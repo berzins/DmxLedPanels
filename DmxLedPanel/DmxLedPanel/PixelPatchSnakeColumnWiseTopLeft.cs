@@ -6,26 +6,29 @@ using System.Threading.Tasks;
 
 namespace DmxLedPanel
 {
-    public class PixelPatchSnakeColumnWiseTopLeft : IPixelPatch
+    public class PixelPatchSnakeColumnWiseTopLeft : PixelPatch
     {
 
-        private int columns, rows, address, pixelLength;
-        Pixel[,] patch;
+        public PixelPatchSnakeColumnWiseTopLeft(
+            int columns, 
+            int rows,
+            int address, 
+            int pixelLength) : base(PixelPatch.PIXEL_PATCH_SNAKE_COLUMNWISE_TOP_LEFT) {
 
-        public PixelPatchSnakeColumnWiseTopLeft(int columns, int rows, int address, int pixelLength) {
             this.columns = columns;
             this.rows = rows;
             this.address = address;
             this.pixelLength = pixelLength;
+           
             patch = patchPixels();
         }
 
-        Pixel[,] IPixelPatch.GetPixelPatch() {
+        public override Pixel[,] GetPixelPatch() {
             return patch;
         }
 
-        int[] IPixelPatch.GetPixelValues()
-        {
+        public override int[] GetPixelValues()
+        {   
             List<int> values = new List<int>();
 
             //loop through columns

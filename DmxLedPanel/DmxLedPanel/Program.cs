@@ -1,4 +1,6 @@
 ﻿using ArtNet.ArtPacket;
+using DmxLedPanel.Modes;
+using DmxLedPanel.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,12 +29,11 @@ namespace DmxLedPanel
             for(int i = 0; i < fixtureCount; i++)
             {
                 Fixture fixture = new Fixture(
-                    new ModeLineWiseTopLeft(3, 3),
+                    new ModeGridTopLeft(1, 9),
                     new PixelPatchSnakeColumnWiseTopLeft(9, 9, 0, 3)
                     );
                 fixture.Address = new Address() { Port = new Port(0, 0, 2), DmxAddress = startAddress };
                 startAddress += fixture.InputAddressCount;
-                fixture.ID = i;
                 fixtures.Add(fixture);
                 Console.WriteLine("Fixture initialized Address (" +
                     fixture.Address.Port.Net + "." +
@@ -73,8 +74,24 @@ namespace DmxLedPanel
 
             //ArtnetOut.Instance.Writer.Write(new ArtPollPacket());
 
-            int pixel = 0;
 
+
+
+            // Set Up State
+
+            State state = new State();
+            state.Outputs.Add(output);
+            state.FixturePool = fixtures;
+
+            string serializedState = ((ISerializable)state).Serialize();
+            Console.WriteLine(serializedState);
+
+            State deserializedState = new State().Deserialize<State>(serializedState);
+
+
+            // Manual Pixel check
+            int pixel = 0;
+            
             while (true)
             {
                 Console.ReadKey();

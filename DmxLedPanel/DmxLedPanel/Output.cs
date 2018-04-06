@@ -7,21 +7,24 @@ using System.Threading.Tasks;
 
 namespace DmxLedPanel
 {
-    class Output : IFixtureUpdateHandler
+    public class Output : IFixtureUpdateHandler
     {
 
-        private List<Fixture> fixtures, updatePending;
-        int curretnFixtureIndex = 0;
+        private static int idCounter = 0;
 
-        
+        private List<Fixture> fixtures, updatePending;
         public Output() {
             fixtures = new List<Fixture>();
             updatePending = new List<Fixture>();
             Ports = new List<Port>(2);
+            Name = "Output " + (idCounter++);
         }
+
+        public string Name { get; set; }
 
         public List<Port> Ports { get; }
         
+
 
         public void PatchFixture(Fixture f) {
             if (!fixtures.Contains(f)) {
@@ -73,7 +76,7 @@ namespace DmxLedPanel
                 writer.Write(pack);
             }
             ArtNet.Utils.ArtPacketStopwatch.Stop();
-            Console.WriteLine("packet took " + ArtNet.Utils.ArtPacketStopwatch.ElapsedMilliseconds + " mils to process");
+            //Console.WriteLine("packet took " + ArtNet.Utils.ArtPacketStopwatch.ElapsedMilliseconds + " mils to process");
         }
 
         private void ResetUpdatePending() {

@@ -4,25 +4,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DmxLedPanel
+namespace DmxLedPanel.Modes
 {
-    public class ModeLineWiseTopLeft : IMode
+    public class ModeGridTopLeft : Mode
     {
+
         private int width, height;
 
-        public ModeLineWiseTopLeft(int width, int height) {
+        public ModeGridTopLeft(int width, int height) : base(MODE_GRID_TOP_LEFT) {
+            Params.Add(width);
+            Params.Add(height);
             this.width = width;
             this.height = height;
+
         }
+
+        
+        public int Width { get; set; }
+        public int Height { get; set; }
+        
 
         /*
          *  Return list of fields indexed from 0.
          *  Fields grab containg Pixels from patch. 
         */
-        public List<Field> GetFields(Pixel[,] patch)
+        public override List<Field> GetFields(Pixel[,] patch)
         {
             int pixWidth = patch.GetLength(0) / width;
-            int pixHeight = patch.GetLength(0) / height;
+            int pixHeight = patch.GetLength(1) / height;
 
             List<Field> fields = new List<Field>();
             int fieldIndex = 0;

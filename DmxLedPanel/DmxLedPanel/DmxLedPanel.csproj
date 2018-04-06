@@ -39,6 +39,9 @@
     <Reference Include="DmxPatch">
       <HintPath>..\..\..\..\..\take with me\Documents\Visual Studio 2015\Projects\ClassLibrary3\ClassLibrary3\bin\Debug\DmxPatch.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -53,12 +56,17 @@
     <Compile Include="ArtnetIn.cs" />
     <Compile Include="ArtnetOut.cs" />
     <Compile Include="Converter.cs" />
+    <Compile Include="FileIO.cs" />
+    <Compile Include="FixtureFactory.cs" />
+    <Compile Include="Modes\Mode.cs" />
+    <Compile Include="PixelPatch.cs" />
+    <Compile Include="Template\FixtureTemplate.cs" />
     <Compile Include="IDmxPacketHandler.cs" />
     <Compile Include="Field.cs" />
     <Compile Include="Fixture.cs" />
     <Compile Include="IPixelPatch.cs" />
-    <Compile Include="Mode.cs" />
-    <Compile Include="ModeLineWiseTopLeft.cs" />
+    <Compile Include="Modes\IMode.cs" />
+    <Compile Include="Modes\ModeLineWiseTopLeft.cs" />
     <Compile Include="Output.cs" />
     <Compile Include="Pixel.cs" />
     <Compile Include="PixelPatchSnakeColumnWiseTopLeft.cs" />
@@ -66,11 +74,23 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IFixtureUpdateHandler.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="Template\FixtureTemplateFactory.cs" />
+    <Compile Include="Template\ModeTemplate.cs" />
+    <Compile Include="Template\OutputTemplate.cs" />
+    <Compile Include="Template\PixelPatchTemplate.cs" />
+    <Compile Include="Template\StateTemplate.cs" />
+    <Compile Include="Util\ISerializable.cs" />
+    <Compile Include="Util\State.cs" />
+    <Compile Include="Util\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ConfigFiles\template.json" />
+    <None Include="ConfigFiles\tsconfig1.json" />
+    <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ConfigFiles\NewFolder1\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

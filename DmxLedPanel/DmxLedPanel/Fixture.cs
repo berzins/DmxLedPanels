@@ -4,20 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ArtNet.ArtPacket;
+using DmxLedPanel.Modes;
 
 namespace DmxLedPanel
 {
     public class Fixture : IDmxPacketHandler
     {
+        private static int idCounter = 0;
+
         private List<IFixtureUpdateHandler> updateHandlers;
         private int addressCount;
         private IPixelPatch pixelPatch;
+        private IMode mode;
 
         public Fixture(IMode m, IPixelPatch pixelPatch) {
             this.pixelPatch = pixelPatch;
+            this.mode = m;
             SetMode(m);
             Address = new Address();
             updateHandlers = new List<IFixtureUpdateHandler>();
+            Name = "Fixture " + (idCounter++);
+            
         }
 
         // FOR TESTS
@@ -27,8 +34,10 @@ namespace DmxLedPanel
        // END OF FOR TESTS
 
         public int ID {
-            get; set;
+            get; private set;
         }
+
+        public string Name { get; set; }
 
         public Address Address { get; set; }
 
@@ -59,6 +68,12 @@ namespace DmxLedPanel
                 addressCount += f.Pixels.Count * f.Pixels[0].AddressCount;     
             }
         }
+
+        public IMode getMode() {
+            return this.mode;
+        }
+
+        
 
         public void AddUpdateHandler(IFixtureUpdateHandler handler) {
             if (!updateHandlers.Contains(handler)) {
