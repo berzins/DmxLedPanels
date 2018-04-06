@@ -7,7 +7,7 @@ using ArtNet.ArtPacket;
 
 namespace DmxLedPanel
 {
-    public class Converter : IDmxPacketHandler
+    public class Converter
     {
         private readonly List<Fixture> fixtures;
         private List<Port> inputPorts;
@@ -32,17 +32,6 @@ namespace DmxLedPanel
         
             //TODO: check if fixture does not overlap with other fixtures
             fixtures.Add(f);
-        }
-
-
-
-        void IDmxPacketHandler.HandlePacket(ArtDmxPacket packet)
-        {   
-            Port port = new Port(packet.PhysicalPort, packet.SubNet, packet.Universe);
-            if (!HasPort(port, inputPorts)) return;
-            
-            // We are interested in this packet so process it.
-           
         }
 
         private bool HasPort(Port port, List<Port> ports) {

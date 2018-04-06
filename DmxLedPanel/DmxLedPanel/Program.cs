@@ -18,46 +18,88 @@ namespace DmxLedPanel
         }
 
         private void Run() {
-            IPixelPatch pixelPatch = new PixelPatchSnakeColumnWiseTopLeft(9, 9, 0, 3);
-            var patch = pixelPatch.GetPixelPatch();
-            for (int row = 0; row < 9; row++) {
-                for (int col = 0; col < 9; col++) {
-                    Pixel pix = patch[col, row];
-                    Console.Write( (pix.Index < 10 ? "0" : "") + pix.Index + " ");                  
-                }
-                Console.WriteLine();
+
+            // crate fixtures
+
+            int fixtureCount = 4;
+            List<Fixture> fixtures = new List<Fixture>();
+            int startAddress = 0;
+            for(int i = 0; i < fixtureCount; i++)
+            {
+                Fixture fixture = new Fixture(
+                    new ModeLineWiseTopLeft(3, 3),
+                    new PixelPatchSnakeColumnWiseTopLeft(9, 9, 0, 3)
+                    );
+                fixture.Address = new Address() { Port = new Port(0, 0, 2), DmxAddress = startAddress };
+                startAddress += fixture.InputAddressCount;
+                fixture.ID = i;
+                fixtures.Add(fixture);
+                Console.WriteLine("Fixture initialized Address (" +
+                    fixture.Address.Port.Net + "." +
+                    fixture.Address.Port.SubNet + "." +
+                    fixture.Address.Port.Universe + "/" +
+                    fixture.Address.DmxAddress + ")");
             }
 
-
-            IMode mode = new ModeLineWiseTopLeft(3, 3);
-            List<Field> fields = mode.GetFields(patch);
-
-            Console.WriteLine();
-
-            foreach (Field f in fields) {
-                foreach (Pixel pix in f.Pixels) {
-                    Console.Write(f.Index + "/" + (pix.Index < 10 ? "0" : "") + pix.Index + " ");
-                }
-                Console.WriteLine();
+            // init output
+            Output output = new Output();
+            output.Ports.Add(new Port(0, 0, 0));
+            output.Ports.Add(new Port(0, 0, 1));
+            foreach (Port p in output.Ports) {
+                Console.WriteLine("Output port set (" + p.Net +"." + p.SubNet + "." + p.Universe + ")");
             }
 
-
-            Fixture fixture = new Fixture(mode, pixelPatch);
-            fixture.Address = new Address() { DmxAddress = 0, Port = new Port(0,0,0)};
-
-
-            int[] dmxData = Enumerable.Repeat(7, 81).ToArray();
-             
-            for (int i = 3; i < dmxData.Length; i++) {
-                dmxData[i] = 0;
+            foreach (Fixture f in fixtures) {
+                output.PatchFixture(f);
             }
-            
+            Console.WriteLine("Output fixtures has been set.");
+
+            // init input
+
+            ArtnetIn artin = ArtnetIn.Instance;
+
+            artin.AddDmxPacketListeners(
+                fixtures.Select(x => (IDmxPacketHandler)x).ToList());
+
+            artin.Start();
+
+            Console.WriteLine("Artnet input enabled");
+
             ArtDmxPacket packet = new ArtDmxPacket();
-            packet.DmxData = dmxData.Select(x => (byte)x).ToArray();
-            ((IDmxPacketHandler)fixture).HandlePacket(packet);
+            for (int i = 0; i < 3; i++)
+            {
+                packet.DmxData[i] = 7;
+            }
 
+            //ArtnetOut.Instance.Writer.Write(new ArtPollPacket());
 
-            patch = fixture.PixelPatch.GetPixelPatch();
+            int pixel = 0;
+
+            while (true)
+            {
+                Console.ReadKey();
+                //Console.WriteLine("Line read is " + pixel);
+                byte[] dmx = Enumerable.Repeat((byte)5, 108).ToArray();
+                int start = pixel * 3;
+                for (int i = start; i < start + 3; i++)
+                {
+                    dmx[i] = 200;
+                }
+                var p = new ArtDmxPacket() { Universe = 2 };
+                p.DmxData = dmx;
+
+                ArtnetOut.Instance.Writer.Write(p);
+
+                //foreach (Fixture f in fixtures) {
+                //    ((IDmxPacketHandler)f).HandlePacket(p);
+                //}
+                pixel++;
+                if (pixel > 35) pixel = 0;
+            }
+        }
+
+        void printFixturePatch(Fixture fixture) {
+            var patch = fixture.PixelPatch.GetPixelPatch();
             for (int row = 0; row < 9; row++)
             {
                 for (int col = 0; col < 9; col++)

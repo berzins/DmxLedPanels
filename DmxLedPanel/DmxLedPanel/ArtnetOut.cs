@@ -30,6 +30,5 @@ namespace DmxLedPanel
                 return this.artWriter;
             }
         }
-
     }
 }

@@ -26,9 +26,25 @@ namespace DmxLedPanel
 
        // END OF FOR TESTS
 
+        public int ID {
+            get; set;
+        }
+
         public Address Address { get; set; }
+
+        public int PixelAddressCount {
+            get {
+                return 3; // TODO: this is really dumb .. rewrite this for another pixel width support
+            }
+        }
          
         public List<Field> Fields { get; private set; }
+
+        public int InputAddressCount {
+            get {
+                return Fields.Count * PixelAddressCount;
+            }
+        }
 
         public int[] DmxValues {
             get {
@@ -67,9 +83,10 @@ namespace DmxLedPanel
                 int [] dmx = Utils.GetSubArray(packet.DmxData, offset + relOffset, f.AddressCount)
                     .Select(x => (int)x).ToArray();
                 f.SetDmxValues(dmx);
-                foreach (IFixtureUpdateHandler fuh in updateHandlers) {
-                    fuh.OnUpdate(this);
-                }
+            }
+            foreach (IFixtureUpdateHandler fuh in updateHandlers)
+            {
+                fuh.OnUpdate(this);
             }
         }
     }

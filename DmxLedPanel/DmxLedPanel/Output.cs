@@ -11,19 +11,17 @@ namespace DmxLedPanel
     {
 
         private List<Fixture> fixtures, updatePending;
-        Dictionary<int, Fixture> fixturePatch;
         int curretnFixtureIndex = 0;
 
         
         public Output() {
             fixtures = new List<Fixture>();
             updatePending = new List<Fixture>();
-            fixturePatch = new Dictionary<int, Fixture>();
+            Ports = new List<Port>(2);
         }
 
-        public Port Port1 { get; set; }
-
-        public Port Port2 { get; set; }
+        public List<Port> Ports { get; }
+        
 
         public void PatchFixture(Fixture f) {
             if (!fixtures.Contains(f)) {
@@ -35,12 +33,18 @@ namespace DmxLedPanel
 
         public void OnUpdate(Fixture f) {
             updatePending.Remove(f);
+
             if (updatePending.Count == 0) {
-                ResetUpdatePending();
+                
                 WriteOutput();
+                ResetUpdatePending();
             }
-            
         }
+
+        public List<Fixture> GetFixtures() {
+            return this.fixtures;
+        }
+
 
         private void WriteOutput() {
 
@@ -55,15 +59,21 @@ namespace DmxLedPanel
             var writer = ArtnetOut.Instance.Writer;
 
             List<ArtDmxPacket> packets = new List<ArtDmxPacket>();
-            packets.Add(new ArtDmxPacket() { PhysicalPort = Port1.Net, SubNet = Port1.SubNet, Universe = Port1.Universe });
-            packets.Add(new ArtDmxPacket() { PhysicalPort = Port2.Net, SubNet = Port2.SubNet, Universe = Port2.Universe });
 
+
+            foreach (Port p in Ports) {
+                packets.Add(new ArtDmxPacket() { PhysicalPort = p.Net, SubNet = p.SubNet, Universe = p.Universe });
+            }
+            
+            // copy data to packets
             copyIndex = 0;
             foreach (ArtDmxPacket pack in packets) {
                 pack.DmxData = Utils.GetSubArray(dmxValues, copyIndex, 510).Select(x => (byte)x).ToArray();
                 copyIndex += 510;
                 writer.Write(pack);
             }
+            ArtNet.Utils.ArtPacketStopwatch.Stop();
+            Console.WriteLine("packet took " + ArtNet.Utils.ArtPacketStopwatch.ElapsedMilliseconds + " mils to process");
         }
 
         private void ResetUpdatePending() {

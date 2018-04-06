@@ -32,8 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ArtNet">
-      <HintPath>C:\Users\guntt\OneDrive\Dokumenti\Visual Studio 2017\Projects\ConsoleApp1\ConsoleApp1\lib\ArtNet.dll</HintPath>
+    <Reference Include="ArtNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libraries\ArtNet\ArtNet\ArtNet\bin\Debug\ArtNet.dll</HintPath>
     </Reference>
     <Reference Include="DmxPatch">
       <HintPath>..\..\..\..\..\take with me\Documents\Visual Studio 2015\Projects\ClassLibrary3\ClassLibrary3\bin\Debug\DmxPatch.dll</HintPath>
@@ -49,6 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Address.cs" />
+    <Compile Include="ArtnetIn.cs" />
+    <Compile Include="ArtnetOut.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="IDmxPacketHandler.cs" />
     <Compile Include="Field.cs" />
