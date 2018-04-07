@@ -70,5 +70,15 @@ namespace DmxLedPanel.Util
 
             return JsonConvert.SerializeObject(temp);
         }
+
+        public List<Fixture> GetPatchedFixtures() {
+            List<Fixture> fixtures = new List<Fixture>();
+            foreach (Output o in Outputs) {
+                foreach (Fixture f in o.GetFixtures()) {
+                    fixtures.Add(f);
+                }
+            }
+            return fixtures;
+        }
     }
 }

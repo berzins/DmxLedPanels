@@ -86,11 +86,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="ConfigFiles\template.json" />
-    <None Include="ConfigFiles\tsconfig1.json" />
+    <None Include="ConfigFiles\storeState.json" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ConfigFiles\NewFolder1\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
