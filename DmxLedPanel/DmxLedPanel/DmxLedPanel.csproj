@@ -60,6 +60,7 @@
     <Compile Include="FixtureFactory.cs" />
     <Compile Include="Modes\Mode.cs" />
     <Compile Include="PixelPatch.cs" />
+    <Compile Include="RestApi\RestApiServer.cs" />
     <Compile Include="Template\FixtureTemplate.cs" />
     <Compile Include="IDmxPacketHandler.cs" />
     <Compile Include="Field.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Template\PixelPatchTemplate.cs" />
     <Compile Include="Template\StateTemplate.cs" />
     <Compile Include="Util\ISerializable.cs" />
+    <Compile Include="Util\Settings.cs" />
     <Compile Include="Util\State.cs" />
     <Compile Include="Util\Utils.cs" />
   </ItemGroup>

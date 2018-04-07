@@ -8,9 +8,7 @@ using System.Threading.Tasks;
 
 namespace DmxLedPanel
 {
-
-
-
+    
     public static class FileIO
     {
         public static string ReadFile(string path, bool relative) {
@@ -34,8 +32,6 @@ namespace DmxLedPanel
             return relative ? Directory.GetFiles(GetRelativePath() + path, filter) :
                 Directory.GetFiles(path, filter);
         }
-
-
-
+        
     }
 }

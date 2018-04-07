@@ -24,8 +24,6 @@ namespace DmxLedPanel
 
         public List<Port> Ports { get; }
         
-
-
         public void PatchFixture(Fixture f) {
             if (!fixtures.Contains(f)) {
                 fixtures.Add(f);
@@ -36,9 +34,7 @@ namespace DmxLedPanel
 
         public void OnUpdate(Fixture f) {
             updatePending.Remove(f);
-
-            if (updatePending.Count == 0) {
-                
+            if (updatePending.Count == 0) {        
                 WriteOutput();
                 ResetUpdatePending();
             }
