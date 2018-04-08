@@ -23,6 +23,7 @@ namespace DmxLedPanel.RestApi
             port = SettingManager.Instance.Settings.RestApiPort;
             server = new HttpListener();
             addRequestHandler("/", new RestHomeHandler());
+            addRequestHandler("/getState/", new RestGetStateHandler());
         }
         
         public void Start() {

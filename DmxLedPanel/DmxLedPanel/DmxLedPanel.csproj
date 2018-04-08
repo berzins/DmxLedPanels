@@ -69,10 +69,12 @@
     <Compile Include="RestApi\IHttpRequestHandler.cs" />
     <Compile Include="RestApi\RestApiServer.cs" />
     <Compile Include="RestApi\RestConst.cs" />
+    <Compile Include="RestApi\RestGetStateHandler.cs" />
     <Compile Include="RestApi\RestHomeHandler.cs" />
     <Compile Include="RestApi\RestPrefixNotRegistredHandler.cs" />
     <Compile Include="RestApi\RestPageNotFoundHandler.cs" />
     <Compile Include="RestApi\RestResourceFileHandler.cs" />
+    <Compile Include="State\StateManager.cs" />
     <Compile Include="Template\FixtureTemplate.cs" />
     <Compile Include="IDmxPacketHandler.cs" />
     <Compile Include="Field.cs" />
@@ -92,9 +94,10 @@
     <Compile Include="Template\OutputTemplate.cs" />
     <Compile Include="Template\PixelPatchTemplate.cs" />
     <Compile Include="Template\StateTemplate.cs" />
+    <Compile Include="Util\FixedSizeStack.cs" />
     <Compile Include="Util\ISerializable.cs" />
     <Compile Include="Util\Settings.cs" />
-    <Compile Include="Util\State.cs" />
+    <Compile Include="State\State.cs" />
     <Compile Include="Util\StaticSerializer.cs" />
     <Compile Include="Util\Utils.cs" />
   </ItemGroup>

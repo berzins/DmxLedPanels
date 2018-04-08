@@ -1,4 +1,5 @@
 ﻿using DmxLedPanel.Template;
+using DmxLedPanel.Util;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DmxLedPanel.Util
+namespace DmxLedPanel.State
 {
     public class State : ISerializable
     {

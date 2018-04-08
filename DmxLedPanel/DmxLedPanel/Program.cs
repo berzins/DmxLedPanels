@@ -6,6 +6,7 @@ using DmxLedPanel.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DmxLedPanel.State;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -88,21 +89,13 @@ namespace DmxLedPanel
             RestApiServer restApi = new RestApiServer();
             restApi.Start();
 
-
-
-
-
             //Console.WriteLine(settings.UIHomePath);
-
-
-            string path = @"D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\DmxLedPanel\ConfigFiles\template.json";
 
             //FileIO.WriteFile(path, ((ISerializable)state).Serialize());
 
-            string serializedState = FileIO.ReadFile(path, false);
-            State deserializedState = new State().Deserialize<State>(serializedState);
+            StateManager.Instance.LoadState(StateManager.DEFAULT_STATE_FILE);
             ArtnetIn artin = ArtnetIn.Instance;
-            List<Fixture> patchedFixtures = deserializedState.GetPatchedFixtures();
+            List<Fixture> patchedFixtures = StateManager.Instance.State.GetPatchedFixtures();
 
             artin.AddDmxPacketListeners(
                 patchedFixtures
@@ -127,10 +120,6 @@ namespace DmxLedPanel
                 p.DmxData = dmx;
 
                 ArtnetOut.Instance.Writer.Write(p);
-
-                //foreach (Fixture f in fixtures) {
-                //    ((IDmxPacketHandler)f).HandlePacket(p);
-                //}
                 pixel++;
                 if (pixel > 35) pixel = 0;
             }
