@@ -7,49 +7,65 @@ using System.Threading.Tasks;
 
 namespace DmxLedPanel.Util
 {
-    public class Settings : ISerializable
+    public class SettingManager
     {
-
         private static readonly string REALTIVE_SETTINGS_PATH = "settings.json";
+        public static readonly int DEFAULT_UI_REST_PORT = 8746;
+        public static readonly string DEFAULT_UI_INDEX_PATH = "ui/index.html";
 
-        private static Settings instance;
+        private static SettingManager instance;
 
-        private Settings() {
-            
+        private Settings settings;
+
+        private SettingManager() {
+            settings = loadSettings();
         }
 
-        public static Settings Instance {
+        public static SettingManager Instance {
             get {
                 if (instance == null)
                 {
-                    try
-                    {
-                        instance = new Settings().Deserialize<Settings>(
-                        FileIO.ReadFile(REALTIVE_SETTINGS_PATH, true));
-                    }
-                    catch (Exception e) {
-                        instance = new Settings();
-                    }
+                    instance = new SettingManager();
                 }
                 return instance;
             }
         }
-
-        public int RestApiPort { get; } = 8746;
-
-        public T Deserialize<T>(string str)
-        {
-            Settings settings = JsonConvert.DeserializeObject<Settings>(str);
-            return (T) Convert.ChangeType(settings, typeof(Settings));
-        }
-
-        public string Serialize()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
+        
+        public Settings Settings { get { return settings; } }
+        
 
         public void Save() {
-            FileIO.WriteFile(REALTIVE_SETTINGS_PATH, true, Serialize());
+            FileIO.WriteFile(REALTIVE_SETTINGS_PATH, true, StaticSerializer.Serialize(settings));
         }
+
+        public void Reload() {
+            settings = loadSettings();
+        }
+
+        private Settings loadSettings() {
+            try
+            {
+                var json = FileIO.ReadFile(REALTIVE_SETTINGS_PATH, true)
+                    .Replace("/", "\\");
+                Settings set = StaticSerializer.Deserialize<Settings>(json);
+                return set; 
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Loading " + REALTIVE_SETTINGS_PATH + " failed! Default settings has been loaded. >> " + e.StackTrace);
+                return new Settings()
+                {
+                    RestApiPort = DEFAULT_UI_REST_PORT,
+                    UIHomePath = DEFAULT_UI_INDEX_PATH
+                };
+            }
+        }
+    }
+
+    public class Settings {
+
+        public int RestApiPort { get; set; }
+
+        public string UIHomePath { get; set; }
     }
 }

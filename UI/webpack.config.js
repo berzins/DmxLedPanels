@@ -7,9 +7,9 @@ var config = {
     mode: 'development',
     entry: SRC_DIR + '/app/index.js',
     output: {
-        path: DIST_DIR + '/app',
+        path: DIST_DIR + '/resource/app/',
         filename: 'bundle.js',
-        publicPath: '/app/'
+        publicPath: '/resource/app/'
     },
     module: {
         rules: [

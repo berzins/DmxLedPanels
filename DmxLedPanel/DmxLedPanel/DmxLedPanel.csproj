@@ -60,7 +60,19 @@
     <Compile Include="FixtureFactory.cs" />
     <Compile Include="Modes\Mode.cs" />
     <Compile Include="PixelPatch.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RestApi\HttpRequestHandler.cs" />
+    <Compile Include="RestApi\IHttpRequestHandler.cs" />
     <Compile Include="RestApi\RestApiServer.cs" />
+    <Compile Include="RestApi\RestConst.cs" />
+    <Compile Include="RestApi\RestHomeHandler.cs" />
+    <Compile Include="RestApi\RestPrefixNotRegistredHandler.cs" />
+    <Compile Include="RestApi\RestPageNotFoundHandler.cs" />
+    <Compile Include="RestApi\RestResourceFileHandler.cs" />
     <Compile Include="Template\FixtureTemplate.cs" />
     <Compile Include="IDmxPacketHandler.cs" />
     <Compile Include="Field.cs" />
@@ -83,6 +95,7 @@
     <Compile Include="Util\ISerializable.cs" />
     <Compile Include="Util\Settings.cs" />
     <Compile Include="Util\State.cs" />
+    <Compile Include="Util\StaticSerializer.cs" />
     <Compile Include="Util\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +104,14 @@
     <None Include="ConfigFiles\storeState.json" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IntallNotes\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

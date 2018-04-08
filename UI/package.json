@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run build",
-    "build": "webpack -d && copy src\\index.html dist\\index.html && copy src\\app\\style\\style.css dist\\app\\style\\style.css && webpack-dev-server --content-base src/ --inline --hot",
+    "build": "webpack -d && copy src\\index.html dist\\index.html && copy src\\app\\style\\style.css dist\\resource\\app\\style\\style.css && webpack-dev-server --content-base src/ --inline --hot",
     "build:prod": "copy src\\index.html dist\\index.html"
   },
   "author": "Gun",

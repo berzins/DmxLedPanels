@@ -59,5 +59,14 @@ namespace DmxLedPanel.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string UIHome {
+            get {
+                return ResourceManager.GetString("UIHome", resourceCulture);
+            }
+        }
     }
 }

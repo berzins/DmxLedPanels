@@ -1,5 +1,7 @@
-﻿using ArtNet.ArtPacket;
+﻿using ArtNet;
+using ArtNet.ArtPacket;
 using DmxLedPanel.Modes;
+using DmxLedPanel.RestApi;
 using DmxLedPanel.Util;
 using System;
 using System.Collections.Generic;
@@ -74,6 +76,24 @@ namespace DmxLedPanel
             //State state = new State();
             //state.Outputs.Add(output);
             //state.FixturePool = fixtures;
+
+            ArtNetReader reader = new ArtNetReader();
+            reader.GetAvailableBindAddresses();
+
+
+
+            //var settings = SettingManager.Instance.Settings.RestApiPort;
+
+
+            RestApiServer restApi = new RestApiServer();
+            restApi.Start();
+
+
+
+
+
+            //Console.WriteLine(settings.UIHomePath);
+
 
             string path = @"D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\DmxLedPanel\ConfigFiles\template.json";
 

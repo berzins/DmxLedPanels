@@ -1,0 +1,4 @@
+To make http api to work run this command as administrator in shell
+--
+netsh http add urlacl url=http://192.168.0.100:8746/ user=Everyone
+--
