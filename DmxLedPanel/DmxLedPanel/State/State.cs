@@ -100,6 +100,15 @@ namespace DmxLedPanel.State
             return null;
         }
 
+        public Output GetOutputByFixture(int id) {
+            foreach (Output o in Outputs) {
+                foreach (Fixture f in o.GetFixtures()) {
+                    if (f.ID == id) return o;
+                }
+            }
+            return null;
+        }
+
         public Fixture GetFixture(int id) {
             foreach (Fixture f in FixturePool) {
                 if (f.ID == id) return f;

@@ -102,9 +102,10 @@ namespace DmxLedPanel
                 // Remove and repatch fixtures
                 fixtures.Remove(rmFix);
                 rmFix.RemoveUpdateHandler(this);
-                patchedAdresses -= rmFix.OutputAddressCount;
                 var tmpFix = this.fixtures;
                 fixtures = new List<Fixture>();
+                //rest to 0 because we are repatching all remaining fixtures
+                patchedAdresses = 0;
                 foreach (Fixture f in tmpFix) {
                     TryPatchFixture(f);
                 }

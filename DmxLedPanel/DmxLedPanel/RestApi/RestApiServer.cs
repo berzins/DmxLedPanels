@@ -29,6 +29,7 @@ namespace DmxLedPanel.RestApi
             addRequestHandler("/deleteOutput/", new RestDeleteOutputHandler());
             addRequestHandler("/deleteFixture/", new RestDeleteFixtureHandler());
             addRequestHandler("/moveFixtureToOutput/", new RestMoveFixtureToOutputHandler());
+            addRequestHandler("/moveFixtureToFixturePool/", new RestMoveFixtureToFixturePoolHandler());
            
 
         }

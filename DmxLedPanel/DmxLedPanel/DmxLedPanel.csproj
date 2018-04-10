@@ -77,6 +77,7 @@
     <Compile Include="RestApi\RestDeleteOutputHandler.cs" />
     <Compile Include="RestApi\RestGetStateHandler.cs" />
     <Compile Include="RestApi\RestHomeHandler.cs" />
+    <Compile Include="RestApi\RestMoveFixtureToFixturePoolHandler.cs" />
     <Compile Include="RestApi\RestMoveFixtureToOutputHandler.cs" />
     <Compile Include="RestApi\RestPrefixNotRegistredHandler.cs" />
     <Compile Include="RestApi\RestPageNotFoundHandler.cs" />
