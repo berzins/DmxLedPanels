@@ -14,6 +14,10 @@ namespace DmxLedPanel.RestApi
 
         public const string CONTENT_RESOURCE = "application/octet-stream";
 
+        public const string CONTENT_TEXT_CSS = "text/css";
+
+        public const string CONTENT_TEXT_JAVASCRIPT = "application/javascript";
+
         public const int RESPONSE_OK = 200;
 
         public const int RESPONSE_NOT_FOUND = 404;

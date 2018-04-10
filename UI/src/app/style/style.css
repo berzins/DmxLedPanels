@@ -1,0 +1,52 @@
+
+.fixture-button {
+    margin:0.5em;
+}
+
+.output-button {
+    width:100%;
+}
+
+.output{
+    padding:10px;
+}
+.fixture-button {
+    margin:0.5em;
+    width:100%;
+}
+
+.output-button {
+    width:100%;
+}
+
+.output{
+    padding:10px;
+}
+
+.item-button:hover {
+    background-position: 0px;
+    background-color: rgba(0,0,0,0.1);
+    color:black;
+}
+
+.item-button {
+    font-size:0.7em;
+}
+
+
+
+
+.item-button:hover {
+    background-position: 0px;
+    background-color: rgba(0,0,0,0.1);
+    color:black;
+}
+
+.item-button {
+    font-size:0.5em;
+}
+
+.item-text {
+    font-size:1em;
+}
+

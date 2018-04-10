@@ -1,0 +1,25 @@
+
+.fixture-button {
+    width:100%;
+}
+
+.output-button {
+    width:100%;
+}
+
+.output{
+    padding:10px;
+}
+
+.item-button:hover {
+    background-position: 0px;
+    background-color: rgba(0,0,0,0.0);
+    color:black;
+}
+
+.item-button {
+    font-size:0.7em;
+    margin:0.5em;
+}
+
+

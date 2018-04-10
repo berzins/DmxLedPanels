@@ -15,6 +15,7 @@ namespace DmxLedPanel.RestApi
         {
             var relUrl = RestApiServer.GetRealtiveUrl(context.Request.Url.ToString());
             string file = SettingManager.Instance.Settings.UIHomePath + relUrl;
+            file = file.Replace("/", @"\");
             if (File.Exists(file))
             {
                 new RestResourceFileHandler(file).HandleRequest(context);
