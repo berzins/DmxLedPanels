@@ -30,7 +30,7 @@
             "Name": "pixelPatchSnakeColumnWiseTopLeft",
             "Columns": 9,
             "Rows": 9,
-            "PixelLength": 0
+            "PixelLength": 3
           },
           "Mode": {
             "Name": "GridTopLeft",
@@ -52,7 +52,7 @@
             "Name": "pixelPatchSnakeColumnWiseTopLeft",
             "Columns": 9,
             "Rows": 9,
-            "PixelLength": 0
+            "PixelLength": 3
           },
           "Mode": {
             "Name": "GridTopLeft",
@@ -74,7 +74,7 @@
             "Name": "pixelPatchSnakeColumnWiseTopLeft",
             "Columns": 9,
             "Rows": 9,
-            "PixelLength": 0
+            "PixelLength": 3
           },
           "Mode": {
             "Name": "GridTopLeft",
@@ -96,7 +96,7 @@
             "Name": "pixelPatchSnakeColumnWiseTopLeft",
             "Columns": 9,
             "Rows": 9,
-            "PixelLength": 0
+            "PixelLength": 3
           },
           "Mode": {
             "Name": "GridTopLeft",
@@ -122,7 +122,7 @@
         "Name": "pixelPatchSnakeColumnWiseTopLeft",
         "Columns": 9,
         "Rows": 9,
-        "PixelLength": 0
+        "PixelLength": 3
       },
       "Mode": {
         "Name": "GridTopLeft",
@@ -144,7 +144,7 @@
         "Name": "pixelPatchSnakeColumnWiseTopLeft",
         "Columns": 9,
         "Rows": 9,
-        "PixelLength": 0
+        "PixelLength": 3
       },
       "Mode": {
         "Name": "GridTopLeft",
@@ -166,7 +166,7 @@
         "Name": "pixelPatchSnakeColumnWiseTopLeft",
         "Columns": 9,
         "Rows": 9,
-        "PixelLength": 0
+        "PixelLength": 3
       },
       "Mode": {
         "Name": "GridTopLeft",
@@ -188,7 +188,7 @@
         "Name": "pixelPatchSnakeColumnWiseTopLeft",
         "Columns": 9,
         "Rows": 9,
-        "PixelLength": 0
+        "PixelLength": 3
       },
       "Mode": {
         "Name": "GridTopLeft",

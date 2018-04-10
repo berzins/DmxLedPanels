@@ -15,6 +15,7 @@ namespace DmxLedPanel.Template
             Fixtures = new List<FixtureTemplate>();
         }
 
+        public int ID { get; set; }
         public string Name { get; set; }
         public List<Port> Ports { get; set; }
         public List<FixtureTemplate> Fixtures { get; set; }

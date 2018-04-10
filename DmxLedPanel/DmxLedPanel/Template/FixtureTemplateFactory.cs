@@ -10,6 +10,7 @@ namespace DmxLedPanel.Template
     {
         public static FixtureTemplate createFixtureTemplate(Fixture f) {
             return new FixtureTemplate() {
+                Id = f.ID,
                 Name = f.Name,
                 Address = f.Address,
                 PixelPatch = new PixelPatchTemplate(f.PixelPatch),

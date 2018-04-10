@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ArtNet.ArtPacket;
 using DmxLedPanel.Modes;
+using DmxLedPanel.State;
 
 namespace DmxLedPanel
 {
@@ -17,14 +18,20 @@ namespace DmxLedPanel
         private IPixelPatch pixelPatch;
         private IMode mode;
 
+        static Fixture()
+        {
+            idCounter = StateManager.Instance.State.GetLastFixtureId() + 1;
+
+        }
+
         public Fixture(IMode m, IPixelPatch pixelPatch) {
             this.pixelPatch = pixelPatch;
             this.mode = m;
             SetMode(m);
             Address = new Address();
             updateHandlers = new List<IFixtureUpdateHandler>();
-            Name = "Fixture " + (idCounter++);
-            
+            ID = idCounter++;
+            Name = "Fixture " + ID;
         }
 
         // FOR TESTS
@@ -52,6 +59,12 @@ namespace DmxLedPanel
         public int InputAddressCount {
             get {
                 return Fields.Count * PixelAddressCount;
+            }
+        }
+
+        public int OutputAddressCount {
+            get {
+                return PixelPatch.Columns * PixelPatch.Rows * Const.PIXEL_LENGTH;
             }
         }
 

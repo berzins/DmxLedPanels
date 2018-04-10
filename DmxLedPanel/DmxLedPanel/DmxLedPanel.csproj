@@ -55,6 +55,7 @@
     <Compile Include="Address.cs" />
     <Compile Include="ArtnetIn.cs" />
     <Compile Include="ArtnetOut.cs" />
+    <Compile Include="Const.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="FileIO.cs" />
     <Compile Include="FixtureFactory.cs" />
@@ -67,10 +68,16 @@
     </Compile>
     <Compile Include="RestApi\HttpRequestHandler.cs" />
     <Compile Include="RestApi\IHttpRequestHandler.cs" />
+    <Compile Include="RestApi\ResponseMessage.cs" />
     <Compile Include="RestApi\RestApiServer.cs" />
     <Compile Include="RestApi\RestConst.cs" />
+    <Compile Include="RestApi\RestCreateFixtureHandler.cs" />
+    <Compile Include="RestApi\RestCreateOutputHandler.cs" />
+    <Compile Include="RestApi\RestDeleteFixtureHandler.cs" />
+    <Compile Include="RestApi\RestDeleteOutputHandler.cs" />
     <Compile Include="RestApi\RestGetStateHandler.cs" />
     <Compile Include="RestApi\RestHomeHandler.cs" />
+    <Compile Include="RestApi\RestMoveFixtureToOutputHandler.cs" />
     <Compile Include="RestApi\RestPrefixNotRegistredHandler.cs" />
     <Compile Include="RestApi\RestPageNotFoundHandler.cs" />
     <Compile Include="RestApi\RestResourceFileHandler.cs" />

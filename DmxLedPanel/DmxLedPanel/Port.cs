@@ -44,6 +44,47 @@ namespace DmxLedPanel
         {
             return base.GetHashCode();
         }
+
+        public Port Clone() {
+            return new Port()
+            {
+                Net = this.Net,
+                SubNet = this.SubNet,
+                Universe = this.Universe
+            };
+        }
+
+
+        public static Port operator ++(Port p) {
+            var next = p.GetNextPort();
+            return new Port() { Net = next.Net, SubNet = next.SubNet, Universe = next.Universe };
+        }
+
+        public Port GetNextPort() {
+
+           var p = this.Clone();
+            // TODO: maybe rewrite this as a recursion...
+            // or use bit banging. 
+            if (p.Universe + 1 > 15)
+            {
+                p.Universe = 0;
+                if (p.SubNet + 1 > 15)
+                {
+                    p.SubNet = 0;
+                    if (p.Net + 1 > 15) {
+                        return null;
+                    }
+                    p.Net += 1;
+                }
+                else {
+                    p.SubNet += 1;
+                }
+            }
+            else {
+                p.Universe += 1;
+            }
+            return p;
+        }
     }
 }
 

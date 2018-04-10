@@ -17,6 +17,7 @@ namespace DmxLedPanel
 
         public PixelPatch(string name) {
             Name = name;
+            PixelLength = Const.PIXEL_LENGTH;
         }
 
         public string Name { get; private set; }

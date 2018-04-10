@@ -24,6 +24,13 @@ namespace DmxLedPanel.RestApi
             server = new HttpListener();
             addRequestHandler("/", new RestHomeHandler());
             addRequestHandler("/getState/", new RestGetStateHandler());
+            addRequestHandler("/createFixture/", new RestCreateFixtureHandler());
+            addRequestHandler("/createOutput/", new RestCreateOutputHandler());
+            addRequestHandler("/deleteOutput/", new RestDeleteOutputHandler());
+            addRequestHandler("/deleteFixture/", new RestDeleteFixtureHandler());
+            addRequestHandler("/moveFixtureToOutput/", new RestMoveFixtureToOutputHandler());
+           
+
         }
         
         public void Start() {
@@ -66,9 +73,12 @@ namespace DmxLedPanel.RestApi
             this.requestHandlers.Add(relPrefix, handler);
         }
 
+        /// <summary>
+        /// Extract relative server url without params
+        /// </summary>
         public static string GetRealtiveUrl(string url) {
             var rgx = @"\w{4}://.*:\d*";
-            return Regex.Replace(url, rgx, ""); 
+            return Regex.Replace(url, rgx, "").Split('?')[0]; 
         }
 
         protected string createPrefix(string pf) {

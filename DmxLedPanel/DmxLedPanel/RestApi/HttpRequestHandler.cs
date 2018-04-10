@@ -9,8 +9,13 @@ namespace DmxLedPanel.RestApi
 {
     public abstract class HttpRequestHandler : IHttpRequestHandler
     {
-        public abstract void HandleRequest(HttpListenerContext context);
 
+        public static readonly char[] PARAM_SPLITTER = {  '|' };
+        public static readonly char[] VALUE_SPLITTER = { '_' };
+
+        public static readonly string KEY_ID = "id";
+
+        public abstract void HandleRequest(HttpListenerContext context);
 
         protected void WriteResponse(
             HttpListenerContext context,
@@ -33,6 +38,17 @@ namespace DmxLedPanel.RestApi
             string data)
         {
             WriteResponse(context, status, contType, Encoding.UTF8.GetBytes(data));
+        }
+
+
+        public void WriteErrorMessage(HttpListenerContext context, Exception e) {
+            var error = Util.StaticSerializer.Serialize(
+                    new ResponseMessage(ResponseMessage.TYPE_ERROR, e.Message + " || " + e.StackTrace));
+            WriteResponse(context, RestConst.RESPONSE_INTERNAL_ERROR, RestConst.CONTENT_TEXT_JSON, error);
+        }
+
+        protected int[] getIntArgArray(string args) {
+            return args.Split(PARAM_SPLITTER).Select(x => int.Parse(x)).ToArray();
         }
     }
 }

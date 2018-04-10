@@ -16,8 +16,15 @@ namespace DmxLedPanel
 
         }
 
-
         public Port Port {get; set;} 
         public int DmxAddress { get; set; }
+
+        public Address Clone() {
+            return new Address()
+            {
+                Port = this.Port.Clone(),
+                DmxAddress = this.DmxAddress
+            };
+        }
     }
 }
