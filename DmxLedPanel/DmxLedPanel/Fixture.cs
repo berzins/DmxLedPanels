@@ -24,6 +24,12 @@ namespace DmxLedPanel
 
         }
 
+        /// <summary>
+        /// Use this with caution.. 
+        /// Usful when reloading whole state of app. 
+        /// </summary>
+        public static void ResetIdCounter() { idCounter = 0; }
+
         public Fixture(IMode m, IPixelPatch pixelPatch) {
             this.pixelPatch = pixelPatch;
             this.mode = m;

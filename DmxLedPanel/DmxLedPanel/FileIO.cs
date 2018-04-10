@@ -28,9 +28,13 @@ namespace DmxLedPanel
             return Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName) + @"\";
         }
 
-        public static string[] GetFiles(string path, bool relative, string filter) {
-            return relative ? Directory.GetFiles(GetRelativePath() + path, filter) :
-                Directory.GetFiles(path, filter);
+        public static string[] GetFiles(string path, bool relative, bool fullPath, string filter) {
+            var p = relative ? GetRelativePath() + path : path;
+            var files = Directory.GetFiles(p, "*.json");
+            if (!fullPath) {
+                files = files.Select(Path.GetFileName).ToArray();
+            }
+            return files;
         }
         
     }

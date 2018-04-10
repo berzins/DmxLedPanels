@@ -75,13 +75,16 @@
     <Compile Include="RestApi\RestCreateOutputHandler.cs" />
     <Compile Include="RestApi\RestDeleteFixtureHandler.cs" />
     <Compile Include="RestApi\RestDeleteOutputHandler.cs" />
+    <Compile Include="RestApi\RestGetSavedStates.cs" />
     <Compile Include="RestApi\RestGetStateHandler.cs" />
     <Compile Include="RestApi\RestHomeHandler.cs" />
+    <Compile Include="RestApi\RestLoadStateHandler.cs" />
     <Compile Include="RestApi\RestMoveFixtureToFixturePoolHandler.cs" />
     <Compile Include="RestApi\RestMoveFixtureToOutputHandler.cs" />
     <Compile Include="RestApi\RestPrefixNotRegistredHandler.cs" />
     <Compile Include="RestApi\RestPageNotFoundHandler.cs" />
     <Compile Include="RestApi\RestResourceFileHandler.cs" />
+    <Compile Include="RestApi\RestSaveStateHandler.cs" />
     <Compile Include="State\StateManager.cs" />
     <Compile Include="Template\FixtureTemplate.cs" />
     <Compile Include="IDmxPacketHandler.cs" />

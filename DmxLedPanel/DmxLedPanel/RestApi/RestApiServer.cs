@@ -32,7 +32,7 @@ namespace DmxLedPanel.RestApi
             addRequestHandler("/moveFixtureToFixturePool/", new RestMoveFixtureToFixturePoolHandler());
             addRequestHandler("/saveState/", new RestSaveStateHandler());
             addRequestHandler("/loadState/", new RestLoadStateHandler());
-
+            addRequestHandler("/getSavedStates/", new RestGetSavedStates());
         }
         
         public void Start() {

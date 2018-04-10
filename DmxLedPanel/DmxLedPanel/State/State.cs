@@ -16,7 +16,7 @@ namespace DmxLedPanel.State
 
         public int GetLastFixtureId() {
             int last = 0;
-            foreach (Fixture f in getAllFixtures())
+            foreach (Fixture f in GetAllFixtures())
             {
                 last = f.ID > last ? f.ID : last;
             }
@@ -186,7 +186,7 @@ namespace DmxLedPanel.State
             return fixtures;
         }
 
-        private List<Fixture> getAllFixtures() {
+        public List<Fixture> GetAllFixtures() {
             List<Fixture> fl = new List<Fixture>();
             fl.AddRange(FixturePool);
             fl.AddRange(GetPatchedFixtures());

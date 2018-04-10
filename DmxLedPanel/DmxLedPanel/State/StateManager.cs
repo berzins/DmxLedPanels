@@ -49,6 +49,12 @@ namespace DmxLedPanel.State
 
         public void LoadState(string file)
         {
+            // a little hack for a bad desing :(.
+            // zero out fixture/output counter cause
+            // the fixture/output constructor increments smallest id in current items.
+            Fixture.ResetIdCounter();
+            Output.ResetIdCounter();
+
             this.state = getStateFromFile(file);
         }
 
@@ -63,11 +69,11 @@ namespace DmxLedPanel.State
 
         public void SaveState(string filename)
         {
-            FileIO.WriteFile(DEFAULT_RELATIVE_STATE_FIEL_PATH + filename, true, GetStateSerialized());
+            FileIO.WriteFile(DEFAULT_RELATIVE_STATE_FIEL_PATH + filename + ".json", true, GetStateSerialized());
         }
 
         public string [] GetAllStateFiles() {
-           return FileIO.GetFiles(DEFAULT_RELATIVE_STATE_FIEL_PATH, true, ".json");
+           return FileIO.GetFiles(DEFAULT_RELATIVE_STATE_FIEL_PATH, true, false, ".json");
         }
     }
 }

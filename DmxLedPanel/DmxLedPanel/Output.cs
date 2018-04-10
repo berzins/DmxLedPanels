@@ -26,6 +26,8 @@ namespace DmxLedPanel
             idCounter = StateManager.Instance.State.GetLastOutputId() + 1;
         }
 
+        public static void ResetIdCounter() { idCounter = 0; }
+
         public Output() {
             addressCount = PORT_COUNT * PORT_ADDRESS_COUNT;
             fixtures = new List<Fixture>();
