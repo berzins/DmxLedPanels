@@ -16,7 +16,8 @@ namespace DmxLedPanel.RestApi
 
             try {
 
-                var fileNames = StateManager.Instance.GetAllStateFiles();
+                var fileNames = StateManager.Instance.GetAllStateFiles().ToList();
+                fileNames.Sort();
                 var msg = new ResponseMessage(ResponseMessage.TYPE_SAVED_STATES, fileNames);
                 var data = Util.StaticSerializer.Serialize(msg);
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, data);

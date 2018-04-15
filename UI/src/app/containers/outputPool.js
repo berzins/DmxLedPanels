@@ -1,33 +1,46 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import Output from './output'
 import AddOutputButton from './addOutputButton'
+import DeleteOutputButton from './deleteOutputButton'
+import { deselectAll } from '../actions/selectActions'
 
 
 class OutputPool extends Component {
 
-    createOutputItems(count) {
-        let outs = []
-        for(let i = 0; i < count; i++) {
-            outs.push(
-                <div className="col-12">
-                    <Output />
+    createOutputItems(outputs) {
+        return outputs.map((out, i) => {
+            return(
+                <div className="col-12" key={"out" + out.ID}>
+                    <Output output={out} click={this.props.click}/>
                 </div>
             )
+        })
+    }
+
+    handleClick() {
+        console.log(this.props.click)
+        if(this.props.click.clicked != true) {
+            this.props.deselectAll()
         }
-        return outs
+        this.props.click.clicked = true
     }
 
     render() {
         return(
-            <div className="output border border-primary">
+            <div 
+            onClick={() => this.handleClick() }
+            className="output"
+            >
                 <div className="row">
-
-                    <div className="col-12">
-                        <AddOutputButton/>
-                    </div>
+                    <div className='col-12 btn-group'>
+                            <AddOutputButton click={this.props.click}/>
+                            <DeleteOutputButton click={this.props.click}/>
+                    </div> 
                     <div className="col-12">
                         <div className="row">
-                            {this.createOutputItems(0)}
+                            {this.createOutputItems(this.props.outputs)}
                         </div>
                     </div>
                 </div>      
@@ -36,4 +49,11 @@ class OutputPool extends Component {
     }
 }
 
-export default OutputPool;
+const mapDispatchToProps = (dispatch) => {
+    return bindActionCreators( 
+        {
+            deselectAll: deselectAll
+        }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(OutputPool);

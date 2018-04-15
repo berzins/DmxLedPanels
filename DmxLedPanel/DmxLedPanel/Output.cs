@@ -10,7 +10,7 @@ namespace DmxLedPanel
 {
     public class Output : IFixtureUpdateHandler
     {
-
+        public static readonly int FIXTURE_UNPATCH = -1;
         private static readonly int PORT_ADDRESS_COUNT = 510;
         private static readonly int PORT_COUNT = 2;
         private static int idCounter = 0;
@@ -55,6 +55,7 @@ namespace DmxLedPanel
         public bool TryPatchFixture(Fixture f) {
             if (!fixtures.Contains(f) && (patchedAdresses + f.OutputAddressCount) < addressCount)
             {
+                f.PatchedTo = this.ID;
                 fixtures.Add(f);
                 f.AddUpdateHandler(this);
                 patchedAdresses += f.OutputAddressCount;
@@ -102,6 +103,7 @@ namespace DmxLedPanel
             }
             if (rmFix != null) {
                 // Remove and repatch fixtures
+                rmFix.PatchedTo = FIXTURE_UNPATCH;
                 fixtures.Remove(rmFix);
                 rmFix.RemoveUpdateHandler(this);
                 var tmpFix = this.fixtures;

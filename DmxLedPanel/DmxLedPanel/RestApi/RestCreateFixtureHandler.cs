@@ -18,6 +18,7 @@ namespace DmxLedPanel.RestApi
         public static readonly string KEY_ADDRESS = "address";
         public static readonly string KEY_PATCH_TYPE = "patch_type";
         public static readonly string KEY_MODE = "mode";
+        public static readonly string KEY_INCREMENT = "increment";
 
         public override void HandleRequest(HttpListenerContext context)
         {
@@ -45,15 +46,23 @@ namespace DmxLedPanel.RestApi
 
                 IMode mode = getFixtureMode(q.Get(KEY_MODE));
                 IPixelPatch patch = getPixelPatch(q.Get(KEY_PATCH_TYPE));
-                
+                bool increment = bool.Parse(q.Get(KEY_INCREMENT));
+
                 for (int i = 0; i < int.Parse(q.Get(KEY_COUNT)); i++)
                 {
-                    fixtures.Add(new Fixture(mode, patch)
-                    {
-                        Name = name + " " + i,
-                        Address = address.Clone()
 
-                    });
+                    var fix = new Fixture(mode, patch);
+                    fix.Name = name + " " + i;
+                    if (increment)
+                    {
+                        fix.Address = address.Clone();
+                        fix.Address.DmxAddress += fix.InputAddressCount * i;
+                    }
+                    else {
+                        fix.Address = address.Clone();
+                    }
+                    
+                    fixtures.Add(fix);
                 }
 
                 StateManager.Instance.State.FixturePool.AddRange(fixtures);

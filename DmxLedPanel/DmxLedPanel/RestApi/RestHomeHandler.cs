@@ -14,10 +14,21 @@ namespace DmxLedPanel.RestApi
 
         public override void HandleRequest(HttpListenerContext context)
         {
+            createUiConfigFile(context);
             string html = FileIO.ReadFile(SettingManager.Instance.Settings.UIHomePath + UI_FILE_NAME, false);
             WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_HTML, html);
         }
 
+        private void createUiConfigFile(HttpListenerContext context)
+        {
+            var settings = SettingManager.Instance.Settings;
+            var file = settings.UIHomePath + settings.UIRelJavascriptPath + "config.js";
+            var url = context.Request.Url.AbsoluteUri.Replace("?react_perf", "");
+            //Console.WriteLine(url);
 
+            UIConfig config = new UIConfig { host = url };
+            var js = "document.ledPanelUiConfig = " + StaticSerializer.Serialize(config);
+            FileIO.WriteFile(file, false, js);
+        }
     }
 }

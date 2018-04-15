@@ -85,6 +85,7 @@
     <Compile Include="RestApi\RestPageNotFoundHandler.cs" />
     <Compile Include="RestApi\RestResourceFileHandler.cs" />
     <Compile Include="RestApi\RestSaveStateHandler.cs" />
+    <Compile Include="RestApi\UIConfig.cs" />
     <Compile Include="State\StateManager.cs" />
     <Compile Include="Template\FixtureTemplate.cs" />
     <Compile Include="IDmxPacketHandler.cs" />

@@ -28,7 +28,7 @@ namespace DmxLedPanel.RestApi
             catch (Exception e) {
                 WriteErrorMessage(context, e);
             }
-
+          
 
         }
     }

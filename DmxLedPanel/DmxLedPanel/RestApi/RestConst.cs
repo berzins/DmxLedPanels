@@ -22,7 +22,7 @@ namespace DmxLedPanel.RestApi
 
         public const int RESPONSE_NOT_FOUND = 404;
 
-        public const int RESPONSE_INTERNAL_ERROR = 500;
+        public const int RESPONSE_INTERNAL_ERROR = 260;
 
     }
 }

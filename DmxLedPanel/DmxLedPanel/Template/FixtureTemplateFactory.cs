@@ -14,7 +14,8 @@ namespace DmxLedPanel.Template
                 Name = f.Name,
                 Address = f.Address,
                 PixelPatch = new PixelPatchTemplate(f.PixelPatch),
-                Mode = new ModeTemplate(f.getMode())
+                Mode = new ModeTemplate(f.getMode()),
+                PatchedTo = f.PatchedTo
             };
         }
     }

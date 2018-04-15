@@ -24,6 +24,7 @@ namespace DmxLedPanel.RestApi
             byte[] data)
         {
             var response = context.Response;
+            response.AddHeader("Access-Control-Allow-Origin", "*");
             response.StatusCode = status;
             response.ContentType = contType;
             response.ContentLength64 = data.Length;

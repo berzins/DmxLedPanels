@@ -67,5 +67,7 @@ namespace DmxLedPanel.Util
         public int RestApiPort { get; set; }
 
         public string UIHomePath { get; set; }
+
+        public string UIRelJavascriptPath { get; set; }
     }
 }

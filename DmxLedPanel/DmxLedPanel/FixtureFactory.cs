@@ -13,6 +13,7 @@ namespace DmxLedPanel
             return new Fixture(getMode(fixTemplate), getPatchType(fixTemplate)) {
                 Name = fixTemplate.Name,
                 Address = fixTemplate.Address
+           
             };
         }
 

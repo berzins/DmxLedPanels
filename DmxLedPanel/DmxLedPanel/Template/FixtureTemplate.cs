@@ -21,7 +21,7 @@ namespace DmxLedPanel
         public Address Address { get; set; }
         public PixelPatchTemplate PixelPatch { get; set; }
         public ModeTemplate Mode { get; set; }
-
+        public int PatchedTo { get; set; } = -1;
 
     }
 }

@@ -54,6 +54,11 @@ namespace DmxLedPanel
 
         public Address Address { get; set; }
 
+        /// <summary>
+        /// -1 if upatched otherwise value indicates output id
+        /// </summary>
+        public int PatchedTo { get; set; } = Output.FIXTURE_UNPATCH;
+
         public int PixelAddressCount {
             get {
                 return 3; // TODO: this is really dumb .. rewrite this for another pixel width support

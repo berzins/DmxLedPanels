@@ -1,1 +1,1 @@
-export const API_URL = "127.0.0.1:8746/"
+export const API_URL = document.ledPanelUiConfig.host

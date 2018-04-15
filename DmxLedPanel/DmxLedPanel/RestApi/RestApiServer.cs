@@ -45,6 +45,9 @@ namespace DmxLedPanel.RestApi
                     while (isRunning) {
                         var context = server.GetContext();
                         IHttpRequestHandler handler = null;
+
+                        Console.WriteLine(context.Request.Url);
+
                         // get relative url cause handlers are sotred by relative keys
                         var url = GetRealtiveUrl(context.Request.Url.ToString());
                         
