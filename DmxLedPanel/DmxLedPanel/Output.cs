@@ -22,9 +22,9 @@ namespace DmxLedPanel
         private int patchedAdresses = 0;
         
 
-        static Output() {
-            idCounter = StateManager.Instance.State.GetLastOutputId() + 1;
-        }
+        //static Output() {
+        //    idCounter = StateManager.Instance.State.GetLastOutputId() + 1;
+        //}
 
         public static void ResetIdCounter() { idCounter = 0; }
 
@@ -77,9 +77,12 @@ namespace DmxLedPanel
             return true;
         }
 
+
         public void OnUpdate(Fixture f) {
+
             updatePending.Remove(f);
-            if (updatePending.Count == 0) {        
+            if (updatePending.Count == 0)
+            {
                 WriteOutput();
                 ResetUpdatePending();
             }
@@ -94,6 +97,14 @@ namespace DmxLedPanel
                 if (f.ID == id) return true;
             }
             return false;
+        }
+
+        public Fixture GetFixture(int id) {
+            foreach (Fixture f in fixtures)
+            {
+                if (f.ID == id) return f;
+            }
+            return null;
         }
 
         public Fixture UnpatchFixture(int id) {
@@ -116,6 +127,18 @@ namespace DmxLedPanel
                 return rmFix;
             }
             return null;
+        }
+
+        public List<Fixture> UnpatchAll() {
+            var fix = new List<Fixture>();
+            foreach (var f in fixtures) {
+                f.PatchedTo = FIXTURE_UNPATCH;
+                f.RemoveUpdateHandler(this);
+                fix.Add(f);
+                fixtures.Remove(f);
+            }
+            patchedAdresses = 0;
+            return fix;
         }
 
         private void WriteOutput() {
@@ -143,7 +166,7 @@ namespace DmxLedPanel
                 copyIndex += 510;
                 writer.Write(pack);
             }
-            ArtNet.Utils.ArtPacketStopwatch.Stop();
+            //ArtNet.Utils.ArtPacketStopwatch.Stop();
             //Console.WriteLine("packet took " + ArtNet.Utils.ArtPacketStopwatch.ElapsedMilliseconds + " mils to process");
         }
 

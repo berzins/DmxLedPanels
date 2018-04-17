@@ -26,7 +26,7 @@ namespace DmxLedPanel.RestApi
                 }
 
                 foreach (int id in ids) {
-                    state.RemoveFixture(id);
+                    state.RemoveFixtureFromFixturePool(id);
                 }
 
                 var data = StateManager.Instance.GetStateSerialized();

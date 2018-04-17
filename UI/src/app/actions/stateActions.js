@@ -9,7 +9,7 @@ export const LOAD_STATE = "LOAD_STATE"
 
 
 // evnets --> additional events to dispatch
-const requestServer = (url, dispatch, events = null) => {
+export const requestServer = (url, dispatch, events = null) => {
     console.log("URL = " + url)
     axios.get(url)
     .then((response) => {
@@ -56,6 +56,18 @@ export const addOutput = (count, data) => {
     }
 }
 
+export const editOutput = (ids, data) => {
+    let url = API_URL + '/editOutput/?' + 
+    'output_id=' + ids.join('|') + 
+    '&name=' + data.name + 
+    '&port=' + data.net + '|' + data.sub + '|' + data.uni +
+    '&increment=' + data.increment 
+
+    return (dispatch) => {
+        requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])
+    }
+}
+
 export const addFixture = (count, data) => {
     
     let url = API_URL + '/createFixture/?' + 
@@ -66,6 +78,65 @@ export const addFixture = (count, data) => {
     '&increment=' + data.increment +
     '&patch_type=' + data.patch + '_' + data.patchCol + '|' + data.patchRow +
     '&mode=' + data.mode + '_' + data.modeCol + '|' + data.modeRow
+
+    return (dispatch) => {
+        requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])
+    }
+}
+
+export const editFixture = (ids, data) => {
+    
+    let url = API_URL + '/editFixture/?' + 
+    'fixture_id=' + ids.join('|') + 
+    '&name=' + data.name + 
+    '&port=' + data.net + '|' + data.sub + '|' + data.uni +
+    '&address=' + data.addr +
+    '&increment=' + data.increment +
+    '&patch_type=' + data.patch + '_' + data.patchCol + '|' + data.patchRow +
+    '&mode=' + data.mode + '_' + data.modeCol + '|' + data.modeRow
+
+    return (dispatch) => {
+        requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])
+    }
+}
+
+export const editFixtureName = (ids, data) => {
+    let url = API_URL + '/editFixtureName/?' + 
+    'fixture_id=' + ids.join('|') + 
+    '&name=' + data.name
+    return (dispatch) => {
+        requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])
+    }
+}
+
+export const editFixtureAddress = (ids, data) => {
+    console.log("Edit fixture address trigered")
+
+    let url = API_URL + '/editFixtureAddress/?' + 
+    'fixture_id=' + ids.join('|') + 
+    '&port=' + data.net + '|' + data.sub + '|' + data.uni +
+    '&address=' + data.addr +
+    '&increment=' + data.increment 
+
+    return (dispatch) => {
+        requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])
+    }
+}
+
+export const editFixtureMode = (ids, data) => {
+    let url = API_URL + '/editFixtureMode/?' + 
+    'fixture_id=' + ids.join('|') + 
+    '&mode=' + data.mode + '_' + data.modeCol + '|' + data.modeRow
+
+    return (dispatch) => {
+        requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])
+    }
+}
+
+export const editFixturePatch = (ids, data) => {
+    let url = API_URL + '/editFixturePixelPatch/?' + 
+    'fixture_id=' + ids.join('|') + 
+    '&patch_type=' + data.patch + '_' + data.patchCol + '|' + data.patchRow
 
     return (dispatch) => {
         requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])
@@ -129,6 +200,24 @@ export const getSavedStates = () => {
     const url = API_URL + '/getSavedStates/'
     return(dispatch) => {
         requestServer(url, dispatch, [SAVED_STATES_UPDATED])
+    }
+}
+
+
+export const HIGHLIGHT_STATE_UPDATED = "HIGHLIGHT_STATE_UPDATED"
+
+export const getHighlightState = () => {
+    const url = API_URL + '/getHighlightState/'
+    return(dispatch) => {
+        requestServer(url, dispatch, [HIGHLIGHT_STATE_UPDATED])
+    }
+}
+
+export const enableHighlight = (on) => {
+    const url = API_URL + '/enableHighlight/?enabled=' + 
+    (on ? "true" : "false")
+    return(dispatch) => {
+        requestServer(url, dispatch, [HIGHLIGHT_STATE_UPDATED])
     }
 }
 

@@ -18,11 +18,10 @@ namespace DmxLedPanel
         private IPixelPatch pixelPatch;
         private IMode mode;
 
-        static Fixture()
-        {
-            idCounter = StateManager.Instance.State.GetLastFixtureId() + 1;
-
-        }
+        //static Fixture()
+        //{
+        //    idCounter = StateManager.Instance.State.GetLastFixtureId() + 1;
+        //}
 
         /// <summary>
         /// Use this with caution.. 
@@ -86,18 +85,31 @@ namespace DmxLedPanel
         }
 
         public void SetMode(IMode m) {
-            Fields = m.GetFields(pixelPatch.GetPixelPatch());
+            this.mode = m;
+            Fields = this.mode.GetFields(pixelPatch.GetPixelPatch());
             addressCount = 0;
             foreach (Field  f in Fields) {
                 addressCount += f.Pixels.Count * f.Pixels[0].AddressCount;     
             }
         }
 
-        public IMode getMode() {
-            return this.mode;
+        /// <summary>
+        /// Will fail if fixture is pattched to output
+        /// </summary>
+        /// <param name="patch"></param>
+        /// <returns>Return true if patch was successful / false if not</returns>
+        public bool TrySetPatch(IPixelPatch patch) {
+            if (PatchedTo == Output.FIXTURE_UNPATCH) {
+                this.pixelPatch = patch;
+                SetMode(this.mode);
+                return true;
+            }
+            return false;
         }
 
-        
+        public IMode getMode() {
+            return this.mode;
+        }        
 
         public void AddUpdateHandler(IFixtureUpdateHandler handler) {
             if (!updateHandlers.Contains(handler)) {
@@ -123,9 +135,30 @@ namespace DmxLedPanel
                     .Select(x => (int)x).ToArray();
                 f.SetDmxValues(dmx);
             }
+            Update();
+        }
+
+        public void Update() {
             foreach (IFixtureUpdateHandler fuh in updateHandlers)
             {
                 fuh.OnUpdate(this);
+            }
+        }
+
+        public void SetHighlight(bool on) {
+            if (on)
+            {
+                updateAllValuesTo(255);
+            }
+            else {
+                updateAllValuesTo(0);
+            }
+        }
+
+        private void updateAllValuesTo(int inteisty) {
+            foreach (Field f in Fields)
+            {
+                f.SetDmxValues(Enumerable.Repeat(inteisty, f.AddressCount).ToArray());
             }
         }
     }

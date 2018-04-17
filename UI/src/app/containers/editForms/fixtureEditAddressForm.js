@@ -2,28 +2,21 @@ import React, {Component} from 'react'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import Modal from 'react-bootstrap4-modal' 
-import { fixtureFormReducer, formErrorReducer } from '../reducers/formReducers'
-import { closeFixtureForm, riseFormValueError, MODE_NEW, MODE_EDIT } from '../actions/formActions'
-import { addFixture, editFixture } from '../actions/stateActions'
-import { FixtureMode, FixturePatch, isInteger } from '../util/util'
-import store from '../store'
+import { fixtureEditAddressFormReducer, formErrorReducer } from '../../reducers/formReducers'
+import { closeEditFixtureAddressForm, riseFormValueError } from '../../actions/formActions'
+import { editFixtureAddress } from '../../actions/stateActions'
+import { isInteger } from '../../util/util'
+import store from '../../store'
 
-const FORM_ID_NAME = "FORM_ID_NAME"
-const FOMR_ID_PATCH = "FOMR_ID_PATCH"
-const FORM_ID_PATCH_COLS = "FORM_ID_PATCH_COLS"
-const FORM_ID_PATCH_ROWS = "FORM_ID_PATCH_ROWS"
-const FORM_ID_MODE = "FORM_ID_MODE"
-const FORM_ID_MODE_COLS = "FORM_ID_MODE_COLS"
-const FORM_ID_MODE_ROWS = "FORM_ID_MODE_ROWS"
-const FORM_ID_PORT_NET = "FORM_ID_PORT_NET"
-const FORM_ID_PORT_SUB = "FORM_ID_PORT_SUB"
-const FORM_ID_PORT_UNI = "FORM_ID_PORT_UNI"
-const FORM_ID_PORT_ADR = "FORM_ID_PORT_ADR"
-const FORM_ID_ADR_INCREM = "FORM_ID_ADR_INCREM"
-const FORM_ID_COUNT = "FORM_ID_COUNT"
+const FORM_ID_PORT_NET = "EDIT_FIXTURE_FORM_ID_PORT_NET"
+const FORM_ID_PORT_SUB = "EDIT_FIXTURE_FORM_ID_PORT_SUB"
+const FORM_ID_PORT_UNI = "EDIT_FIXTURE_FORM_ID_PORT_UNI"
+const FORM_ID_PORT_ADR = "EDIT_FIXTURE_FORM_ID_PORT_ADR"
+const FORM_ID_ADR_INCREM = "EDIT_FIXTURE_FORM_ID_ADR_INCREM"
 
 
-class FixtureForm extends Component {
+
+class FixtureEditAddressForm extends Component {
 
     constructor(props){
         super(props) 
@@ -122,7 +115,7 @@ class FixtureForm extends Component {
     }
 
     onClose(){
-        this.props.closeFixtureForm(this)
+        this.props.closeEditFixtureAddressForm(this)
     }
 
     validate(validatons) {
@@ -147,13 +140,6 @@ class FixtureForm extends Component {
         let ids = store.getState().selectionReducer.fixtures
         
         let data = {
-            name : this.getValue(FORM_ID_NAME),
-            patch : this.getValue(FOMR_ID_PATCH),
-            patchCol : this.getValue(FORM_ID_PATCH_COLS),
-            patchRow : this.getValue(FORM_ID_PATCH_ROWS),
-            mode : this.getValue(FORM_ID_MODE),
-            modeCol: this.getValue(FORM_ID_MODE_COLS),
-            modeRow : this.getValue(FORM_ID_MODE_ROWS),
             net : this.getValue(FORM_ID_PORT_NET),
             sub : this.getValue(FORM_ID_PORT_SUB),
             uni : this.getValue(FORM_ID_PORT_UNI),
@@ -170,13 +156,9 @@ class FixtureForm extends Component {
             this.props.riseFormValueError(res)
             return;
         }
-        if(this.props.form.mode == MODE_NEW) {
-            this.props.addFixture(count, data)    
-        } else {
-            this.props.editFixture(ids, data)          
-        }
-
-        this.props.closeFixtureForm(null)
+        
+        this.props.editFixtureAddress(ids, data)
+        this.props.closeEditFixtureAddressForm(this)
     }
 
 
@@ -193,7 +175,6 @@ class FixtureForm extends Component {
         }
         return(
             <div></div>
-     
         )
     }
 
@@ -201,37 +182,16 @@ class FixtureForm extends Component {
 
     render() {
         let form = this.props.form
-        let patchVals = this.fillIncrementArray(30, 1)
         let portVals = this.fillIncrementArray(16, 0)
-        let modeVals = [1, 3, 9]
         return(
             <Modal visible={form.opened} onClickBackdrop={() => this.onClose() }>
                 <div className="modal-header">
-                <h5 className="modal-title">{this.getTitle(form.mode)}</h5>
+                <h5 className="modal-title">Edit fixture address</h5>
                 </div>
                 <div className="modal-body">
                 {this.renderError()}
                 <form>
                 <div className="form-row align-items-center">
-
-                    {this.createRowItem([
-                        this.createTextInputItem("Name", FORM_ID_NAME, "Fixture"),
-                        this.createTextInputItem("Count", FORM_ID_COUNT, 1)
-                    ])}
-                    {this.createRowItem([
-                        this.createSelectItem("Patch type", FOMR_ID_PATCH, FixturePatch.all())
-                    ])} 
-                    {this.createRowItem([
-                        this.createSelectItem("Patch columns", FORM_ID_PATCH_COLS, patchVals),
-                        this.createSelectItem("Patch rows", FORM_ID_PATCH_ROWS, patchVals)
-                    ])}
-                    {this.createRowItem([
-                        this.createSelectItem("Mode", FORM_ID_MODE, FixtureMode.all())
-                    ])}
-                    {this.createRowItem([
-                        this.createSelectItem("Mode Columns", FORM_ID_MODE_COLS, modeVals),
-                        this.createSelectItem("Mode Rows", FORM_ID_MODE_ROWS, modeVals)
-                    ])}
                     {this.createRowItem([
                         this.createSelectItem("Net", FORM_ID_PORT_NET, portVals),
                         this.createSelectItem("SubNet", FORM_ID_PORT_SUB, portVals),
@@ -253,7 +213,7 @@ class FixtureForm extends Component {
                     Klancel
                 </button>
                 <button type="button" className="btn btn-primary" onClick={ () => this.onSubmit() }>
-                    {this.getSumbitTitle(form.mode)}
+                    Edit
                 </button>
                 </div>
             </Modal>
@@ -263,18 +223,17 @@ class FixtureForm extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        form: state.fixtureFormReducer,
+        form: state.fixtureEditAddressFormReducer,
         error: state.formErrorReducer
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
-        addFixture: addFixture,
-        editFixture: editFixture,
-        closeFixtureForm: closeFixtureForm,
+        editFixtureAddress: editFixtureAddress,
+        closeEditFixtureAddressForm: closeEditFixtureAddressForm,
         riseFormValueError: riseFormValueError
     }, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FixtureForm)
+export default connect(mapStateToProps, mapDispatchToProps)(FixtureEditAddressForm)

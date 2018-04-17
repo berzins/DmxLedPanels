@@ -100,6 +100,17 @@ namespace DmxLedPanel.State
             return null;
         }
 
+        public List<Output> GetOutputs(int[] ids) {
+            var outs = new List<Output>();
+            foreach (var id in ids) {
+                var o = GetOutput(id);
+                if (o != null) {
+                    outs.Add(o);
+                }
+            }
+            return outs;
+        }
+
         public Output GetOutputByFixture(int id) {
             foreach (Output o in Outputs) {
                 foreach (Fixture f in o.GetFixtures()) {
@@ -109,20 +120,44 @@ namespace DmxLedPanel.State
             return null;
         }
 
-        public Fixture GetFixture(int id) {
+        public Fixture GetFixtureFromFixturePool(int id) {
             foreach (Fixture f in FixturePool) {
                 if (f.ID == id) return f;
+            }
+            foreach (var o in Outputs) {
+                var f = o.GetFixture(id);
+                if (f != null) return f;
             }
             return null;
         }
 
-        public List<Fixture> GetFixtures(int[] ids) {
+        public List<Fixture> GetFixturesFromFixturePool(int[] ids) {
             List<Fixture> fl = new List<Fixture>();
             foreach (int id in ids) {
-                fl.Add(GetFixture(id));
+                fl.Add(GetFixtureFromFixturePool(id));
             }
             return fl;
         }
+
+        public List<Fixture> GetFixture(int id) {
+            var fix = new List<Fixture>();
+            foreach (var f in GetAllFixtures()) {
+                if (f.ID == id) fix.Add(f);
+            }
+            return fix;
+        }
+
+        public List<Fixture> GetFixtures(int [] ids) {
+            var fix = new List<Fixture>();
+            foreach (var f in GetAllFixtures()) {
+                foreach (var id in ids) {
+                    if (f.ID == id) fix.Add(f);
+                }
+            }
+            return fix;
+        }
+
+        
 
         /// <summary>
         /// Removes output with all its content from State Outputs
@@ -143,8 +178,8 @@ namespace DmxLedPanel.State
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Fixture RemoveFixture(int id) {
-            var f = GetFixture(id);
+        public Fixture RemoveFixtureFromFixturePool(int id) {
+            var f = GetFixtureFromFixturePool(id);
             if (f != null) {
                 FixturePool.Remove(f);
                 return f;
@@ -152,15 +187,15 @@ namespace DmxLedPanel.State
             return null;
         }
 
-        public List<Fixture> RemoveFixtures(int [] ids) {
+        public List<Fixture> RemoveFixturesFromFixturePool(int [] ids) {
             List<Fixture> fixtures = new List<Fixture>();
             foreach (int id in ids) {
-                fixtures.Add(RemoveFixture(id));
+                fixtures.Add(RemoveFixtureFromFixturePool(id));
             }
             return fixtures;
         }
 
-        public List<Fixture> RemoveFixtures(List<Fixture> fixtures) {
+        public List<Fixture> RemoveFixturesFromFixturePool(List<Fixture> fixtures) {
             foreach (Fixture f in fixtures) {
                 FixturePool.Remove(f);
             }
@@ -173,7 +208,7 @@ namespace DmxLedPanel.State
         }
 
         public bool ContainFixture(int id) {
-            return GetFixture(id) != null ? true : false;
+            return GetFixtureFromFixturePool(id) != null ? true : false;
         }
 
         public List<Fixture> GetPatchedFixtures() {

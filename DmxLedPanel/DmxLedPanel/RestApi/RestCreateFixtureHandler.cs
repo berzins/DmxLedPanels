@@ -44,14 +44,16 @@ namespace DmxLedPanel.RestApi
                     }
                 };
 
-                IMode mode = getFixtureMode(q.Get(KEY_MODE));
-                IPixelPatch patch = getPixelPatch(q.Get(KEY_PATCH_TYPE));
+ 
                 bool increment = bool.Parse(q.Get(KEY_INCREMENT));
 
                 for (int i = 0; i < int.Parse(q.Get(KEY_COUNT)); i++)
                 {
 
-                    var fix = new Fixture(mode, patch);
+                    var fix = new Fixture(
+                        getFixtureMode(q.Get(KEY_MODE)), 
+                        getPixelPatch(q.Get(KEY_PATCH_TYPE))
+                        );
                     fix.Name = name + " " + i;
                     if (increment)
                     {
@@ -79,7 +81,7 @@ namespace DmxLedPanel.RestApi
         /// Figure out 'KEY_PATCH_TYPE' parmeter
         /// Expected syntax is [patch type name] VALUE_SPILTTER [columns] PARAM_SPILTTER [rows]
         /// </summary>
-        private IPixelPatch getPixelPatch(string param) {
+        public static IPixelPatch getPixelPatch(string param) {
             string[] args = param.Split(VALUE_SPLITTER);
             if (args[0].Equals(PixelPatch.PIXEL_PATCH_SNAKE_COLUMNWISE_TOP_LEFT)) {
                 int[] dim = args[1].Split(PARAM_SPLITTER).Select(x => int.Parse(x)).ToArray();
@@ -93,7 +95,7 @@ namespace DmxLedPanel.RestApi
         /// Figure out 'KEY_MODE' parmeter
         /// Expected syntax is [mode name] VALUE_SPILTTER [columns] PARAM_SPILTTER [rows]
         /// </summary>
-        private IMode getFixtureMode(string param) {
+        public static IMode getFixtureMode(string param) {
             string[] args = param.Split(VALUE_SPLITTER);
             if (args[0].Equals(Mode.MODE_GRID_TOP_LEFT)) {
                 int[] dim = args[1].Split(PARAM_SPLITTER).Select(x => int.Parse(x)).ToArray();

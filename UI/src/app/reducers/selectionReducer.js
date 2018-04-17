@@ -34,6 +34,13 @@ const printSomething = (state) => {
     )
 }
 
+const removeItem = (array, id) => {
+    const index = array.indexOf(id)
+    if(index > -1) { 
+        array.splice(index, 1)
+    }
+}
+
 const selectFixture = (state, id) => {
     if(state.hasOutput) {
         state = {...init, fixtures: [], outputs: [] }
@@ -60,7 +67,8 @@ const selectOutput = (state, id) => {
 }
 
 const deselectFixture = (state, id) => {
-    let fix = state.fixtures.filter(fixId => { if(fixId !== id) {return fixId} })
+    removeItem(state.fixtures, id)
+    const fix = state.fixtures
     let hasFix = fix.length > 0 ? true : false
     const onlyFix = hasFix && !state.hasOutput
     return {
@@ -73,7 +81,8 @@ const deselectFixture = (state, id) => {
 }
 
 const deselectOutput = (state, id) => {
-    let out = state.outputs.filter(outId => {if(outId  !== id) { return outId} })
+    removeItem(state.outputs, id)
+    let out = state.outputs
     let hasOut = out.length > 0 ? true : false
     const onlyOut = hasOut && !state.hasFixture
     return {
@@ -105,7 +114,7 @@ export const selectionReducer = (state = init, action) => {
 
         case DESELECT_OUTPUT: {
             let s = deselectOutput(state, action.payload.id)
-            s
+            return s
         }
 
         case DESELECT_ALL: {

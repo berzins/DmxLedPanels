@@ -110,3 +110,78 @@ export const selectFile = (fileItemId) => {
     }
 }
 
+
+// ------------- edit form actions ----------------
+
+export const OPEN_EDIT_FIXTURE_NAME_FORM = "OPEN_EDIT_FIXTURE_NAME_FORM"
+
+export const openEditFixtureNameForm = (data = null) => {
+    return dispatch => {
+        dispatch({type: OPEN_EDIT_FIXTURE_NAME_FORM, payload:data})
+    }
+}
+
+
+export const OPEN_EDIT_FIXTURE_ADDRESS_FORM = "OPEN_EDIT_FIXTURE_ADDRESS_FORM"
+
+export const openEditFixtureAddressForm = (data = null) => {
+    return dispatch => {
+        dispatch({type: OPEN_EDIT_FIXTURE_ADDRESS_FORM, payload:data})
+    }
+}
+
+
+export const OPEN_EDIT_FIXTURE_MODE_FORM = "OPEN_EDIT_FIXTURE_MODE_FORM"
+
+export const openEditFixtureModeForm = (data = null) => {
+    return dispatch => {
+        dispatch({type: OPEN_EDIT_FIXTURE_MODE_FORM, payload:data})
+    }
+}
+
+
+export const OPEN_EDIT_FIXTURE_PATCH_FORM = "OPEN_EDIT_FIXTURE_PATCH_FORM"
+
+export const openEditFixturePatchForm = (data = null) => {
+    return dispatch => {
+        dispatch({type: OPEN_EDIT_FIXTURE_PATCH_FORM, payload:data})
+    }
+}
+
+
+export const CLOSE_EDIT_FIXTURE_NAME_FORM = "CLOSE_EDIT_FIXTURE_NAME_FORM"
+
+export const closeEditFixtureNameForm = (data = null) => {
+    return dispatch => {
+        dispatch({type: CLOSE_EDIT_FIXTURE_NAME_FORM, payload:data})
+    }
+}
+
+
+export const CLOSE_EDIT_FIXTURE_ADDRESS_FORM = "CLOSE_EDIT_FIXTURE_ADDRESS_FORM"
+
+export const closeEditFixtureAddressForm = (data = null) => {
+    return dispatch => {
+        dispatch({type: CLOSE_EDIT_FIXTURE_ADDRESS_FORM, payload:data})
+    }
+}
+
+
+export const CLOSE_EDIT_FIXTURE_MODE_FORM = "CLOSE_EDIT_FIXTURE_MODE_FORM"
+
+export const closeEditFixtureModeForm = (data = null) => {
+    return dispatch => {
+        dispatch({type: CLOSE_EDIT_FIXTURE_MODE_FORM, payload:data})
+    }
+}
+
+
+export const CLOSE_EDIT_FIXTURE_PATCH_FORM = "CLOSE_EDIT_FIXTURE_PATCH_FORM"
+
+export const closeEditFixturePatchForm = (data = null) => {
+    return dispatch => {
+        dispatch({type: CLOSE_EDIT_FIXTURE_PATCH_FORM, payload:data})
+    }
+}
+
+// ------------- end of edit forms ----------------------------

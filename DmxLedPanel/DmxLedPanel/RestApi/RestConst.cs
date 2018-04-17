@@ -8,6 +8,8 @@ namespace DmxLedPanel.RestApi
 {
     public static class RestConst
     {
+        public const string CONTETN_TEST_PLAIN = "text/plain";
+
         public const string CONTENT_TEXT_HTML = "text/html";
 
         public const string CONTENT_TEXT_JSON = "application/json";

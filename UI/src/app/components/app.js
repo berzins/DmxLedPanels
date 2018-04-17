@@ -9,7 +9,11 @@ import LoadButton from '../containers/loadButton'
 import StoreStateForm from '../containers/storeStateForm'
 import LoadStateForm from '../containers/loadStateForm'
 import DeselectButton from '../containers/deselectButton'
-
+import HighlightButton from '../containers/hilightButton' 
+import FixtureEditNameForm from '../containers/editForms/fixtureEditNameForm'
+import FixtureEditAddressForm from '../containers/editForms/fixtureEditAddressForm'
+import FixtureEditModeform from '../containers/editForms/fixtureEditModeForm'
+import FixtureEditPatchFrom from '../containers/editForms/fixtureEditPatchForm'
 
 class App extends Component { 
 
@@ -30,9 +34,10 @@ class App extends Component {
         return(
             <div className="container-fluid">
                 <div className= "col-12 btn-group">
-                    <SaveButton className='' click={this.click}/>
-                    <LoadButton className='btn-margin-right' click={this.click}/>
-                    <DeselectButton className='btn-margin-right' click={this.click}/>
+                    <SaveButton  click={this.click}/>
+                    <LoadButton  click={this.click}/>
+                    <HighlightButton click={this.click}/>
+                    <DeselectButton click={this.click}/>
 
                 </div>
 
@@ -43,7 +48,11 @@ class App extends Component {
                 <FixtureForm click={this.click}/>  
                 <OutputForm click={this.click}/>
                 <StoreStateForm click={this.click}/>  
-                <LoadStateForm click={this.click}/>    
+                <LoadStateForm click={this.click}/>
+                <FixtureEditNameForm click={this.click}/>
+                <FixtureEditAddressForm click={this.click}/>  
+                <FixtureEditModeform click={this.click}/>  
+                <FixtureEditPatchFrom click={this.click}/>
             </div>
         )
     }

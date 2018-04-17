@@ -5,6 +5,9 @@ import FixturePool from './fixturePool'
 import OutputPool from './outputPool'
 import UnpatchField from './unpatchField'
 import { loadState } from '../actions/stateActions'
+import AddFixtureButton from './addFixtureButton'
+import DeleteFixtureButton from './deleteFixtureButton'
+import EditFixtureButton from './edditFixtureButton'
 
 class ItemContainer extends Component {
 
@@ -44,11 +47,28 @@ class ItemContainer extends Component {
                     outputs={this.props.state.data.Outputs} />
                 </div>
                 <div className="col-4">
-                    <FixturePool
-                    click={this.props.click} 
-                    fixtures={this.props.state.data.FixturePool}
-                    patchedFix={outFix}
-                    />
+                <div className="row">
+                    <div className="col-12 btn-group">
+                        <AddFixtureButton click={this.props.click}/>
+                        <EditFixtureButton click={this.props.click}/>
+                        <DeleteFixtureButton click={this.props.click}/>
+                    </div>
+                    <div className="col-12">
+                        <FixturePool
+                        click={this.props.click} 
+                        fixtures={this.props.state.data.FixturePool}
+                        patchedFix={outFix}
+                        />
+                    </div>
+                </div> 
+
+
+
+
+
+
+
+                    
                 </div>
                 
                 </div>

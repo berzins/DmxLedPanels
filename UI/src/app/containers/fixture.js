@@ -8,8 +8,9 @@ import {
     getPortString
 } from '../util/util'
 import { selectFixture, deselectFixture } from '../actions/selectActions'
+import { highlight } from '../actions/actions'
 import { selectionReducer } from '../reducers/selectionReducer'
-import { store } from '../store'
+import store from '../store'
 
 
 
@@ -27,6 +28,12 @@ class Fixture extends Component {
             this.selected = !this.selected
             return true
         }
+
+        if(this.props.fixture != nextProps.fixture) {
+            return true
+        }
+        
+
         return false
     }
 
@@ -43,6 +50,10 @@ class Fixture extends Component {
     }
 
     render() {
+
+        if(store.getState().hilightStateReducer.on) {
+            this.props.highlight();
+        }
 
         this.mode = getShortNameFixtureMode(this.props.fixture.Mode)
         this.patch = getShortNameFixturePatch(this.props.fixture.PixelPatch)
@@ -79,7 +90,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
         selectFixture: selectFixture,
-        deselectFixture: deselectFixture
+        deselectFixture: deselectFixture,
+        highlight: highlight        
     },dispatch)
 }
 

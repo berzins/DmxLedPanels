@@ -8,7 +8,21 @@ namespace DmxLedPanel
 {
     public class Pixel
     {
-        
+
+        public Pixel() { }
+
+        // copy constructor
+        protected Pixel(int index, int[] dmxVals, int[] dmxAddr, int addrCount) {
+            this.AddressCount = addrCount;
+            this.Index = index;
+            for (int i = 0; i < dmxVals.Length; i++) {
+                DmxValues[i] = dmxVals[i];
+            }
+            for (int i = 0; i < dmxAddr.Length; i++) {
+                DmxAddresses[i] = dmxAddr[i];
+            }
+        }
+
         private int addressCount = 0;
 
         public int Index { get; set; }
@@ -24,6 +38,10 @@ namespace DmxLedPanel
                 this.DmxAddresses = new int[value];
                 this.addressCount = value;
             }
+        }
+
+        public Pixel Clone() {
+            return new Pixel(Index, DmxValues, DmxAddresses, AddressCount);
         }
     }
 }

@@ -26,5 +26,15 @@ namespace DmxLedPanel
                 DmxAddress = this.DmxAddress
             };
         }
+
+        public static Address operator +(Address a, int lenght) {
+            if ((a.DmxAddress + lenght) > 512) {
+                a.Port++;
+                a.DmxAddress = 1;
+                return a.Clone();
+            }
+            a.DmxAddress += lenght;
+            return a.Clone();
+        }
     }
 }

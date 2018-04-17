@@ -3,8 +3,13 @@ import {
     STATE_CHANGE_SERVER_ERROR,
     CONNECTION_ERROR,
     LOAD_STATE,
-    SAVED_STATES_UPDATED
+    SAVED_STATES_UPDATED,
+    getHighlightState
 } from '../actions/stateActions'
+
+import {
+    SOMETHING_HIGHLIGHTED
+} from '../actions/actions'
 
 const init = {
     data: null,
@@ -49,6 +54,27 @@ export const savedStatesReducer = (state = savedInit, action) => {
             if(action.payload.Type == 'saved_states') {
                 return {...state, names: action.payload.Content}
             }
+        }
+    }
+    return state
+}
+
+
+import { HIGHLIGHT_STATE_UPDATED } from '../actions/stateActions'
+
+const highlightInit = {
+    on: false,
+    fixtures: []
+}
+
+export const hilightStateReducer = (state = getHighlightState, action) => {
+    switch(action.type) {
+        case HIGHLIGHT_STATE_UPDATED: {
+            return {...state, on: action.payload.Content}
+        }
+        case SOMETHING_HIGHLIGHTED: {
+            console.log(action.payload)
+            return {...state, fixtures: action.payload.Content}
         }
     }
     return state

@@ -2,9 +2,6 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import Fixture from './fixture'
-import AddFixtureButton from './addFixtureButton'
-import DeselectButton from './deselectButton'
-import DeleteFixtureButton from './deleteFixtureButton'
 import { unpatchFixture } from '../actions/stateActions'
 import { stateReducer } from '../reducers/stateReducer'
 import  store  from '../store'
@@ -68,19 +65,11 @@ class FixturePool extends Component {
     render() {
         return(
             <div 
-            className="output"
+            className="output fixture-pool"
             onClick={() => this.handleClick()}
             >
                 <div className="row">
-                    <div className="col-12 btn-group">
-                        <AddFixtureButton click={this.props.click}/>
-                        <DeleteFixtureButton click={this.props.click}/>
-                    </div>
-                    <div className="col-12">
-                        <div className="row">
-                            {this.renderFixtures(this.props.fixtures)}
-                        </div>
-                    </div>
+                    {this.renderFixtures(this.props.fixtures)}
                 </div>      
             </div>
         );

@@ -33,14 +33,19 @@ namespace DmxLedPanel.RestApi
                     throw new ArgumentException("State outputs does not contain output with id '" + outId + "'");
                 }
 
-                var fixtures = state.GetFixtures(fixIds);
+                var fixtures = state.GetFixturesFromFixturePool(fixIds);
                 var success = state.GetOutput(outId).
                     TryPatchFixtures(fixtures);
                 if (!success) {
                     throw new ArgumentOutOfRangeException("Faild to patch fixtures.. not enough address space");
                 }
 
-                state.RemoveFixtures(fixtures);
+                state.RemoveFixturesFromFixturePool(fixtures);
+
+                ArtnetIn.Instance.UpdateDmxPacketListeners(
+                    StateManager.Instance.State.GetPatchedFixtures().
+                    Select(x => (IDmxPacketHandler)x).ToList()
+                    );
 
                 var data = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, data);

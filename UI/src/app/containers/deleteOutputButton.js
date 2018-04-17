@@ -18,7 +18,7 @@ class DeleteOutputButton extends Component {
         let s = this.props.selection
         return(
             <div
-            className={"button btn btn-danger item-button " + (!s.onlyOutput ? 'disabled' : '')} 
+            className={"button btn btn-danger item-button " + (!s.hasOutput ? 'disabled' : '')} 
             autoComplete="off"
             onClick={() => this.handleClick()}
             >

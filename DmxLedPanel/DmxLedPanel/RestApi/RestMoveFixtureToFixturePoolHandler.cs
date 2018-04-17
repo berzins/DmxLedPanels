@@ -23,7 +23,6 @@ namespace DmxLedPanel.RestApi
                 var state = StateManager.Instance.State; 
                 var fixOutMap = new List<FixtureOutputMap>();
                
-                
                 foreach (int id in fixIds) {
                     var output = state.GetOutputByFixture(id);
                     if (output == null) {
@@ -38,10 +37,13 @@ namespace DmxLedPanel.RestApi
                             fom.FixtureId));
                 }
 
-                var data = StateManager.Instance.GetStateSerialized();
-                WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, data);
+                ArtnetIn.Instance.UpdateDmxPacketListeners(
+                    StateManager.Instance.State.GetPatchedFixtures().
+                    Select(x => (IDmxPacketHandler)x).ToList()
+                    );
 
-                
+                var data = StateManager.Instance.GetStateSerialized();
+                WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, data);   
             }
             catch (Exception e) {
                 WriteErrorMessage(context, e);

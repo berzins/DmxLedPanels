@@ -5,6 +5,8 @@ import { selectOutput, deselectOutput } from '../actions/selectActions'
 import { selectionReducer } from '../reducers/selectionReducer'
 import { patchFixture } from '../actions/stateActions'
 import { ItemInfoRow } from '../components/itemInfoRow'
+import store from '../store'
+import { highlight } from '../actions/actions'
 
 class OutputButton extends Component {
 
@@ -35,7 +37,7 @@ class OutputButton extends Component {
 
     handleClick() {
         this.props.click.clicked = true
-        if(this.props.selection.onlyFixture) {     
+        if(this.props.selection.onlyFixture) {    
             this.props.patchFixture(this.props.selection.fixtures, this.id)
         }
         const action = this.selected ? this.props.deselectOutput : this.props.selectOutput
@@ -53,6 +55,9 @@ class OutputButton extends Component {
     }
 
     render() {
+        if(store.getState().hilightStateReducer.on) {
+            this.props.highlight();
+        }
         return(
             <div
             id={this.htmlId}
@@ -83,7 +88,8 @@ const mapDeispatchToProps = (dispatch) => {
     {
         selectOutput: selectOutput,
         deselectOutput: deselectOutput,
-        patchFixture: patchFixture
+        patchFixture: patchFixture,
+        highlight: highlight
     },dispatch)
 }
 

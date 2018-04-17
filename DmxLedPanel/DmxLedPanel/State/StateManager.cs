@@ -16,20 +16,25 @@ namespace DmxLedPanel.State
         public static readonly string DEFAULT_STATE_FILE = "default.json";
 
         private static StateManager instance;
+        private static object syncRoot = new Object();
 
         private FixedSizeStack<string> stateStack;
 
         private State state;
 
         private StateManager() {
-            LoadState(DEFAULT_STATE_FILE);
+            //LoadState(DEFAULT_STATE_FILE);
             stateStack = new FixedSizeStack<string>(DEFAULT_STATE_STACK_SIZE);
         }
 
         public static StateManager Instance {
             get {
                 if (instance == null) {
-                    instance = new StateManager();
+                    lock (syncRoot) {
+                        if (instance == null) {
+                            instance = new StateManager();
+                        }
+                    }
                 }
                 return instance;
             }
@@ -49,13 +54,26 @@ namespace DmxLedPanel.State
 
         public void LoadState(string file)
         {
+
+            Console.WriteLine("load state triggered");
             // a little hack for a bad desing :(.
             // zero out fixture/output counter cause
             // the fixture/output constructor increments smallest id in current items.
+
+
             Fixture.ResetIdCounter();
             Output.ResetIdCounter();
 
+            // release artnet listeners
+            ArtnetIn.Instance.ClearDmxPacketListeners();
+
+            //load state
             this.state = getStateFromFile(file);
+
+            // connect state to artnet inupt
+            ArtnetIn.Instance.AddDmxPacketListeners(
+                this.state.GetPatchedFixtures().Select(x => (IDmxPacketHandler)x).ToList()
+                );
         }
 
         // Serialize the state and put in the 'undo' stack;

@@ -32,10 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ArtNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Libraries\ArtNet\ArtNet\ArtNet\bin\Debug\ArtNet.dll</HintPath>
-    </Reference>
     <Reference Include="DmxPatch">
       <HintPath>..\..\..\..\..\take with me\Documents\Visual Studio 2015\Projects\ClassLibrary3\ClassLibrary3\bin\Debug\DmxPatch.dll</HintPath>
     </Reference>
@@ -59,6 +55,7 @@
     <Compile Include="Converter.cs" />
     <Compile Include="FileIO.cs" />
     <Compile Include="FixtureFactory.cs" />
+    <Compile Include="GetHighlihgtStateHandler.cs" />
     <Compile Include="Modes\Mode.cs" />
     <Compile Include="PixelPatch.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -66,6 +63,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RestApi\RestEditFixtureAddressHandler.cs" />
+    <Compile Include="RestApi\RestEditFixtureNameHandler.cs" />
+    <Compile Include="RestApi\RestEditFixturePixelPatchHandler.cs" />
+    <Compile Include="RestApi\RestEditOutputHandler.cs" />
+    <Compile Include="RestApi\GetHighlightStateHandler.cs" />
     <Compile Include="RestApi\HttpRequestHandler.cs" />
     <Compile Include="RestApi\IHttpRequestHandler.cs" />
     <Compile Include="RestApi\ResponseMessage.cs" />
@@ -75,8 +77,12 @@
     <Compile Include="RestApi\RestCreateOutputHandler.cs" />
     <Compile Include="RestApi\RestDeleteFixtureHandler.cs" />
     <Compile Include="RestApi\RestDeleteOutputHandler.cs" />
+    <Compile Include="RestApi\RestEditFixtureHandler.cs" />
+    <Compile Include="RestApi\RestEnableHighlightHandler.cs" />
+    <Compile Include="RestApi\RestFixtureEditModeHandler.cs" />
     <Compile Include="RestApi\RestGetSavedStates.cs" />
     <Compile Include="RestApi\RestGetStateHandler.cs" />
+    <Compile Include="RestApi\RestHighlightHandler.cs" />
     <Compile Include="RestApi\RestHomeHandler.cs" />
     <Compile Include="RestApi\RestLoadStateHandler.cs" />
     <Compile Include="RestApi\RestMoveFixtureToFixturePoolHandler.cs" />
@@ -86,6 +92,7 @@
     <Compile Include="RestApi\RestResourceFileHandler.cs" />
     <Compile Include="RestApi\RestSaveStateHandler.cs" />
     <Compile Include="RestApi\UIConfig.cs" />
+    <Compile Include="State\HighlightState.cs" />
     <Compile Include="State\StateManager.cs" />
     <Compile Include="Template\FixtureTemplate.cs" />
     <Compile Include="IDmxPacketHandler.cs" />
@@ -127,6 +134,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IntallNotes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Libraries\ArtNet\ArtNet\ArtNet\ArtNet.csproj">
+      <Project>{188c5ef2-1406-4ed3-80f8-32f9921721ba}</Project>
+      <Name>ArtNet</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

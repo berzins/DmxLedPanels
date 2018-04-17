@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ArtNet.ArtPacket;
+using System.Net;
+using DmxLedPanel.State;
 
 namespace DmxLedPanel
 {
@@ -14,10 +16,11 @@ namespace DmxLedPanel
         private ArtNetReader reader;
         private ArtDispatcher dispatcher;
         private List<IDmxPacketHandler> dmxPacketHandlers;
+        private bool paused = false;
 
         private ArtnetIn() {
             dispatcher = initDispatcher();
-            reader = new ArtNetReader(dispatcher);
+            reader = new ArtNetReader(dispatcher, IPAddress.Parse("192.168.0.100"));
             dmxPacketHandlers = new List<IDmxPacketHandler>();
         }
 
@@ -48,6 +51,21 @@ namespace DmxLedPanel
                 AddDmxPacketListener(h);
             }
         }
+
+        public List<IDmxPacketHandler> ClearDmxPacketListeners() {
+            var r = new List<IDmxPacketHandler>();
+            foreach (IDmxPacketHandler h in dmxPacketHandlers) {
+                r.Add(h);
+            }
+            dmxPacketHandlers.Clear();
+            return r;
+        }
+
+        public void UpdateDmxPacketListeners(List<IDmxPacketHandler> handlers) {
+            ClearDmxPacketListeners();
+            AddDmxPacketListeners(handlers);
+        }
+
 
         private ArtDispatcher initDispatcher() {
             ArtDispatcher d = new ArtDispatcher();

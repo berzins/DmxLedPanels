@@ -27,6 +27,14 @@
     height: 100%;
 }
 
+.fixture-pool {
+    padding-bottom: 2em;
+    border-width: 1px;
+    border-bottom-style: solid;
+    border-top-style: solid;
+    border-color: orange;
+}
+
 .btn-margin-right {
     margin-right: 4px;
 }

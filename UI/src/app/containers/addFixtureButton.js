@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
-import { openFixtureForm, MODE_NEW } from '../actions/formActions'
+import { openFixtureForm, MODE_NEW, MODE_EDIT } from '../actions/formActions'
 
 
 class AddFixtureButton extends Component {

@@ -107,3 +107,83 @@ export const formErrorReducer = (state = null, actoin) => {
     }
     return state;
 }
+
+
+
+// --------------- edit reducers -----------------------
+
+
+import { 
+    OPEN_EDIT_FIXTURE_NAME_FORM,
+    CLOSE_EDIT_FIXTURE_NAME_FORM
+} from '../actions/formActions'
+
+export const fixtureEditNameFormReducer = (state = init, action) => {
+    switch(action.type) {
+        case OPEN_EDIT_FIXTURE_NAME_FORM: {
+            return {...state, opened: true, mode: MODE_DEFAULT, data: action.payload }
+        }
+        case CLOSE_EDIT_FIXTURE_NAME_FORM: {
+            return {...state, opened: false, mode: null, data: action.payload}
+        }
+    }
+    return state
+}
+
+
+
+import { 
+    OPEN_EDIT_FIXTURE_ADDRESS_FORM,
+    CLOSE_EDIT_FIXTURE_ADDRESS_FORM
+} from '../actions/formActions'
+
+export const fixtureEditAddressFormReducer = (state = init, action) => {
+    switch(action.type) {
+        case OPEN_EDIT_FIXTURE_ADDRESS_FORM: {
+            return {...state, opened: true, mode: MODE_DEFAULT, data: action.payload }
+        }
+        case CLOSE_EDIT_FIXTURE_ADDRESS_FORM: {
+            return {...state, opened: false, mode: null, data: action.payload}
+        }
+    }
+    return state
+}
+
+
+
+import { 
+    OPEN_EDIT_FIXTURE_MODE_FORM,
+    CLOSE_EDIT_FIXTURE_MODE_FORM
+} from '../actions/formActions'
+
+export const fixtureEditModeFormReducer = (state = init, action) => {
+    switch(action.type) {
+        case OPEN_EDIT_FIXTURE_MODE_FORM: {
+            return {...state, opened: true, mode: MODE_DEFAULT, data: action.payload }
+        }
+        case CLOSE_EDIT_FIXTURE_MODE_FORM: {
+            return {...state, opened: false, mode: null, data: action.payload}
+        }
+    }
+    return state
+}
+
+
+
+import { 
+    OPEN_EDIT_FIXTURE_PATCH_FORM,
+    CLOSE_EDIT_FIXTURE_PATCH_FORM
+    
+} from '../actions/formActions'
+
+export const fixtureEditPatchFormReducer = (state = init, action) => {
+    switch(action.type) {
+        case OPEN_EDIT_FIXTURE_PATCH_FORM: {
+            return {...state, opened: true, mode: MODE_DEFAULT, data: action.payload }
+        }
+        case CLOSE_EDIT_FIXTURE_PATCH_FORM: {
+            return {...state, opened: false, mode: null, data: action.payload}
+        }
+    }
+    return state
+}

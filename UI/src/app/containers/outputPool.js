@@ -9,6 +9,7 @@ import { deselectAll } from '../actions/selectActions'
 
 class OutputPool extends Component {
 
+    
     createOutputItems(outputs) {
         return outputs.map((out, i) => {
             return(
@@ -20,10 +21,6 @@ class OutputPool extends Component {
     }
 
     handleClick() {
-        console.log(this.props.click)
-        if(this.props.click.clicked != true) {
-            this.props.deselectAll()
-        }
         this.props.click.clicked = true
     }
 

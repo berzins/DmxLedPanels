@@ -25,14 +25,23 @@ namespace DmxLedPanel.RestApi
             addRequestHandler("/", new RestHomeHandler());
             addRequestHandler("/getState/", new RestGetStateHandler());
             addRequestHandler("/createFixture/", new RestCreateFixtureHandler());
-            addRequestHandler("/createOutput/", new RestCreateOutputHandler());
-            addRequestHandler("/deleteOutput/", new RestDeleteOutputHandler());
+            addRequestHandler("/editFixture/", new RestEditFixtureHandler());
+            addRequestHandler("/editFixtureName/", new RestEditFixtureNameHandler());
+            addRequestHandler("/editFixtureAddress/", new RestEditFixtureAddressHandler());
+            addRequestHandler("/editFixtureMode/", new RestEditFixtureModeHandler());
+            addRequestHandler("/editFixturePixelPatch/", new RestEditFixturePixelPatchHandler());
             addRequestHandler("/deleteFixture/", new RestDeleteFixtureHandler());
+            addRequestHandler("/createOutput/", new RestCreateOutputHandler());
+            addRequestHandler("/editOutput/", new RestEditOutputHandler());
+            addRequestHandler("/deleteOutput/", new RestDeleteOutputHandler());    
             addRequestHandler("/moveFixtureToOutput/", new RestMoveFixtureToOutputHandler());
             addRequestHandler("/moveFixtureToFixturePool/", new RestMoveFixtureToFixturePoolHandler());
             addRequestHandler("/saveState/", new RestSaveStateHandler());
             addRequestHandler("/loadState/", new RestLoadStateHandler());
             addRequestHandler("/getSavedStates/", new RestGetSavedStates());
+            addRequestHandler("/enableHighlight/", new RestEnableHighlightHandler());
+            addRequestHandler("/highlight/", new RestHighlightHandler());
+            addRequestHandler("/getHighlightState/", new GetHighlightStateHandler());
         }
         
         public void Start() {
