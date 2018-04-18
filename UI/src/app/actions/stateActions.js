@@ -17,7 +17,6 @@ export const requestServer = (url, dispatch, events = null) => {
             if(events !== null) {
                 events.forEach(e => {
                     dispatch({type: e, payload: response.data})
-                    console.log(e + " dispatched")
                 });
             }
         } else {
@@ -49,6 +48,7 @@ export const addOutput = (count, data) => {
     'count=' + count + 
     '&name=' + data.name + 
     '&port=' + data.net + '|' + data.sub + '|' + data.uni +
+    '&ip=' + data.ip.replace(/\./g, "_") +
     '&increment=' + data.increment 
 
     return (dispatch) => {
@@ -67,6 +67,37 @@ export const editOutput = (ids, data) => {
         requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])
     }
 }
+
+export const editOutputName = (ids, data) => {
+    let url = API_URL + '/editOutputName/?' + 
+    'output_id=' + ids.join('|') + 
+    '&name=' + data.name 
+
+    return (dispatch) => {
+        requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])
+    }
+}
+
+export const editOutputPort = (ids, data) => {
+    let url = API_URL + '/editOutputPort/?' + 
+    'output_id=' + ids.join('|') + 
+    '&port=' + data.net + '|' + data.sub + '|' + data.uni
+
+    return (dispatch) => {
+        requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])
+    }
+}
+
+export const editOutputIp = (ids, data) => {
+    let url = API_URL + '/editOuotputIP/?' + 
+    'output_id=' + ids.join('|') + 
+    '&ip=' + data.ip 
+
+    return (dispatch) => {
+        requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])
+    }
+}
+
 
 export const addFixture = (count, data) => {
     
@@ -221,7 +252,19 @@ export const enableHighlight = (on) => {
     }
 }
 
+export const undoState = () => {
+    const url = API_URL + '/undoState/?'
+    return (dispatch) => {
+        requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])
+    }
+}
 
+export const redoState = () => {
+    const url = API_URL + '/redoState/?'
+    return (dispatch) => {
+        requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])
+    }
+}
 
 
 

@@ -12,6 +12,7 @@ namespace DmxLedPanel.RestApi
     {
         public static readonly string KEY_NAME = "name";
         public static readonly string KEY_PORT = "port";
+        public static readonly string KEY_IP = "ip";
         public static readonly string KEY_COUNT = "count";
 
 
@@ -19,20 +20,23 @@ namespace DmxLedPanel.RestApi
         {
             var q = context.Request.QueryString;
             List<Output> outputs = new List<Output>();
-
-            var name = q.Get(KEY_NAME);
-            var pv = getIntArgArray(q.Get(KEY_PORT));
-            var port = new Port() { Net = pv[0], SubNet = pv[1], Universe = pv[2] };
             
             try
             {
+
+                var name = q.Get(KEY_NAME);
+                var pv = getIntArgArray(q.Get(KEY_PORT));
+                var port = new Port() { Net = pv[0], SubNet = pv[1], Universe = pv[2] };
+                var ip = q.Get(KEY_IP).Replace('_', '.');
+
                 for (int i = 0; i < int.Parse(q.Get(KEY_COUNT)); i++) {
                     var ports = new List<Port>();
                     ports.Add(port++);
                     ports.Add(port++);
                     outputs.Add(new Output() {
                         Name = name + " " + i,
-                        Ports = ports
+                        Ports = ports,
+                        IP = ip
                     });    
                 }
                 StateManager.Instance.State.Outputs.AddRange(outputs);

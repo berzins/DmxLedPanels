@@ -19,6 +19,7 @@ namespace DmxLedPanel.Template
         public string Name { get; set; }
         public List<Port> Ports { get; set; }
         public List<FixtureTemplate> Fixtures { get; set; }
+        public string IPAddress { get; set; }
 
     }
 }

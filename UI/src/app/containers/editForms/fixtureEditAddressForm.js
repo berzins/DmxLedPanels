@@ -3,7 +3,7 @@ import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import Modal from 'react-bootstrap4-modal' 
 import { fixtureEditAddressFormReducer, formErrorReducer } from '../../reducers/formReducers'
-import { closeEditFixtureAddressForm, riseFormValueError } from '../../actions/formActions'
+import { closeEditFixtureAddressForm, riseFormValueError, clearFormValueError } from '../../actions/formActions'
 import { editFixtureAddress } from '../../actions/stateActions'
 import { isInteger } from '../../util/util'
 import store from '../../store'
@@ -158,6 +158,7 @@ class FixtureEditAddressForm extends Component {
         }
         
         this.props.editFixtureAddress(ids, data)
+        this.props.clearFormValueError()
         this.props.closeEditFixtureAddressForm(this)
     }
 
@@ -232,7 +233,8 @@ const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
         editFixtureAddress: editFixtureAddress,
         closeEditFixtureAddressForm: closeEditFixtureAddressForm,
-        riseFormValueError: riseFormValueError
+        riseFormValueError: riseFormValueError,
+        clearFormValueError: clearFormValueError
     }, dispatch)
 }
 

@@ -48,12 +48,14 @@ namespace DmxLedPanel.State
                 foreach (Port p in o.Ports) {
                     output.Ports.Add(p);
                 }
+
                 // add fixtures
                 foreach (FixtureTemplate ft in o.Fixtures) {
                     Fixture f = FixtureFactory.createFixture(ft);
                     f.Name = ft.Name;
                     output.TryPatchFixture(f);
                 }
+                output.IP = o.IPAddress;
                 output.Name = o.Name;
                 state.Outputs.Add(output);
             }
@@ -77,6 +79,7 @@ namespace DmxLedPanel.State
                 ot.ID = o.ID;
                 ot.Ports = o.Ports;
                 ot.Name = o.Name;
+                ot.IPAddress = o.IP;
                 foreach (Fixture f in o.GetFixtures()) {
                     ot.Fixtures.Add(FixtureTemplateFactory.createFixtureTemplate(f));
                 }

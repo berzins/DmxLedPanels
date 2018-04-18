@@ -14,6 +14,11 @@ import FixtureEditNameForm from '../containers/editForms/fixtureEditNameForm'
 import FixtureEditAddressForm from '../containers/editForms/fixtureEditAddressForm'
 import FixtureEditModeform from '../containers/editForms/fixtureEditModeForm'
 import FixtureEditPatchFrom from '../containers/editForms/fixtureEditPatchForm'
+import OutputEditNameForm from '../containers/editForms/outputEditNameForm'
+import OutputEditPortForm from '../containers/editForms/outputEditPortForm'
+import ButtonUndoState from '../containers/menuButtons/undoButton'
+import ButtonRedoState from '../containers/menuButtons/redoButton'
+import OutputEditIpForm from '../containers/editForms/outputEditIpForm'
 
 class App extends Component { 
 
@@ -36,6 +41,8 @@ class App extends Component {
                 <div className= "col-12 btn-group">
                     <SaveButton  click={this.click}/>
                     <LoadButton  click={this.click}/>
+                    <ButtonUndoState click={this.click}/>
+                    <ButtonRedoState click={this.click}/>
                     <HighlightButton click={this.click}/>
                     <DeselectButton click={this.click}/>
 
@@ -53,6 +60,9 @@ class App extends Component {
                 <FixtureEditAddressForm click={this.click}/>  
                 <FixtureEditModeform click={this.click}/>  
                 <FixtureEditPatchFrom click={this.click}/>
+                <OutputEditNameForm click={this.click}/>
+                <OutputEditPortForm click={this.click}/>
+                <OutputEditIpForm click={this.click}/>
             </div>
         )
     }

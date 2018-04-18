@@ -18,7 +18,7 @@ const init = {
 }
 
 export const stateReducer = (state = init, action) => {
-
+    console.log(action.type)
     switch(action.type) {
         case LOAD_STATE: {
             return{...sate, loaded:false, error: null, data:null }
@@ -73,7 +73,6 @@ export const hilightStateReducer = (state = getHighlightState, action) => {
             return {...state, on: action.payload.Content}
         }
         case SOMETHING_HIGHLIGHTED: {
-            console.log(action.payload)
             return {...state, fixtures: action.payload.Content}
         }
     }

@@ -98,11 +98,15 @@ export const fileSelectedReducer = (state = fileInit, action)  =>{
 }
 
 
+import { CLEAR_VALUE_ERROR } from '../actions/formActions'
 
 export const formErrorReducer = (state = null, actoin) => {
     switch(actoin.type) {
         case FORM_VALUE_ERROR: {
             return actoin.payload
+        }
+        case CLEAR_VALUE_ERROR: {
+            return null
         }
     }
     return state;
@@ -119,15 +123,11 @@ import {
 } from '../actions/formActions'
 
 export const fixtureEditNameFormReducer = (state = init, action) => {
-    switch(action.type) {
-        case OPEN_EDIT_FIXTURE_NAME_FORM: {
-            return {...state, opened: true, mode: MODE_DEFAULT, data: action.payload }
-        }
-        case CLOSE_EDIT_FIXTURE_NAME_FORM: {
-            return {...state, opened: false, mode: null, data: action.payload}
-        }
-    }
-    return state
+    return genericEditFormEventHandler(
+        state, action,
+        OPEN_EDIT_FIXTURE_NAME_FORM,
+        CLOSE_EDIT_FIXTURE_NAME_FORM
+    )
 }
 
 
@@ -138,15 +138,11 @@ import {
 } from '../actions/formActions'
 
 export const fixtureEditAddressFormReducer = (state = init, action) => {
-    switch(action.type) {
-        case OPEN_EDIT_FIXTURE_ADDRESS_FORM: {
-            return {...state, opened: true, mode: MODE_DEFAULT, data: action.payload }
-        }
-        case CLOSE_EDIT_FIXTURE_ADDRESS_FORM: {
-            return {...state, opened: false, mode: null, data: action.payload}
-        }
-    }
-    return state
+    return genericEditFormEventHandler(
+        state, action,
+        OPEN_EDIT_FIXTURE_ADDRESS_FORM,
+        CLOSE_EDIT_FIXTURE_ADDRESS_FORM
+    )
 }
 
 
@@ -157,15 +153,11 @@ import {
 } from '../actions/formActions'
 
 export const fixtureEditModeFormReducer = (state = init, action) => {
-    switch(action.type) {
-        case OPEN_EDIT_FIXTURE_MODE_FORM: {
-            return {...state, opened: true, mode: MODE_DEFAULT, data: action.payload }
-        }
-        case CLOSE_EDIT_FIXTURE_MODE_FORM: {
-            return {...state, opened: false, mode: null, data: action.payload}
-        }
-    }
-    return state
+    return genericEditFormEventHandler(
+        state, action,
+        OPEN_EDIT_FIXTURE_MODE_FORM,
+        CLOSE_EDIT_FIXTURE_MODE_FORM
+    )
 }
 
 
@@ -177,11 +169,61 @@ import {
 } from '../actions/formActions'
 
 export const fixtureEditPatchFormReducer = (state = init, action) => {
+    return genericEditFormEventHandler(
+        state, action,
+        OPEN_EDIT_FIXTURE_PATCH_FORM,
+        CLOSE_EDIT_FIXTURE_PATCH_FORM
+    )
+}
+
+import { 
+    OPEN_EDIT_OUTPUT_NAME_FORM,
+    CLOSE_EDIT_OUTPUT_NAME_FORM
+    
+} from '../actions/formActions'
+
+export const outputEditNameFormReducer = (state = init, action) => {
+    return genericEditFormEventHandler(
+        state, action,
+        OPEN_EDIT_OUTPUT_NAME_FORM,
+        CLOSE_EDIT_OUTPUT_NAME_FORM
+    )
+}
+
+
+import { 
+    OPEN_EDIT_OUTPUT_PORT_FORM,
+    CLOSE_EDIT_OUTPUT_PORT_FORM
+} from '../actions/formActions'
+
+export const outputEditPortFormReducer = (state = init, action) => {
+    return genericEditFormEventHandler(
+        state, action,
+        OPEN_EDIT_OUTPUT_PORT_FORM,
+        CLOSE_EDIT_OUTPUT_PORT_FORM
+    )
+}
+
+import {
+    OPEN_EDIT_OUTPUT_IP_FORM,
+    CLOSE_EDIT_OUTPUT_IP_FORM
+} from '../actions/formActions'
+
+export const outputEditIpFormReducer = (state = init, action) => {
+    return genericEditFormEventHandler(
+        state, action,
+        OPEN_EDIT_OUTPUT_IP_FORM,
+        CLOSE_EDIT_OUTPUT_IP_FORM
+    )
+}
+
+
+const genericEditFormEventHandler = (state, action, open, close) => {
     switch(action.type) {
-        case OPEN_EDIT_FIXTURE_PATCH_FORM: {
+        case open: {
             return {...state, opened: true, mode: MODE_DEFAULT, data: action.payload }
         }
-        case CLOSE_EDIT_FIXTURE_PATCH_FORM: {
+        case close: {
             return {...state, opened: false, mode: null, data: action.payload}
         }
     }

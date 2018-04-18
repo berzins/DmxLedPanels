@@ -3,6 +3,7 @@ using DmxLedPanel.State;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,16 +11,22 @@ namespace DmxLedPanel
 {
     public class Output : IFixtureUpdateHandler
     {
+
+        public static readonly IPAddress DEFAULT_IP = IPAddress.Parse("255.255.255.255");
+
         public static readonly int FIXTURE_UNPATCH = -1;
         private static readonly int PORT_ADDRESS_COUNT = 510;
         private static readonly int PORT_COUNT = 2;
         private static int idCounter = 0;
+
 
         private List<Fixture> fixtures, updatePending;
 
         private List<Port> ports;
         private int addressCount;
         private int patchedAdresses = 0;
+        private IPAddress ipAddress;
+        private ArtNet.ArtNetWritter writer;
         
 
         //static Output() {
@@ -35,6 +42,8 @@ namespace DmxLedPanel
             Ports = new List<Port>(PORT_COUNT);
             ID = idCounter++;
             Name = "Output " + ID;
+            ipAddress = IPAddress.Parse("255.255.255.255");
+            writer = new ArtNet.ArtNetWritter(ipAddress);
         }
 
         public int ID { get; private set; }
@@ -49,6 +58,24 @@ namespace DmxLedPanel
                 }
                 ports = new List<Port>();
                 ports.AddRange(value);
+            }
+        }
+
+        public string IP {
+            get {
+                return ipAddress.ToString();
+            }
+            set {
+                    bool valid = IPAddress.TryParse(value, out ipAddress);
+                    if (valid)
+                    {
+                        writer = new ArtNet.ArtNetWritter(ipAddress);
+                    }
+                    else {
+                        Console.WriteLine("not valid ip address - outpt address set to " + DEFAULT_IP);
+                        ipAddress = DEFAULT_IP;
+                        writer = new ArtNet.ArtNetWritter(ipAddress);
+                    }
             }
         }
         
@@ -150,8 +177,6 @@ namespace DmxLedPanel
                 Array.Copy(f.DmxValues, 0, dmxValues, copyIndex, f.DmxValues.Length);
                 copyIndex += f.DmxValues.Length;
             }
-
-            var writer = ArtnetOut.Instance.Writer;
 
             List<ArtDmxPacket> packets = new List<ArtDmxPacket>();
 

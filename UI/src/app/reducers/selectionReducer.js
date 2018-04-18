@@ -76,7 +76,7 @@ const deselectFixture = (state, id) => {
         fixtures: fix,
         hasFixture: hasFix,
         onlyFixture: onlyFix,
-        onlyOutput: !onlyFix
+        onlyOutput: (!onlyFix && state.hasOutput)
     }
 }
 
@@ -90,7 +90,7 @@ const deselectOutput = (state, id) => {
         outputs: out,
         hasOutput: hasOut,
         onlyOutput: onlyOut,
-        onlyFixture:!onlyOut
+        onlyFixture: (!onlyOut && state.hasFixture)
     }
 }
 

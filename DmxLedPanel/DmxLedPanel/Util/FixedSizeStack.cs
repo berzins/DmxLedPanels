@@ -26,8 +26,16 @@ namespace DmxLedPanel.Util
             items.Add(item);
         }
 
+        public int Count { get { return items.Count; } }
+
         public void Clear() {
             items = new List<T>();
+        }
+
+        public T this[int i] {
+            get {
+                return items[(items.Count - 1) - i];
+            }
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -39,7 +47,7 @@ namespace DmxLedPanel.Util
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return this.GetEnumerator();
         }
     }
 }

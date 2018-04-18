@@ -102,6 +102,15 @@ export const riseFormValueError = (msg) => {
 }
 
 
+export const CLEAR_VALUE_ERROR = "CLEAR_VALUE_ERROR"
+
+export const clearFormValueError = (msg = null) => {
+    return (dispatch) => {
+        dispatch({type: CLEAR_VALUE_ERROR, payload:msg })
+    }
+}
+
+
 export const SELECT_FILE = "SELECT_FILE"
 
 export const selectFile = (fileItemId) => { 
@@ -181,6 +190,57 @@ export const CLOSE_EDIT_FIXTURE_PATCH_FORM = "CLOSE_EDIT_FIXTURE_PATCH_FORM"
 export const closeEditFixturePatchForm = (data = null) => {
     return dispatch => {
         dispatch({type: CLOSE_EDIT_FIXTURE_PATCH_FORM, payload:data})
+    }
+}
+
+export const OPEN_EDIT_OUTPUT_NAME_FORM = "OPEN_EDIT_OUTPUT_NAME_FORM"
+
+export const openEditOutputNameForm = (data = null)  =>{
+    return dispatch => {
+        dispatch({type: OPEN_EDIT_OUTPUT_NAME_FORM, payload: data})
+    }
+}
+
+
+export const OPEN_EDIT_OUTPUT_PORT_FORM = "OPEN_EDIT_OUTPUT_PORT_FORM"
+
+export const openEditOutputPortForm = (data = null)  =>{
+    return dispatch => {
+        dispatch({type: OPEN_EDIT_OUTPUT_PORT_FORM, payload: data})
+    }
+}
+
+export const OPEN_EDIT_OUTPUT_IP_FORM = "OPEN_EDIT_OUTPUT_IP_FORM"
+
+export const openEditOutputIpForm = (data = null)  =>{
+    return dispatch => {
+        dispatch({type: OPEN_EDIT_OUTPUT_IP_FORM, payload: data})
+    }
+}
+
+
+export const CLOSE_EDIT_OUTPUT_NAME_FORM = "CLOSE_EDIT_OUTPUT_NAME_FORM"
+
+export const closeEditOutputNameForm = (data = null)  =>{
+    return dispatch => {
+        dispatch({type: CLOSE_EDIT_OUTPUT_NAME_FORM, payload: data})
+    }
+}
+
+
+export const CLOSE_EDIT_OUTPUT_PORT_FORM = "CLOSE_EDIT_OUTPUT_PORT_FORM"
+
+export const closeEditOutputPortForm = (data = null)  =>{
+    return dispatch => {
+        dispatch({type: CLOSE_EDIT_OUTPUT_PORT_FORM, payload: data})
+    }
+}
+
+export const CLOSE_EDIT_OUTPUT_IP_FORM = "CLOSE_EDIT_OUTPUT_IP_FORM"
+
+export const closeEditOutputIpForm = (data = null)  =>{
+    return dispatch => {
+        dispatch({type: CLOSE_EDIT_OUTPUT_IP_FORM, payload: data})
     }
 }
 

@@ -90,16 +90,20 @@ namespace DmxLedPanel
 
         private class ArtDmxListener : ArtnetListener
         {
+            private object synclock = new object();
             public ArtDmxListener(ArtnetIn artin) : base(artin)
             {
             }
 
             public override void Action(Packet p)
             {
-                foreach(IDmxPacketHandler h in artin.dmxPacketHandlers)
+                lock (synclock)
                 {
-                    h.HandlePacket((ArtDmxPacket)p);
-                }
+                    foreach (IDmxPacketHandler h in artin.dmxPacketHandlers)
+                    {
+                        h.HandlePacket((ArtDmxPacket)p);
+                    }
+                } 
             }
         }
 

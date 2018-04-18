@@ -12,18 +12,19 @@ class OutputButton extends Component {
 
     constructor(props) {
         super(props)
-        this.id = props.data.id
-        this.name = props.data.name
-        this.ports = props.data.ports
         this.selected = false
-        this.htmlId = this.id + this.name
+        this.htmlId = this.props.data.id + this.props.data.name
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if(this.selected != this.isSelected(this.id, nextProps.selection)) {
+        if(this.selected != this.isSelected(this.props.data.id, nextProps.selection)) {
             this.selected = !this.selected
             return true
         }
+        if(this.props.data != nextProps.data) {
+            return true
+        }
+
         return false
     }
 
@@ -37,11 +38,12 @@ class OutputButton extends Component {
 
     handleClick() {
         this.props.click.clicked = true
+        console.log("this.props.selection.onlyFixture = " + this.props.selection.onlyFixture)
         if(this.props.selection.onlyFixture) {    
-            this.props.patchFixture(this.props.selection.fixtures, this.id)
+            this.props.patchFixture(this.props.selection.fixtures, this.props.data.id)
         }
         const action = this.selected ? this.props.deselectOutput : this.props.selectOutput
-        action(this.id, false)
+        action(this.props.data.id, false)
         
     }
 
@@ -69,8 +71,12 @@ class OutputButton extends Component {
             autoComplete="off"
             onClick={() => this.handleClick() }
             >
-                <div><b>{this.name}</b></div>
-                { this.getPorts(this.ports) }
+                <div><b>{this.props.data.name}</b></div>
+                { this.getPorts(this.props.data.ports) }
+                <ItemInfoRow 
+                name={"IP"} 
+                value={this.props.data.ip} 
+                key={this.props.data.ip + this.props.data.id}/>
             </div>
         );
 

@@ -14,7 +14,10 @@ import {
     fixtureEditNameFormReducer,
     fixtureEditAddressFormReducer,
     fixtureEditModeFormReducer,
-    fixtureEditPatchFormReducer
+    fixtureEditPatchFormReducer,
+    outputEditNameFormReducer,
+    outputEditPortFormReducer,
+    outputEditIpFormReducer
 } from './formReducers'
 import {selectionReducer, poolItemSelectedReducer} from './selectionReducer'
 
@@ -33,7 +36,10 @@ const reducers = combineReducers(
         fixtureEditNameFormReducer: fixtureEditNameFormReducer,
         fixtureEditAddressFormReducer: fixtureEditAddressFormReducer,
         fixtureEditModeFormReducer: fixtureEditModeFormReducer,
-        fixtureEditPatchFormReducer: fixtureEditPatchFormReducer
+        fixtureEditPatchFormReducer: fixtureEditPatchFormReducer,
+        outputEditNameFormReducer: outputEditNameFormReducer,
+        outputEditPortFormReducer: outputEditPortFormReducer,
+        outputEditIpFormReducer: outputEditIpFormReducer
     }
 );
 

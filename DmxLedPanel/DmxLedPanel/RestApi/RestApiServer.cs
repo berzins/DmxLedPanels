@@ -19,7 +19,7 @@ namespace DmxLedPanel.RestApi
 
         public RestApiServer()
         {
-            requestHandlers = new Dictionary<string, IHttpRequestHandler>();
+            requestHandlers = new Dictionary<string, IHttpRequestHandler>(); 
             port = SettingManager.Instance.Settings.RestApiPort;
             server = new HttpListener();
             addRequestHandler("/", new RestHomeHandler());
@@ -33,6 +33,9 @@ namespace DmxLedPanel.RestApi
             addRequestHandler("/deleteFixture/", new RestDeleteFixtureHandler());
             addRequestHandler("/createOutput/", new RestCreateOutputHandler());
             addRequestHandler("/editOutput/", new RestEditOutputHandler());
+            addRequestHandler("/editOutputName/", new RestEditOutputNameHandler());
+            addRequestHandler("/editOutputPort/", new RestEditOutputPortHandler());
+            addRequestHandler("/editOuotputIP/", new RestEditOutputIPHandler());
             addRequestHandler("/deleteOutput/", new RestDeleteOutputHandler());    
             addRequestHandler("/moveFixtureToOutput/", new RestMoveFixtureToOutputHandler());
             addRequestHandler("/moveFixtureToFixturePool/", new RestMoveFixtureToFixturePoolHandler());
@@ -42,6 +45,8 @@ namespace DmxLedPanel.RestApi
             addRequestHandler("/enableHighlight/", new RestEnableHighlightHandler());
             addRequestHandler("/highlight/", new RestHighlightHandler());
             addRequestHandler("/getHighlightState/", new GetHighlightStateHandler());
+            addRequestHandler("/undoState/", new RestUndoStateHandler());
+            addRequestHandler("/redoState/", new RestRedoStateHandler());
         }
         
         public void Start() {

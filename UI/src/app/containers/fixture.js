@@ -33,7 +33,6 @@ class Fixture extends Component {
             return true
         }
         
-
         return false
     }
 

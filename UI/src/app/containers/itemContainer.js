@@ -8,6 +8,9 @@ import { loadState } from '../actions/stateActions'
 import AddFixtureButton from './addFixtureButton'
 import DeleteFixtureButton from './deleteFixtureButton'
 import EditFixtureButton from './edditFixtureButton'
+import EditOutputButton from './editOutputButton'
+import AddOutputButton from './addOutputButton'
+import DeleteOutputButton from './deleteOutputButton'
 
 class ItemContainer extends Component {
 
@@ -42,9 +45,18 @@ class ItemContainer extends Component {
             <div className="row">
 
                 <div className="col-8">
+                <div className="row">
+                    <div className='col-12 btn-group'>
+                            <AddOutputButton click={this.props.click}/>
+                            <EditOutputButton click={this.props.click}/>
+                            <DeleteOutputButton click={this.props.click}/>
+                    </div> 
+                    <div className="col-12">
                     <OutputPool 
                     click={this.props.click}
                     outputs={this.props.state.data.Outputs} />
+                    </div>
+                </div>
                 </div>
                 <div className="col-4">
                 <div className="row">

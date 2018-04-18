@@ -78,6 +78,9 @@
     <Compile Include="RestApi\RestDeleteFixtureHandler.cs" />
     <Compile Include="RestApi\RestDeleteOutputHandler.cs" />
     <Compile Include="RestApi\RestEditFixtureHandler.cs" />
+    <Compile Include="RestApi\RestEditOutputIPHandler.cs" />
+    <Compile Include="RestApi\RestEditOutputNameHandler.cs" />
+    <Compile Include="RestApi\RestEditOutputPortHandler.cs" />
     <Compile Include="RestApi\RestEnableHighlightHandler.cs" />
     <Compile Include="RestApi\RestFixtureEditModeHandler.cs" />
     <Compile Include="RestApi\RestGetSavedStates.cs" />
@@ -89,8 +92,10 @@
     <Compile Include="RestApi\RestMoveFixtureToOutputHandler.cs" />
     <Compile Include="RestApi\RestPrefixNotRegistredHandler.cs" />
     <Compile Include="RestApi\RestPageNotFoundHandler.cs" />
+    <Compile Include="RestApi\RestRedoStateHandler.cs" />
     <Compile Include="RestApi\RestResourceFileHandler.cs" />
     <Compile Include="RestApi\RestSaveStateHandler.cs" />
+    <Compile Include="RestApi\RestUndoStateHandler.cs" />
     <Compile Include="RestApi\UIConfig.cs" />
     <Compile Include="State\HighlightState.cs" />
     <Compile Include="State\StateManager.cs" />

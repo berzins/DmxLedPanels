@@ -5,14 +5,6 @@ import OutputButton from './outputButton'
 
 class Output extends Component {
 
-    constructor(props) {
-        super(props)
-        this.fixtures = props.output.Fixtures
-        this.id = props.output.ID
-        this.name = props.output.Name
-        this.ports = props.output.Ports
-    }
-
 
     handleClick() {
         this.props.click.clicked = true
@@ -34,9 +26,10 @@ class Output extends Component {
 
 
     render() {
+        console.log(this.props.output)
         return(
             <div 
-            className="jumbotron output border border-primary"
+            className="jumbotron output border border-primary output-button"
             onClick={() => this.handleClick()}
             >
             <div className="row align-items-center">
@@ -46,7 +39,12 @@ class Output extends Component {
                 col-sm-12
                 col-md-3">
                     <OutputButton 
-                    data={{id: this.id, name: this.name, ports: this.ports}}
+                    data={{
+                        id: this.props.output.ID, 
+                        name: this.props.output.Name, 
+                        ports: this.props.output.Ports,
+                        ip: this.props.output.IPAddress
+                    }}
                     click={this.props.click}
                     />
                 </div>

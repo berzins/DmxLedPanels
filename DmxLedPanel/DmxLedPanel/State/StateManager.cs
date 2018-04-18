@@ -19,6 +19,7 @@ namespace DmxLedPanel.State
         private static object syncRoot = new Object();
 
         private FixedSizeStack<string> stateStack;
+        private int stateStatckIndex = 0;
 
         private State state;
 
@@ -44,7 +45,7 @@ namespace DmxLedPanel.State
             string f = DEFAULT_RELATIVE_STATE_FIEL_PATH + file;
             if (File.Exists(f))
             {
-                return new State().Deserialize<State>(FileIO.ReadFile(f, true));
+                return inflateAndLoadSerializedState(FileIO.ReadFile(f, true));
             }
             else {
                 Console.WriteLine("State file failed to load.. empty state loaded.");
@@ -54,12 +55,14 @@ namespace DmxLedPanel.State
 
         public void LoadState(string file)
         {
+            this.state = getStateFromFile(file);
+            GetStateSerialized();
+        }
 
-            Console.WriteLine("load state triggered");
+        private State inflateAndLoadSerializedState(string serState) {
             // a little hack for a bad desing :(.
             // zero out fixture/output counter cause
             // the fixture/output constructor increments smallest id in current items.
-
 
             Fixture.ResetIdCounter();
             Output.ResetIdCounter();
@@ -68,18 +71,20 @@ namespace DmxLedPanel.State
             ArtnetIn.Instance.ClearDmxPacketListeners();
 
             //load state
-            this.state = getStateFromFile(file);
+            var state = new State().Deserialize<State>(serState);
 
             // connect state to artnet inupt
             ArtnetIn.Instance.AddDmxPacketListeners(
-                this.state.GetPatchedFixtures().Select(x => (IDmxPacketHandler)x).ToList()
+                state.GetPatchedFixtures().Select(x => (IDmxPacketHandler)x).ToList()
                 );
+            return state;
         }
 
         // Serialize the state and put in the 'undo' stack;
         public string GetStateSerialized() {
             string json = this.state.Serialize();
             stateStack.Add(json);
+            stateStatckIndex = 0;
             return json;
         }
 
@@ -92,6 +97,28 @@ namespace DmxLedPanel.State
 
         public string [] GetAllStateFiles() {
            return FileIO.GetFiles(DEFAULT_RELATIVE_STATE_FIEL_PATH, true, false, ".json");
+        }
+
+
+        public State Undo(int steps) {
+            // check if there anything to undo
+            var tempi = this.stateStatckIndex + steps;
+            if (tempi >= stateStack.Count) {
+                return State;
+            }
+            stateStatckIndex += steps;
+            this.state = inflateAndLoadSerializedState(stateStack[stateStatckIndex]);
+            return State;
+        }
+
+        public State Redo(int steps) {
+            var tempi = this.stateStatckIndex - steps;
+            if (tempi < 0) {
+                return State;
+            }
+            stateStatckIndex -= steps;  
+            this.state = inflateAndLoadSerializedState(stateStack[stateStatckIndex]);
+            return State;
         }
     }
 }

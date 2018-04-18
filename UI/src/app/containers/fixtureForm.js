@@ -3,7 +3,7 @@ import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import Modal from 'react-bootstrap4-modal' 
 import { fixtureFormReducer, formErrorReducer } from '../reducers/formReducers'
-import { closeFixtureForm, riseFormValueError, MODE_NEW, MODE_EDIT } from '../actions/formActions'
+import { closeFixtureForm, riseFormValueError, MODE_NEW, MODE_EDIT, clearFormValueError } from '../actions/formActions'
 import { addFixture, editFixture } from '../actions/stateActions'
 import { FixtureMode, FixturePatch, isInteger } from '../util/util'
 import store from '../store'
@@ -145,7 +145,8 @@ class FixtureForm extends Component {
 
         let validatons = [];
         let ids = store.getState().selectionReducer.fixtures
-        
+        const count = this.getValue(FORM_ID_COUNT);
+
         let data = {
             name : this.getValue(FORM_ID_NAME),
             patch : this.getValue(FOMR_ID_PATCH),
@@ -175,7 +176,7 @@ class FixtureForm extends Component {
         } else {
             this.props.editFixture(ids, data)          
         }
-
+        this.props.clearFormValueError()
         this.props.closeFixtureForm(null)
     }
 
@@ -196,8 +197,6 @@ class FixtureForm extends Component {
      
         )
     }
-
-
 
     render() {
         let form = this.props.form
@@ -273,7 +272,8 @@ const mapDispatchToProps = (dispatch) => {
         addFixture: addFixture,
         editFixture: editFixture,
         closeFixtureForm: closeFixtureForm,
-        riseFormValueError: riseFormValueError
+        riseFormValueError: riseFormValueError,
+        clearFormValueError: clearFormValueError
     }, dispatch)
 }
 
