@@ -35,6 +35,14 @@
     border-color: orange;
 }
 
+.output-pool {
+    padding-bottom: 2em;
+    border-width: 1px;
+    border-top-style: solid;
+    /* border-bottom-style: solid; */
+    border-color: cornflowerblue
+}
+
 .btn-margin-right {
     margin-right: 4px;
 }

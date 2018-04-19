@@ -2,7 +2,8 @@ import {combineReducers} from 'redux';
 import {
     stateReducer,
     savedStatesReducer,
-    hilightStateReducer
+    hilightStateReducer,
+    dmxStateReducer
 } from './stateReducer'
 import {
     outputFormReducer, 
@@ -17,7 +18,7 @@ import {
     fixtureEditPatchFormReducer,
     outputEditNameFormReducer,
     outputEditPortFormReducer,
-    outputEditIpFormReducer
+    outputEditIpFormReducer,
 } from './formReducers'
 import {selectionReducer, poolItemSelectedReducer} from './selectionReducer'
 
@@ -39,7 +40,8 @@ const reducers = combineReducers(
         fixtureEditPatchFormReducer: fixtureEditPatchFormReducer,
         outputEditNameFormReducer: outputEditNameFormReducer,
         outputEditPortFormReducer: outputEditPortFormReducer,
-        outputEditIpFormReducer: outputEditIpFormReducer
+        outputEditIpFormReducer: outputEditIpFormReducer,
+        dmxStateReducer: dmxStateReducer
     }
 );
 

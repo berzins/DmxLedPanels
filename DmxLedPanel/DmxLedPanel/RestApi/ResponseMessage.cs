@@ -11,6 +11,7 @@ namespace DmxLedPanel.RestApi
         public static readonly string TYPE_INFO = "info";
         public static readonly string TYPE_ERROR = "error";
         public static readonly string TYPE_SAVED_STATES = "saved_states";
+        public static readonly string TYPE_DMX_IN_STATE = "dmx_in_state";
 
         
         public ResponseMessage(string type, object content) {

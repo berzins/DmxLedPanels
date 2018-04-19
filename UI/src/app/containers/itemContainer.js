@@ -44,7 +44,7 @@ class ItemContainer extends Component {
             
             <div className="row">
 
-                <div className="col-8">
+                <div className="col-6 col-md-8">
                 <div className="row">
                     <div className='col-12 btn-group'>
                             <AddOutputButton click={this.props.click}/>
@@ -58,7 +58,7 @@ class ItemContainer extends Component {
                     </div>
                 </div>
                 </div>
-                <div className="col-4">
+                <div className="col-6 col-md-4">
                 <div className="row">
                     <div className="col-12 btn-group">
                         <AddFixtureButton click={this.props.click}/>

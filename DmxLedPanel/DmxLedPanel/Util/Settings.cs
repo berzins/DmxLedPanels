@@ -66,8 +66,19 @@ namespace DmxLedPanel.Util
 
         public int RestApiPort { get; set; }
 
+        public bool AddFireWallException { get; set; }
+
         public string UIHomePath { get; set; }
 
         public string UIRelJavascriptPath { get; set; }
+
+        public string DefaultOutputIp { get; set; }
+
+        public string ArtNetBindIp { get; set; }
+
+        public string ArtNetBroadcastIp { get; set; }
+
+        public string CloseHash { get; set; }
+        
     }
 }

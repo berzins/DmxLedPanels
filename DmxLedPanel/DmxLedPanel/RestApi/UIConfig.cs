@@ -8,6 +8,10 @@ namespace DmxLedPanel.RestApi
 {
     public class UIConfig
     {
+
         public string host { get; set; }
+
+        public string defaultOutputIp { get; set; }
+
     }
 }

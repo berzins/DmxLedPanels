@@ -17,7 +17,7 @@ namespace DmxLedPanel.Util
 
         public static string Serialize(object obj)
         {
-            return JsonConvert.SerializeObject(obj);
+            return JsonConvert.SerializeObject(obj, Formatting.Indented);
         }
 
     }

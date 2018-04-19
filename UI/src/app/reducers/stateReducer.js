@@ -78,3 +78,14 @@ export const hilightStateReducer = (state = getHighlightState, action) => {
     }
     return state
 }
+
+import { DMX_STATE_UPDATE } from '../actions/stateActions'
+
+export const dmxStateReducer = (state = false, action) => {
+    switch(action.type) {
+        case DMX_STATE_UPDATE: {
+            return action.payload.Content
+        }
+    }
+    return state;
+}

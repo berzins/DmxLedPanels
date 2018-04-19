@@ -19,6 +19,7 @@ import OutputEditPortForm from '../containers/editForms/outputEditPortForm'
 import ButtonUndoState from '../containers/menuButtons/undoButton'
 import ButtonRedoState from '../containers/menuButtons/redoButton'
 import OutputEditIpForm from '../containers/editForms/outputEditIpForm'
+import DmxSignalItem from '../containers/justItems/dmxSignalItem'
 
 class App extends Component { 
 
@@ -38,6 +39,7 @@ class App extends Component {
     render() {
         return(
             <div className="container-fluid">
+            <DmxSignalItem click={this.click}/>
                 <div className= "col-12 btn-group">
                     <SaveButton  click={this.click}/>
                     <LoadButton  click={this.click}/>
@@ -63,6 +65,7 @@ class App extends Component {
                 <OutputEditNameForm click={this.click}/>
                 <OutputEditPortForm click={this.click}/>
                 <OutputEditIpForm click={this.click}/>
+                
             </div>
         )
     }

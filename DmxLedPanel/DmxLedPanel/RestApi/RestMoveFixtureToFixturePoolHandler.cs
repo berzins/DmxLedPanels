@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using DmxLedPanel.State;
+using DmxLedPanel.ArtNetIO;
 
 namespace DmxLedPanel.RestApi
 {

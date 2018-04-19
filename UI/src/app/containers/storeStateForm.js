@@ -2,10 +2,21 @@ import React, {Component} from 'react'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import Modal from 'react-bootstrap4-modal' 
-import { storeStateFormReducer, formErrorReducer } from '../reducers/formReducers'
-import { closeStoreStateForm, riseFormValueError, MODE_NEW, MODE_EDIT } from '../actions/formActions'
+import { 
+    storeStateFormReducer, 
+    formErrorReducer,
+    fileSelectedReducer
+} from '../reducers/formReducers'
+import { 
+    closeStoreStateForm,
+    riseFormValueError,
+    selectFile, 
+} from '../actions/formActions'
+import { savedStatesReducer } from '../reducers/stateReducer'
 import { saveState } from '../actions/stateActions'
-import { isInteger } from '../util/util'
+import { fileList } from './justItems/randomItems'
+import { rowItem, contentItem, textInputItem, errorItem, formModal } from './editForms/formItems'
+import { ItemInfoRow } from '../components/itemInfoRow';
 
 const FORM_ID_NAME = "FORM_STORE_ID_NAME"
 
@@ -13,25 +24,6 @@ class StoreStateForm extends Component {
 
     handleClick() {
         this.props.click.clicked = true
-    }
-
-    createTextInputItem(title, id, value) {
-        return(
-            <div className="form-group" key={id}>
-            <label htmlFor={id}>{title}</label>
-            <input type="text" className="form-control" id={id} placeholder={value} defaultValue={value}/>
-            </div>
-        )
-    }
-    
-    createRowItem(child) {
-        return (
-            <div className="col-12">
-                <div className="form-row align-items-center">
-                    {child.map((x) => {return x})}
-                </div>    
-            </div>
-        )
     }
 
     onClose(){
@@ -51,45 +43,31 @@ class StoreStateForm extends Component {
         return document.getElementById(id).value
     }
 
-    renderError(){
-        if(this.props.error !== null) {
-            return(
-                <div className="badge badge-danger">{this.props.error}</div>
-            )
-        }
-        return(
-            <div></div>
-        )
-    }
-    
-
     render() {
         let form = this.props.form
+        console.log("this.props.fileSelected");
+        console.log(this.props.fileSelected);
         return(
-            <Modal visible={form.opened} onClickBackdrop={() => this.onClose() } onClick={() => this.handleClick()}>
-                <div className="modal-header">
-                <h5 className="modal-title">{"Store state"}</h5>
-                </div>
-                <div className="modal-body">
-                {this.renderError()}
-                <form>
-                <div className="form-row align-items-center">
-                    {this.createRowItem([
-                        this.createTextInputItem("File name", FORM_ID_NAME, "faking_fak"),
-                    ])}
-                </div>
-                {}
-                </form>
-                </div>
-                <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => this.onClose() }>
-                    Whaatoijfjainjowila?
-                </button>
-                <button type="button" className="btn btn-primary" onClick={ () => this.onSubmit() }>
-                    Submit
-                </button>
-                </div>
-            </Modal>
+            formModal(
+                form.opened,
+                "Save the day, save the project!",
+                "Make it happen",
+                "Whatever",
+                this,
+                () => contentItem([
+                    errorItem(form.opened, this.props.error),
+                    rowItem([fileList(this.props.files)]),
+                    rowItem([
+                        textInputItem(
+                            "File name", 
+                            FORM_ID_NAME,
+                            this.props.fileSelected != null ?
+                            this.props.fileSelected.filename : 
+                            "hello"
+                        )
+                    ])
+                ])
+            )
         )
     }
 }
@@ -97,13 +75,16 @@ class StoreStateForm extends Component {
 const mapStateToProps = (state) => {
     return {
         form: state.storeStateFormReducer,
-        error: state.formErrorReducer
+        error: state.formErrorReducer,
+        fileSelected: state.fileSelectedReducer,
+        files: state.savedStatesReducer
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
         saveState: saveState,
+        selectFile: selectFile,
         closeStoreStateForm: closeStoreStateForm,
         riseFormValueError: riseFormValueError
     }, dispatch)

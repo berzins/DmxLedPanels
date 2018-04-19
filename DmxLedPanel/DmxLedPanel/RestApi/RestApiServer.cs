@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DmxLedPanel.RestApi
 {
-    public class RestApiServer
+    public class RestApiServer : ISystemInitializer
     {
         int port = 8746;
         private HttpListener server;
@@ -21,7 +21,12 @@ namespace DmxLedPanel.RestApi
         {
             requestHandlers = new Dictionary<string, IHttpRequestHandler>(); 
             port = SettingManager.Instance.Settings.RestApiPort;
+            initServer();
+        }
+
+        void initServer() {
             server = new HttpListener();
+            server.IgnoreWriteExceptions = true;
             addRequestHandler("/", new RestHomeHandler());
             addRequestHandler("/getState/", new RestGetStateHandler());
             addRequestHandler("/createFixture/", new RestCreateFixtureHandler());
@@ -36,7 +41,7 @@ namespace DmxLedPanel.RestApi
             addRequestHandler("/editOutputName/", new RestEditOutputNameHandler());
             addRequestHandler("/editOutputPort/", new RestEditOutputPortHandler());
             addRequestHandler("/editOuotputIP/", new RestEditOutputIPHandler());
-            addRequestHandler("/deleteOutput/", new RestDeleteOutputHandler());    
+            addRequestHandler("/deleteOutput/", new RestDeleteOutputHandler());
             addRequestHandler("/moveFixtureToOutput/", new RestMoveFixtureToOutputHandler());
             addRequestHandler("/moveFixtureToFixturePool/", new RestMoveFixtureToFixturePoolHandler());
             addRequestHandler("/saveState/", new RestSaveStateHandler());
@@ -47,12 +52,27 @@ namespace DmxLedPanel.RestApi
             addRequestHandler("/getHighlightState/", new GetHighlightStateHandler());
             addRequestHandler("/undoState/", new RestUndoStateHandler());
             addRequestHandler("/redoState/", new RestRedoStateHandler());
+            addRequestHandler("/dmxSignal/", new RestDmxSignalHandler());
+        }
+
+        public void InitSystem() {
+            Cmd.Execute("netsh http add urlacl url=http://*:" + port + "/ user=Everyone");
         }
         
         public void Start() {
             if (server != null)
             {
-                server.Start();
+
+                try
+                {
+                    server.Start();
+                    Console.WriteLine("Rest API server started on port " + port);
+                }
+                catch (Exception e) {
+                    Console.WriteLine("API server failed to start on port " + port + ". " + e.Message);
+                    return;
+                }
+
                 isRunning = true;
                 new Thread(() =>
                 {
@@ -84,6 +104,12 @@ namespace DmxLedPanel.RestApi
         public void Stop() {
             isRunning = false;
             server.Stop();
+        }
+
+        public void Dispose() {
+            server.Close();
+            server = null;
+            requestHandlers.Clear();
         }
 
         protected void addRequestHandler(string relPrefix, IHttpRequestHandler handler) {

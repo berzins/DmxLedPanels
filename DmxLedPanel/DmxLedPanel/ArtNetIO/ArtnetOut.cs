@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DmxLedPanel
+namespace DmxLedPanel.ArtNetIO
 {
     public class ArtnetOut
     {

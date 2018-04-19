@@ -6,7 +6,7 @@ let key = 5000;
 
 export const selectItem = (title, id, values) => {
     return (
-        <div className="col-auto my-1" key={id}>
+        <div className="col-auto my-1" key={id + (key++)}>
         <label className="mr-sm-2" htmlFor="inlineFormCustomSelect">{title}</label>
         <select className="custom-select mr-sm-2" id={id}>
             {values.map((val, i) => {
@@ -24,7 +24,7 @@ export const selectItem = (title, id, values) => {
 
 export const textInputItem = (title, id, value) => {
     return(
-        <div className="form-group" key={id}>
+        <div className="form-group" key={id + (key++)}>
         <label htmlFor={id}>{title}</label>
         <input type="text" className="form-control" id={id} placeholder={value} defaultValue={value}/>
         </div>
@@ -41,7 +41,7 @@ export const radioItem = (title, id, checked, callback) => {
         input = <input className="form-check-input" type="checkbox" id={id} onChange={() => callback(this)} />
     }
     return(
-        <div className="form-group" key={id}>
+        <div className="form-group" key={id * (key++)}>
         <div className="form-check">
         {input}
         <label className="form-check-label" htmlFor="gridCheck">
@@ -108,7 +108,7 @@ export const formModal = (visib, title, submitTxt, cancelTxt, parent, content) =
 export const errorItem = (visible, error) => {
     if(visible) {
         return(
-            <div className="badge badge-danger"  key={key++}>{error}</div>
+            <div className="badge badge-danger"  key={(key++)}>{error}</div>
         )
     }
     return(

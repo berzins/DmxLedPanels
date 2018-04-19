@@ -15,33 +15,19 @@ import {
     selectFile 
 } from '../actions/formActions'
 
+import { errorItem } from './editForms/formItems'
 import { loadStateFromFile, getSavedStates } from '../actions/stateActions'
 import { savedStatesReducer } from '../reducers/stateReducer'
-import File from '../containers/file'
+import { fileList } from './justItems/randomItems'
 
 class LoadStateForm extends Component {
-
-
 
     handleClick() {
         this.props.click.clicked = true
     }
-    
-    createFileList(files) {
-        return (
-            <div className=" list-group" style={{width: 100+"%"}}>
-                {files.names.map((f) => {
-                    return(
-                        <File key={f} filename={f.split('.')[0]} click={this.props.click}/>
-                    )
-                    })
-                }
-            </div>
-        )
-    }
 
     onClose(){
-        this.props.selectFile(null)
+        //this.props.selectFile(null)
         this.props.closeOpenStateForm(this)
     }
 
@@ -53,17 +39,6 @@ class LoadStateForm extends Component {
         }
         this.props.loadStateFromFile(this.props.selectedFile.filename)
         this.onClose()
-    }
-
-    renderError(){
-        if(this.props.error !== null) {
-            return(
-                <div className="badge badge-danger">{this.props.error}</div>
-            )
-        }
-        return(
-            <div></div>
-        )
     }
 
     renderSelectedFile() {
@@ -82,24 +57,24 @@ class LoadStateForm extends Component {
         return(
             <Modal visible={form.opened} onClickBackdrop={() => this.onClose() } onClick={() => this.handleClick()}>
                 <div className="modal-header">
-                <h5 className="modal-title">{"Store state"}</h5>
+                <h5 className="modal-title">{"Load project"}</h5>
                 </div>
                 <div className="modal-body">
-                {this.renderError()}
+                {errorItem(this.props.error != null, this.props.error)}
                 <form>
                 <div className="form-row align-items-center">
 
-                    {this.createFileList(this.props.files)}
+                    {fileList(this.props.files)}
                     {this.renderSelectedFile()}
                 </div>
                 </form>
                 </div>
                 <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={() => this.onClose() }>
-                    Whaatoijfjainjowila?
+                    Whaaat?
                 </button>
                 <button type="button" className="btn btn-primary" onClick={ () => this.onSubmit() }>
-                    Submit
+                    Pam pa ram OK.
                 </button>
                 </div>
             </Modal>

@@ -29,7 +29,9 @@ namespace DmxLedPanel.RestApi
             response.ContentType = contType;
             response.ContentLength64 = data.Length;
             response.OutputStream.Write(data, 0, data.Length);
-            response.OutputStream.Close();          
+            response.OutputStream.Close();
+            response = null;
+            context = null;
         }
 
         protected void WriteResponse(

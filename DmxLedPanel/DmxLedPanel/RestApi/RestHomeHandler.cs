@@ -26,7 +26,10 @@ namespace DmxLedPanel.RestApi
             var url = context.Request.Url.AbsoluteUri.Replace("?react_perf", "");
             //Console.WriteLine(url);
 
-            UIConfig config = new UIConfig { host = url };
+            UIConfig config = new UIConfig {
+                host = url,
+                defaultOutputIp = SettingManager.Instance.Settings.DefaultOutputIp
+            };
             var js = "document.ledPanelUiConfig = " + StaticSerializer.Serialize(config);
             FileIO.WriteFile(file, false, js);
         }

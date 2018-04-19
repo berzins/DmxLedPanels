@@ -20,10 +20,12 @@ export const requestServer = (url, dispatch, events = null) => {
                 });
             }
         } else {
+            console.log(response.data)
             dispatch({type: STATE_CHANGE_SERVER_ERROR, payload: response.data})
         }
     })
     .catch((error) => {
+        console.log(response.data)
         dispatch({type: CONNECTION_ERROR, payload: error})
     })
 }
@@ -253,18 +255,28 @@ export const enableHighlight = (on) => {
 }
 
 export const undoState = () => {
-    const url = API_URL + '/undoState/?'
+    const url = API_URL + '/undoState/'
     return (dispatch) => {
         requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])
     }
 }
 
 export const redoState = () => {
-    const url = API_URL + '/redoState/?'
+    const url = API_URL + '/redoState/'
     return (dispatch) => {
         requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])
     }
 }
 
+
+export const DMX_STATE_UPDATE = "DMX_STATE_UPDATE" 
+
+export const getDmxState = current => {
+    const url = API_URL + '/dmxSignal/?' + 
+    'has_signal=' + current
+    return (dispatch) => {
+        requestServer(url, dispatch, [DMX_STATE_UPDATE])
+    }
+}
 
 

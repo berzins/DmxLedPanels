@@ -31,6 +31,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>ico_LFU_5.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="DmxPatch">
       <HintPath>..\..\..\..\..\take with me\Documents\Visual Studio 2015\Projects\ClassLibrary3\ClassLibrary3\bin\Debug\DmxPatch.dll</HintPath>
@@ -49,8 +52,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Address.cs" />
-    <Compile Include="ArtnetIn.cs" />
-    <Compile Include="ArtnetOut.cs" />
+    <Compile Include="ArtNetIO\ArtNetDevice.cs" />
+    <Compile Include="ArtNetIO\ArtnetIn.cs" />
+    <Compile Include="ArtNetIO\ArtnetOut.cs" />
+    <Compile Include="ArtNetIO\IDmxSignalListener.cs" />
+    <Compile Include="ArtNetIO\WhosInNetwork.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="FileIO.cs" />
@@ -63,6 +69,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RestApi\RestDmxSignalHandler.cs" />
     <Compile Include="RestApi\RestEditFixtureAddressHandler.cs" />
     <Compile Include="RestApi\RestEditFixtureNameHandler.cs" />
     <Compile Include="RestApi\RestEditFixturePixelPatchHandler.cs" />
@@ -118,11 +130,15 @@
     <Compile Include="Template\OutputTemplate.cs" />
     <Compile Include="Template\PixelPatchTemplate.cs" />
     <Compile Include="Template\StateTemplate.cs" />
+    <Compile Include="Util\Cmd.cs" />
     <Compile Include="Util\FixedSizeStack.cs" />
+    <Compile Include="Util\InitSystemManager.cs" />
     <Compile Include="Util\ISerializable.cs" />
     <Compile Include="Util\Settings.cs" />
     <Compile Include="State\State.cs" />
+    <Compile Include="Util\SettingsHash.cs" />
     <Compile Include="Util\StaticSerializer.cs" />
+    <Compile Include="Util\SystemInitializer.cs" />
     <Compile Include="Util\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +152,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IntallNotes\" />
@@ -145,6 +165,9 @@
       <Project>{188c5ef2-1406-4ed3-80f8-32f9921721ba}</Project>
       <Name>ArtNet</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ico_LFU_5.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

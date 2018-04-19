@@ -25,7 +25,7 @@ class OutputPool extends Component {
         return(
             <div 
             onClick={() => this.handleClick() }
-            className="output">
+            className="output output-pool">
             <div className="row">
                     {this.createOutputItems(this.props.outputs)}
             </div>

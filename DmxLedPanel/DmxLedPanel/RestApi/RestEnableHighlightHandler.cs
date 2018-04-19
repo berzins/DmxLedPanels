@@ -1,4 +1,5 @@
-﻿using DmxLedPanel.State;
+﻿using DmxLedPanel.ArtNetIO;
+using DmxLedPanel.State;
 using System;
 using System.Collections.Generic;
 using System.Linq;

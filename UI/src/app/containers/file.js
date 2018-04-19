@@ -7,7 +7,6 @@ class File extends Component {
 
 
     handleClick(){
-        this.props.click.clicked = true
         this.props.selectFile(this.props.filename)
     }
 
