@@ -53,6 +53,7 @@ namespace DmxLedPanel.RestApi
             addRequestHandler("/undoState/", new RestUndoStateHandler());
             addRequestHandler("/redoState/", new RestRedoStateHandler());
             addRequestHandler("/dmxSignal/", new RestDmxSignalHandler());
+            addRequestHandler("/currentProject/", new RestGetCurrentProject());
         }
 
         public void InitSystem() {

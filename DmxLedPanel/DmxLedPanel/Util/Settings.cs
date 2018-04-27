@@ -18,7 +18,7 @@ namespace DmxLedPanel.Util
         private Settings settings;
 
         private SettingManager() {
-            settings = loadSettings();
+            settings = LoadSettings();
         }
 
         public static SettingManager Instance {
@@ -39,10 +39,10 @@ namespace DmxLedPanel.Util
         }
 
         public void Reload() {
-            settings = loadSettings();
+            settings = LoadSettings();
         }
 
-        private Settings loadSettings() {
+        private Settings LoadSettings() {
             try
             {
                 var json = FileIO.ReadFile(REALTIVE_SETTINGS_PATH, true)
@@ -77,6 +77,8 @@ namespace DmxLedPanel.Util
         public string ArtNetBindIp { get; set; }
 
         public string ArtNetBroadcastIp { get; set; }
+
+        public string CurrentProject { get; set; }
 
         public string CloseHash { get; set; }
         

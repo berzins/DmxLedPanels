@@ -48,7 +48,7 @@ namespace DmxLedPanel.ArtNetIO
 
         public override void Action(Packet p)
         {
-            var reply = (ArtPollReplyPacket)p;
+            var reply = new ArtPollReplyPacket();
             ArtNetDevice device;
 
             if (tryGetDevice(reply.LongName, out device))

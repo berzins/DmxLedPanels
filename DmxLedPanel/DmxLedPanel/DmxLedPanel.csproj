@@ -11,6 +11,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -30,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>ico_LFU_5.ico</ApplicationIcon>
@@ -58,7 +61,6 @@
     <Compile Include="ArtNetIO\IDmxSignalListener.cs" />
     <Compile Include="ArtNetIO\WhosInNetwork.cs" />
     <Compile Include="Const.cs" />
-    <Compile Include="Converter.cs" />
     <Compile Include="FileIO.cs" />
     <Compile Include="FixtureFactory.cs" />
     <Compile Include="GetHighlihgtStateHandler.cs" />
@@ -95,6 +97,7 @@
     <Compile Include="RestApi\RestEditOutputPortHandler.cs" />
     <Compile Include="RestApi\RestEnableHighlightHandler.cs" />
     <Compile Include="RestApi\RestFixtureEditModeHandler.cs" />
+    <Compile Include="RestApi\RestGetCurrentProject.cs" />
     <Compile Include="RestApi\RestGetSavedStates.cs" />
     <Compile Include="RestApi\RestGetStateHandler.cs" />
     <Compile Include="RestApi\RestHighlightHandler.cs" />

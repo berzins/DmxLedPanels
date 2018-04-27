@@ -85,13 +85,18 @@ export const loadStateFormReducer = (state = init, action) => {
 
 
 const  fileInit = {
-    filename: null
+    filename: null,
+    selector : null
 }
 
 export const fileSelectedReducer = (state = fileInit, action)  =>{
     switch(action.type) {
         case SELECT_FILE: {
-            return {...state, filename: action.payload }
+            return {
+                ...state, 
+                filename: action.payload.filename,
+                selector: action.payload.selector      
+            }
         }
     }
     return state

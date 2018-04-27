@@ -279,4 +279,14 @@ export const getDmxState = current => {
     }
 }
 
+export const CURRENT_PROJECT_UPDATE = "CURRENT_PROJECT_UPDATE"
+
+export const getCurretProject = () => {
+    const url = API_URL + '/currentProject/'
+    return (dispatch) => {
+        requestServer(url, dispatch, [CURRENT_PROJECT_UPDATE])
+    }
+}
+
+
 

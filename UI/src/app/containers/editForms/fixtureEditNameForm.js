@@ -41,7 +41,7 @@ class FixtureEditNameForm extends Component {
 
 
     onClose(){
-        this.props.closeFixtureForm(this)
+        this.props.closeEditFixtureNameForm(this)
     }
 
     onSubmit() {

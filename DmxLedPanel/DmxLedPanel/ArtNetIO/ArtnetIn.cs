@@ -20,7 +20,9 @@ namespace DmxLedPanel.ArtNetIO
 
         private ArtnetIn() {
             dispatcher = initDispatcher();
-            reader = new ArtNetReader(dispatcher, IPAddress.Parse("192.168.0.100"));
+            reader = new ArtNetReader(dispatcher, IPAddress.Parse(
+                SettingManager.Instance.Settings.ArtNetBindIp
+                ));
             dmxPacketHandlers = new List<IDmxPacketHandler>();
             signalListeners = new List<IDmxSignalListener>();
         }
@@ -71,8 +73,7 @@ namespace DmxLedPanel.ArtNetIO
             return r;
         }
 
-
-
+        
         public void AddDmxSignalListener(IDmxSignalListener l) {
             lock (lockref) {
                 var c = new List<IDmxSignalListener>(signalListeners);

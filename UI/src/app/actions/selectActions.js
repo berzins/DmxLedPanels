@@ -46,7 +46,7 @@ export const deselectOutput = (id) => {
     return (dispatch) => {
         let p = {type:SELECT_TYPE_OUTPUT, id: id}
         dispatch({type: DESELECT_OUTPUT, payload: p})
-        dispatch({type: DESELECT_ITEM, payload: p})
+        dispatch({type  : DESELECT_ITEM, payload: p})
     }
 }
 

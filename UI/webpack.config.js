@@ -1,10 +1,11 @@
 var path = require('path');
 
-var DIST_DIR = path.resolve(__dirname, "dist");
+//var DIST_DIR =  __dirname + 'D:/ProgrammingProjects/Asound/DmxLedPanels/DmxLedPanel/DmxLedPanel/bin/Debug/UI'
+var DIST_DIR = path.resolve(__dirname, "../DmxLedPanel/DmxLedPanel/bin/Debug/UI");
 var SRC_DIR = path.resolve(__dirname, "src");
 
 var config = {
-    mode: 'development',
+    mode: 'production',
     entry: SRC_DIR + '/app/index.js',
     output: {
         path: DIST_DIR + '/resource/app/',

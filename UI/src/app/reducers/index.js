@@ -3,7 +3,8 @@ import {
     stateReducer,
     savedStatesReducer,
     hilightStateReducer,
-    dmxStateReducer
+    dmxStateReducer,
+    currentProjectReducer,
 } from './stateReducer'
 import {
     outputFormReducer, 
@@ -41,7 +42,8 @@ const reducers = combineReducers(
         outputEditNameFormReducer: outputEditNameFormReducer,
         outputEditPortFormReducer: outputEditPortFormReducer,
         outputEditIpFormReducer: outputEditIpFormReducer,
-        dmxStateReducer: dmxStateReducer
+        dmxStateReducer: dmxStateReducer,
+        currentProjectReducer: currentProjectReducer
     }
 );
 

@@ -113,9 +113,9 @@ export const clearFormValueError = (msg = null) => {
 
 export const SELECT_FILE = "SELECT_FILE"
 
-export const selectFile = (fileItemId) => { 
+export const selectFile = (fileItemId, selector = null) => { 
     return (dispatch) => {
-        dispatch({type: SELECT_FILE, payload: fileItemId})
+        dispatch({type: SELECT_FILE, payload: {filename: fileItemId, selector: selector}})
     }
 }
 

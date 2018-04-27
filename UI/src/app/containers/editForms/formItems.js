@@ -31,6 +31,14 @@ export const textInputItem = (title, id, value) => {
     )
 }
 
+export const textItem = (value) => {
+    return(
+        <div className="form-group" key={(key++)}>
+        <label>{value}</label>
+        </div>
+    )
+}
+
 // ----
 
 export const radioItem = (title, id, checked, callback) => {

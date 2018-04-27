@@ -1,10 +1,6 @@
 ﻿using DmxLedPanel.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DmxLedPanel.RestApi
 {
@@ -15,7 +11,7 @@ namespace DmxLedPanel.RestApi
         public override void HandleRequest(HttpListenerContext context)
         {
             createUiConfigFile(context);
-            string html = FileIO.ReadFile(SettingManager.Instance.Settings.UIHomePath + UI_FILE_NAME, false);
+            string html = FileIO.ReadFile(SettingManager.Instance.Settings.UIHomePath + UI_FILE_NAME, true);
             WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_HTML, html);
         }
 

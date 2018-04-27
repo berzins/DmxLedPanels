@@ -16,7 +16,7 @@ import {
 } from '../actions/formActions'
 
 import { errorItem } from './editForms/formItems'
-import { loadStateFromFile, getSavedStates } from '../actions/stateActions'
+import { loadStateFromFile, getSavedStates, getCurretProject } from '../actions/stateActions'
 import { savedStatesReducer } from '../reducers/stateReducer'
 import { fileList } from './justItems/randomItems'
 
@@ -38,6 +38,10 @@ class LoadStateForm extends Component {
             return
         }
         this.props.loadStateFromFile(this.props.selectedFile.filename)
+        setTimeout(() => {
+            
+            this.props.getCurretProject();
+        }, 200)
         this.onClose()
     }
 
@@ -97,7 +101,8 @@ const mapDispatchToProps = (dispatch) => {
         riseFormValueError: riseFormValueError,
         loadStateFromFile: loadStateFromFile,
         getSavedStates: getSavedStates,
-        selectFile: selectFile
+        selectFile: selectFile,
+        getCurretProject: getCurretProject
     }, dispatch)
 }
 

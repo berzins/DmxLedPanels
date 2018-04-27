@@ -24,7 +24,7 @@ namespace DmxLedPanel.RestApi
                 // in case UI and server has different states, just sync them. 
                 var hasSignal = bool.Parse(context.Request.QueryString.Get(KEY_HAS_SIGNAL));
                 if (hasSignal != ArtnetIn.Instance.HasSignal) {
-                    respond(context, ArtnetIn.Instance.HasSignal);
+                    Respond(context, ArtnetIn.Instance.HasSignal);
                     return;
                 }
 
@@ -43,7 +43,7 @@ namespace DmxLedPanel.RestApi
             try
             {
                 context.Request.GetClientCertificate();
-                respond(this.context, detected);
+                Respond(this.context, detected);
             }
             catch (Exception e) {
                 Console.WriteLine("Dmx state response failed. Refresh UI to sync dmx state");
@@ -64,7 +64,7 @@ namespace DmxLedPanel.RestApi
             
         }
 
-        private void respond(HttpListenerContext context, bool hasSignal) {
+        private void Respond(HttpListenerContext context, bool hasSignal) {
             var msg = new ResponseMessage(
                         ResponseMessage.TYPE_DMX_IN_STATE,
                         hasSignal
