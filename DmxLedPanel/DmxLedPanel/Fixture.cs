@@ -18,11 +18,6 @@ namespace DmxLedPanel
         private IPixelPatch pixelPatch;
         private IMode mode;
 
-        //static Fixture()
-        //{
-        //    idCounter = StateManager.Instance.State.GetLastFixtureId() + 1;
-        //}
-
         /// <summary>
         /// Use this with caution.. 
         /// Usful when reloading whole state of app. 
