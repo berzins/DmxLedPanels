@@ -12,6 +12,7 @@ namespace DmxLedPanel.RestApi
 
         public static readonly char[] PARAM_SPLITTER = {  '|' };
         public static readonly char[] VALUE_SPLITTER = { '_' };
+        public static readonly char[] ITEM_SPLITTER = { '^' };
 
         public static readonly string KEY_ID = "id";
 

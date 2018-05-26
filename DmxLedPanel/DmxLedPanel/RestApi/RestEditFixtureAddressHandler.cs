@@ -45,7 +45,7 @@ namespace DmxLedPanel.RestApi
                 };
 
                 var fixtures = StateManager.Instance.State.GetFixtures(fids);
-
+    
                 var i = 0;
                 var offset = 0;
                 foreach (var f in fixtures)
@@ -74,7 +74,8 @@ namespace DmxLedPanel.RestApi
             }
             catch (Exception e)
             {
-                var msg = new ResponseMessage(ResponseMessage.TYPE_ERROR, e.Message + " ..... " + e.StackTrace);
+                Utils.LogException(e);
+                WriteErrorMessage(context, e);
             }
 
         }

@@ -2,6 +2,7 @@
 
 const MODE_GTL = "GridTopLeft"
 const PATCH_SCTL = "pixelPatchSnakeColumnWiseTopLeft"
+const PATCH_SRTL = "pixelPatchSnakeRowWiseTopLeft"
 
 export class FixtureMode {
     static all() {
@@ -15,7 +16,7 @@ export class FixtureMode {
 
 export class FixturePatch {
     static all() {
-        return [PATCH_SCTL]
+        return [PATCH_SCTL, PATCH_SRTL]
     }
 
     static allShort() {

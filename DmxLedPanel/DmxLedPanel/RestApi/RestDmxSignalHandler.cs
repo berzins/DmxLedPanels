@@ -33,6 +33,7 @@ namespace DmxLedPanel.RestApi
 
             }
             catch (Exception e) {
+                Utils.LogException(e);
                 WriteErrorMessage(context, e);
             }
         }

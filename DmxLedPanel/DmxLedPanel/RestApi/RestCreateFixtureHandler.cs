@@ -1,4 +1,5 @@
 ﻿using DmxLedPanel.Modes;
+using DmxLedPanel.PixelPatching;
 using DmxLedPanel.State;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,11 @@ namespace DmxLedPanel.RestApi
         public static readonly string KEY_PORT = "port";
         public static readonly string KEY_ADDRESS = "address";
         public static readonly string KEY_PATCH_TYPE = "patch_type";
-        public static readonly string KEY_MODE = "mode";
+        public static readonly string KEY_MODES = "modes";
+        public static readonly string KEY_CURRENT_MODE = "current_mode";
+        public static readonly string KEY_UTILS_ENABLED = "utils_enabled";
+        public static readonly string KEY_UTIL_ADDRESS = "utils_address";
+        public static readonly string KEY_UTIL_ADDRESS_INCREMET = "util_addr_increment";
         public static readonly string KEY_INCREMENT = "increment";
 
         public override void HandleRequest(HttpListenerContext context)
@@ -26,7 +31,6 @@ namespace DmxLedPanel.RestApi
             List<Fixture> fixtures = new List<Fixture>();
             try
             {
-
                 string name = q.Get(KEY_FIX_NAME);
 
                 int dmxAddress = int.Parse(q.Get(KEY_ADDRESS));
@@ -44,25 +48,33 @@ namespace DmxLedPanel.RestApi
                     }
                 };
 
- 
+                //var utilsEnabled = bool.Parse(q.Get(KEY_UTILS_ENABLED));
+                //var utilAddress = q.Get(KEY_UTIL_ADDRESS);
+                //var utilAddrIncrement = bool.Parse(q.Get(KEY_UTIL_ADDRESS_INCREMET));
+
+
                 bool increment = bool.Parse(q.Get(KEY_INCREMENT));
 
                 for (int i = 0; i < int.Parse(q.Get(KEY_COUNT)); i++)
                 {
 
                     var fix = new Fixture(
-                        getFixtureMode(q.Get(KEY_MODE)), 
+                        getFixtureModes(q.Get(KEY_MODES)), 
                         getPixelPatch(q.Get(KEY_PATCH_TYPE))
                         );
                     fix.Name = name + " " + i;
+
+                    fix.Address =  address.Clone();
                     if (increment)
                     {
-                        fix.Address = address.Clone();
-                        fix.Address.DmxAddress += fix.InputAddressCount * i;
+                        address.DmxAddress += fix.InputAddressCount;
                     }
-                    else {
-                        fix.Address = address.Clone();
-                    }
+
+                    //TODO: fix this. 
+                    //fix.UtilAddress = utilAddress.Clone();
+                    // if (ut ilAddrIncrement) {
+
+                    //}
                     
                     fixtures.Add(fix);
                 }
@@ -71,7 +83,8 @@ namespace DmxLedPanel.RestApi
                 string state = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
             }
-            catch (Exception e) {
+            catch (EntryPointNotFoundException e) {
+                Utils.LogException(e);
                 WriteErrorMessage(context, e);
             }
         }
@@ -87,9 +100,25 @@ namespace DmxLedPanel.RestApi
                 int[] dim = args[1].Split(PARAM_SPLITTER).Select(x => int.Parse(x)).ToArray();
                 return new PixelPatchSnakeColumnWiseTopLeft(dim[0], dim[1], 0, Const.PIXEL_LENGTH);
             }
+            if (args[0].Equals(PixelPatch.PIXEL_PATCH_SNAKE_ROWWISE_TOP_LEFT)) {
+                int[] dim = args[1].Split(PARAM_SPLITTER).Select(x => int.Parse(x)).ToArray();
+                return new PixelPatchSnakeRowWiseTopLeft(dim[0], dim[1], 0, Const.PIXEL_LENGTH);
+            }
             return null;
         }
 
+
+        public static List<IMode> getFixtureModes(string param) {
+
+            List<IMode> modes = new List<IMode>();
+            string[] args = param.Split(ITEM_SPLITTER);
+
+            foreach (var m in args) {
+                modes.Add(getFixtureMode(m));
+            }
+
+            return modes;
+        }
 
         /// <summary>
         /// Figure out 'KEY_MODE' parmeter
@@ -102,6 +131,20 @@ namespace DmxLedPanel.RestApi
                 return new ModeGridTopLeft(dim[0], dim[1]);
             }
             return null;
+        }
+
+        private List<Address> createAddresses(Address addr, bool increment, int spacing, int count) {
+            var addresses = new List<Address>();
+            for (int i = 0; i < count; i++)
+            {
+                var a = addr.Clone();
+                addresses.Add(a);
+                if(increment)
+                {
+                    addr.DmxAddress += spacing;
+                }
+            }
+            return addresses;
         }
     }
 }

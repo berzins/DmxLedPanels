@@ -16,6 +16,7 @@ namespace DmxLedPanel.RestApi
                     RestConst.CONTENT_TEXT_JSON, state);
             }
             catch (Exception e) {
+                Utils.LogException(e);
                 WriteErrorMessage(context, e);
             }
         }

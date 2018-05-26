@@ -20,8 +20,8 @@ namespace DmxLedPanel
         public string Name { get; set; }
         public Address Address { get; set; }
         public PixelPatchTemplate PixelPatch { get; set; }
-        public ModeTemplate Mode { get; set; }
         public int PatchedTo { get; set; } = -1;
-
+        public List<ModeTemplate> Modes { get; set; }
+        public int CurrentModeIndex { get; set; }
     }
 }

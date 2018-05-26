@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArtNet", "..\..\..\Librarie
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DmxLedPanelsSetup", "DmxLedPanelsSetup\DmxLedPanelsSetup.vdproj", "{ED66870A-52FA-40C5-8A65-875B777388A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DmxLedPanelTester", "DmxLedPanelTester\DmxLedPanelTester.csproj", "{114AD1FD-4667-435B-9EB2-F5F058544E83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{ED66870A-52FA-40C5-8A65-875B777388A9}.Debug|Any CPU.ActiveCfg = Debug
 		{ED66870A-52FA-40C5-8A65-875B777388A9}.Debug|Any CPU.Build.0 = Debug
 		{ED66870A-52FA-40C5-8A65-875B777388A9}.Release|Any CPU.ActiveCfg = Release
+		{114AD1FD-4667-435B-9EB2-F5F058544E83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{114AD1FD-4667-435B-9EB2-F5F058544E83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{114AD1FD-4667-435B-9EB2-F5F058544E83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{114AD1FD-4667-435B-9EB2-F5F058544E83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArtNet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,6 +28,21 @@ namespace DmxLedPanel
             T[] result = new T[length];
             Array.Copy(data, index, result, 0, length);
             return result;
+        }
+
+
+
+        public static T [] cloneArray<T>(T[] source) {
+            T [] copy = new T [source.Length];
+            for (int i = 0; i < copy.Length; i++)
+            {
+                copy[i] = source[i];
+            }
+            return copy;
+        }
+
+        public static void LogException(Exception e) {
+            Logger.Log("Message: " + e.Message + ", StackTrace: " + e.StackTrace, LogLevel.ERROR);
         }
     
     }

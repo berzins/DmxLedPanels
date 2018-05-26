@@ -76,7 +76,8 @@ namespace DmxLedPanel.RestApi
 
             }
             catch (Exception e) {
-                var msg = new ResponseMessage(ResponseMessage.TYPE_ERROR, e.Message + " ..... " + e.StackTrace);
+                Utils.LogException(e);
+                WriteErrorMessage(context, e);
             }
             
         }

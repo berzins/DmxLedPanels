@@ -48,6 +48,7 @@ namespace DmxLedPanel
                         addPixelValuesToList(values, col, row);            
                     }
                 }
+
                 //loop rows backwards
                 else
                 {
@@ -60,12 +61,7 @@ namespace DmxLedPanel
             return values.ToArray();
         }
 
-        private void addPixelValuesToList(List<int> values, int col, int row) {
-            foreach (int val in patch[col, row].DmxValues)
-            {
-                values.Add(val);
-            }
-        }
+        
 
 
 
@@ -87,6 +83,7 @@ namespace DmxLedPanel
                         updateIndexes(ref address, pixelLength, ref pixIndex);
                     }
                 }
+
                 //loop rows backwards
                 else
                 {
@@ -100,23 +97,9 @@ namespace DmxLedPanel
             return order;
         }
 
-        private static void updateIndexes(ref int address, int pixelLength, ref int pixIndex)
-        {
-            address += pixelLength;
-            pixIndex++;
-        }
+        
 
-        private static Pixel initPixel(int index, int address, int pixelLength)
-        {
-            var pix = new Pixel();
-            pix.AddressCount = pixelLength;
-            for (int i = 0; i < pix.DmxAddresses.Length; i++)
-            {
-                pix.Index = index;
-                pix.DmxAddresses[i] = address++;
-            }
-            return pix;
-        }
+        
 
         public override IPixelPatch Clone()
         {

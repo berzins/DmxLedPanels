@@ -56,6 +56,7 @@ namespace DmxLedPanel
 
         static void Main(string[] args)
         {
+            ArtNetReader.GetAvailableBindAddresses();
             _handler += new EventHandler(Handler);
             SetConsoleCtrlHandler(_handler, true);
 

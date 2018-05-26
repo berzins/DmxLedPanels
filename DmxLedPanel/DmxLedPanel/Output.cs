@@ -42,7 +42,9 @@ namespace DmxLedPanel
             Ports = new List<Port>(PORT_COUNT);
             ID = idCounter++;
             Name = "Output " + ID;
-            ipAddress = IPAddress.Parse("255.255.255.255");
+
+            var ip = Util.SettingManager.Instance.Settings.ArtNetBroadcastIp;
+            ipAddress = IPAddress.Parse(ip);
             writer = new ArtNet.ArtNetWritter(ipAddress);
         }
 

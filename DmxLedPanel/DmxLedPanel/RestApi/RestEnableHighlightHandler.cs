@@ -40,6 +40,7 @@ namespace DmxLedPanel.RestApi
                     Util.StaticSerializer.Serialize(msg));
             }
             catch (Exception e) {
+                Utils.LogException(e);
                 WriteErrorMessage(context, e);
             }
         }

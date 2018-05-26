@@ -12,7 +12,11 @@ namespace DmxLedPanel.ArtNetIO
         private ArtNet.ArtNetWritter artWriter;
 
         private ArtnetOut() {
-            artWriter = new ArtNet.ArtNetWritter();
+            artWriter = new ArtNet.ArtNetWritter(
+                System.Net.IPAddress.Parse(
+                    Util.SettingManager.Instance.Settings.ArtNetBroadcastIp
+                    )
+                );
         }
 
         public static ArtnetOut Instance {

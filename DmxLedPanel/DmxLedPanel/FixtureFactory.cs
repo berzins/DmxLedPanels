@@ -1,4 +1,5 @@
 ﻿using DmxLedPanel.Modes;
+using DmxLedPanel.Template;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,20 +11,29 @@ namespace DmxLedPanel
     public static class FixtureFactory
     {
         public static Fixture createFixture(FixtureTemplate fixTemplate) {
-            return new Fixture(getMode(fixTemplate), getPatchType(fixTemplate)) {
+
+            var modes = new List<IMode>();
+            foreach (var mt in fixTemplate.Modes) {
+                modes.Add(getMode(mt));
+            }
+            
+            var fix = new Fixture(modes, getPatchType(fixTemplate)) {
                 Name = fixTemplate.Name,
-                Address = fixTemplate.Address
-           
+                Address = fixTemplate.Address,
             };
+
+            fix.SwitchMode(fixTemplate.CurrentModeIndex);
+
+            return fix;
         }
 
-        private static IMode getMode(FixtureTemplate fixTemplate) {
-            if (fixTemplate.Mode.Name.Equals(Mode.MODE_GRID_TOP_LEFT)) {
-                return new ModeGridTopLeft(fixTemplate.Mode.Params[0], fixTemplate.Mode.Params[1]);
+        private static IMode getMode(ModeTemplate modeTemplate) {
+            if (modeTemplate.Name.Equals(Mode.MODE_GRID_TOP_LEFT)) {
+                return new ModeGridTopLeft(modeTemplate.Params[0], modeTemplate.Params[1]);
             }
             throw new KeyNotFoundException(
                 "Fixture Factory failed to load a mode with key '" + 
-                fixTemplate.Mode.Name + "'");
+                modeTemplate.Name + "'");
         }
 
         private static IPixelPatch getPatchType(FixtureTemplate fixTemplate) {

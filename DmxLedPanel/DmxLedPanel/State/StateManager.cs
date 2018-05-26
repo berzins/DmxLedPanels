@@ -1,4 +1,5 @@
 ﻿using DmxLedPanel.ArtNetIO;
+using DmxLedPanel.Modes;
 using DmxLedPanel.Util;
 using System;
 using System.Collections.Generic;
@@ -67,6 +68,7 @@ namespace DmxLedPanel.State
 
             Fixture.ResetIdCounter();
             Output.ResetIdCounter();
+            Mode.ResetIdCounter();
 
             // release artnet listeners
             ArtnetIn.Instance.ClearDmxPacketListeners();

@@ -15,5 +15,7 @@ namespace DmxLedPanel.Modes
 
         List<Field> GetFields(Pixel[,] patch);
 
+        int Id { get; }
+
     }
 }

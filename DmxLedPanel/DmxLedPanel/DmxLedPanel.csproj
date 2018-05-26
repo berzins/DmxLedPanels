@@ -63,9 +63,15 @@
     <Compile Include="Const.cs" />
     <Compile Include="FileIO.cs" />
     <Compile Include="FixtureFactory.cs" />
+    <Compile Include="Fixtures\DmxModeSwitcher.cs" />
+    <Compile Include="Fixtures\FixtureDmxUtil.cs" />
+    <Compile Include="Fixtures\IDmxUtlHandler.cs" />
     <Compile Include="GetHighlihgtStateHandler.cs" />
     <Compile Include="Modes\Mode.cs" />
-    <Compile Include="PixelPatch.cs" />
+    <Compile Include="PixelPatching\PixelOrder.cs" />
+    <Compile Include="PixelPatching\PixelPatch.cs" />
+    <Compile Include="PixelPatching\PixelPatchSnakeRowWiseTopLeft.cs" />
+    <Compile Include="PixelPatching\PixelPosition.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -76,6 +82,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="RestApi\RestAddModeHandler.cs" />
     <Compile Include="RestApi\RestDmxSignalHandler.cs" />
     <Compile Include="RestApi\RestEditFixtureAddressHandler.cs" />
     <Compile Include="RestApi\RestEditFixtureNameHandler.cs" />
@@ -117,13 +124,13 @@
     <Compile Include="Template\FixtureTemplate.cs" />
     <Compile Include="IDmxPacketHandler.cs" />
     <Compile Include="Field.cs" />
-    <Compile Include="Fixture.cs" />
-    <Compile Include="IPixelPatch.cs" />
+    <Compile Include="Fixtures\Fixture.cs" />
+    <Compile Include="PixelPatching\IPixelPatch.cs" />
     <Compile Include="Modes\IMode.cs" />
     <Compile Include="Modes\ModeLineWiseTopLeft.cs" />
     <Compile Include="Output.cs" />
-    <Compile Include="Pixel.cs" />
-    <Compile Include="PixelPatchSnakeColumnWiseTopLeft.cs" />
+    <Compile Include="PixelPatching\Pixel.cs" />
+    <Compile Include="PixelPatching\PixelPatchSnakeColumnWiseTopLeft.cs" />
     <Compile Include="Port.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
