@@ -23,7 +23,9 @@ namespace DmxLedPanel.Template
                 PixelPatch = new PixelPatchTemplate(f.PixelPatch),
                 Modes = modes,
                 CurrentModeIndex = f.CurrentModeIndex,
-                PatchedTo = f.PatchedTo
+                PatchedTo = f.PatchedTo,
+                UtilAddress = f.UtilAddress,
+                UtilsEnabled = f.IsDmxUtilsEnabled
             };
         }
     }

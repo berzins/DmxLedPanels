@@ -14,6 +14,8 @@ namespace DmxLedPanel.RestApi
         public static readonly string KEY_FIXTURE_ID = "fixture_id";
         public static readonly string KEY_PORT = "port";
         public static readonly string KEY_ADDRESS = "address";
+        public static readonly string KEY_UTIL_ADDRESS = "util_address";
+        public static readonly string KEY_UTIL_ENABLED = "util_enabled";
         public static readonly string KEY_INCREMENT = "increment";
 
 
@@ -24,48 +26,48 @@ namespace DmxLedPanel.RestApi
             try
             {
                 var fids = getIntArgArray(q.Get(KEY_FIXTURE_ID));
-                var port = getIntArgArray(q.Get(KEY_PORT));
+                var portStr = getIntArgArray(q.Get(KEY_PORT));
                 var addr = q.Get(KEY_ADDRESS);
                 var increment = bool.Parse(q.Get(KEY_INCREMENT));
+                var utilEnabled = bool.Parse(q.Get(KEY_UTIL_ENABLED));
 
-                if (fids == null || port == null || addr == null)
+                if (fids == null || portStr == null || addr == null)
                 {
                     throw new ArgumentNullException("Some of fixture edit properties was null");
                 }
 
-                Address address = new Address()
+                var port = new Port()
+                {
+                    Net = portStr[0],
+                    SubNet = portStr[1],
+                    Universe = portStr[2]
+                };
+
+                var address = new Address()
                 {
                     DmxAddress = int.Parse(addr),
-                    Port = new Port()
-                    {
-                        Net = port[0],
-                        SubNet = port[1],
-                        Universe = port[2]
-                    }
+                    Port = port.Clone()
+                };
+
+                var utilAddress = new Address()
+                {
+                    Port = port.Clone(),
+                    DmxAddress = int.Parse(q.Get(KEY_UTIL_ADDRESS))
                 };
 
                 var fixtures = StateManager.Instance.State.GetFixtures(fids);
     
-                var i = 0;
-                var offset = 0;
                 foreach (var f in fixtures)
                 {
                     if (increment)
                     {
-                        if (address.DmxAddress + f.Address.DmxAddress > 512) {
-                            address += f.InputAddressCount;
-                            f.Address = address.Clone();
-                            address += f.InputAddressCount;
-                        } else {
-                            f.Address = address.Clone();
-                            address += f.InputAddressCount;
-                        }
+                        setAddresses(f, address, utilAddress, utilEnabled);
+                        address += f.InputAddressCount;
                     }
                     else
                     {
-                        f.Address = address.Clone();
+                        setAddresses(f, address, utilAddress, utilEnabled);
                     }
-                    i++;
                 }
 
                 string state = StateManager.Instance.GetStateSerialized();
@@ -78,6 +80,12 @@ namespace DmxLedPanel.RestApi
                 WriteErrorMessage(context, e);
             }
 
+        }
+
+        private void setAddresses(Fixture f, Address address, Address utilAddress, bool utilEnabled) {
+            f.Address = address.Clone();
+            f.UtilAddress = utilAddress.Clone();
+            f.IsDmxUtilsEnabled = utilEnabled;
         }
     }
 }

@@ -90,7 +90,7 @@ namespace DmxLedPanel
 
             restApi.Start();
 
-            StateManager.Instance.LoadState(StateManager.DEFAULT_STATE_FILE);
+            StateManager.Instance.LoadStateFromFile(SettingManager.Instance.Settings.CurrentProject);
             ArtnetIn.Instance.Start();
 
 

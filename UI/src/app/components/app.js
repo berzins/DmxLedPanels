@@ -20,6 +20,7 @@ import ButtonUndoState from '../containers/menuButtons/undoButton'
 import ButtonRedoState from '../containers/menuButtons/redoButton'
 import OutputEditIpForm from '../containers/editForms/outputEditIpForm'
 import DmxSignalItem from '../containers/justItems/dmxSignalItem'
+import ModeManagerForm from '../containers/forms/modeForm'
 
 class App extends Component { 
 
@@ -65,6 +66,7 @@ class App extends Component {
                 <OutputEditNameForm click={this.click}/>
                 <OutputEditPortForm click={this.click}/>
                 <OutputEditIpForm click={this.click}/>
+                <ModeManagerForm click={this.click}/>
                 
             </div>
         )

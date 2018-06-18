@@ -22,10 +22,7 @@ namespace DmxLedPanel
            
             patch = patchPixels();
         }
-
-        // terrible clone constructor
-        public PixelPatchSnakeColumnWiseTopLeft(PixelPatch pp, Pixel[,] patch) :
-             base(pp.Name, pp.Columns, pp.Rows, pp.Address, pp.PixelLength, patch) {}
+        
 
         public override Pixel[,] GetPixelPatch() {
             return patch;
@@ -95,15 +92,6 @@ namespace DmxLedPanel
                 }
             }
             return order;
-        }
-
-        
-
-        
-
-        public override IPixelPatch Clone()
-        {
-            return (IPixelPatch)(new PixelPatchSnakeColumnWiseTopLeft(this, this.patch));
         }
     }
 }

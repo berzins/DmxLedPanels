@@ -56,7 +56,7 @@ namespace DmxLedPanel.RestApi
                 foreach(var f in fixtures)
                 {
                     f.TrySetPatch(RestCreateFixtureHandler.getPixelPatch(patch));
-                    f.SetMode(RestCreateFixtureHandler.getFixtureMode(mode));
+                    f.SetMode(RestCreateFixtureHandler.GetFixtureMode(mode));
           
                     f.Name = name + " " + i;
                     if (increment)

@@ -23,5 +23,7 @@ namespace DmxLedPanel
         public int PatchedTo { get; set; } = -1;
         public List<ModeTemplate> Modes { get; set; }
         public int CurrentModeIndex { get; set; }
+        public Address UtilAddress { get; set; }
+        public bool UtilsEnabled { get; set; }
     }
 }

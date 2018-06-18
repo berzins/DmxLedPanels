@@ -5,7 +5,7 @@ var DIST_DIR = path.resolve(__dirname, "../DmxLedPanel/DmxLedPanel/bin/Debug/UI"
 var SRC_DIR = path.resolve(__dirname, "src");
 
 var config = {
-    mode: 'production',
+    mode: 'development',
     entry: SRC_DIR + '/app/index.js',
     output: {
         path: DIST_DIR + '/resource/app/',

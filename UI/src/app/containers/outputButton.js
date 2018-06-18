@@ -38,7 +38,6 @@ class OutputButton extends Component {
 
     handleClick() {
         this.props.click.clicked = true
-        console.log("this.props.selection.onlyFixture = " + this.props.selection.onlyFixture)
         if(this.props.selection.onlyFixture) {    
             this.props.patchFixture(this.props.selection.fixtures, this.props.data.id)
         }

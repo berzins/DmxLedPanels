@@ -6,6 +6,15 @@ import { fixtureEditModeFormReducer } from '../../reducers/formReducers'
 import { closeEditFixtureModeForm } from '../../actions/formActions'
 import { editFixtureMode } from '../../actions/stateActions'
 import { FixtureMode } from '../../util/util'
+import { 
+    formModal,
+    contentItem,
+    buttonItem,
+    rowItem
+} from './formItems'
+import ModeItemList from '../justItems/modeItemList'
+import { openModeManagerForm } from '../../actions/formActions'
+import { convertModeIndexesToModevalues } from '../../util/mode'
 import store from '../../store'
 
 const FORM_ID_MODE = "EDIT_FIXTURE_FORM_ID_MODE"
@@ -24,42 +33,6 @@ class FixtureEditModeForm extends Component {
         this.props.click.clicked = true
     }
 
-    createSelectItem(title, id, values) {
-
-        return (
-            <div 
-            className="col-auto my-1" 
-            key={id}
-            onClick={() => this.handleClick() }
-            >
-            <label className="mr-sm-2" htmlFor="inlineFormCustomSelect">{title}</label>
-            <select className="custom-select mr-sm-2" id={id}>
-                {values.map((val, i) => {
-                    return i === 0 ? 
-                    <option value={val} key={title + val} defaultValue>{val}</option> : 
-                    <option value={val} key={title + val}>{val}</option>
-                    })
-                }
-            </select>
-            </div>
-        )
-    }
-    
-    createRowItem(child) {
-        return (
-            <div className="col-12">
-                <div className="form-row align-items-center">
-                    {child.map((x) => {return x})}
-                </div>    
-            </div>
-        )
-    }
-
-    fillIncrementArray(size, start) {
-        let vals = Array.apply(null, Array(size))
-        return vals.map((x, i) => {return i + start})
-    }
-
     onClose(){
         this.props.closeEditFixtureModeForm(this)
     }
@@ -69,52 +42,35 @@ class FixtureEditModeForm extends Component {
         let ids = store.getState().selectionReducer.fixtures
         
         let data = {
-            mode : this.getValue(FORM_ID_MODE),
-            modeCol: this.getValue(FORM_ID_MODE_COLS),
-            modeRow : this.getValue(FORM_ID_MODE_ROWS)
+            modes : convertModeIndexesToModevalues(store.getState().modesReducer.modes)
         }
         
         this.props.editFixtureMode(ids, data)
         this.props.closeEditFixtureModeForm(this)
-        
     }
-
-
-
+    
     getValue(id){
         return document.getElementById(id).value
+    }
+
+    onModeManagerClick() {
+        this.props.openModeManagerForm()
     }
 
     render() {
         let form = this.props.form
         let modeVals = [1, 3, 9]
-        return(
-            <Modal visible={form.opened} onClickBackdrop={() => this.onClose() }>
-                <div className="modal-header">
-                <h5 className="modal-title">Edit fixture mode</h5>
-                </div>
-                <div className="modal-body">
-                <form>
-                <div className="form-row align-items-center">
-                    {this.createRowItem([
-                        this.createSelectItem("Mode", FORM_ID_MODE, FixtureMode.all())
-                    ])}
-                    {this.createRowItem([
-                        this.createSelectItem("Mode Columns", FORM_ID_MODE_COLS, modeVals),
-                        this.createSelectItem("Mode Rows", FORM_ID_MODE_ROWS, modeVals)
-                    ])}
-                </div>
-                </form>
-                </div>
-                <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => this.onClose() }>
-                    Klancel
-                </button>
-                <button type="button" className="btn btn-primary" onClick={ () => this.onSubmit() }>
-                    Edit
-                </button>
-                </div>
-            </Modal>
+        return formModal(
+            form.opened,
+            'Edit fixture modes',
+            'Yes, I can do it',
+            'It\'s time to leave',
+            this,
+            () => contentItem([
+                rowItem([
+                    <ModeItemList />
+                ])
+            ])
         )
     }
 }
@@ -128,7 +84,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
         editFixtureMode: editFixtureMode,
-        closeEditFixtureModeForm: closeEditFixtureModeForm
+        closeEditFixtureModeForm: closeEditFixtureModeForm,
+        openModeManagerForm : openModeManagerForm
     }, dispatch)
 }
 

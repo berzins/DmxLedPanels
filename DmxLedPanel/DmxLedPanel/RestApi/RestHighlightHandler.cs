@@ -13,9 +13,7 @@ namespace DmxLedPanel.RestApi
 
         public static readonly string KEY_FIXTURE_ID = "fixture_id";
         public static readonly string KEY_OUTPUT_ID = "output_id";
-
         
-
 
         public override void HandleRequest(HttpListenerContext context)
         {
@@ -70,18 +68,18 @@ namespace DmxLedPanel.RestApi
                     }
                 }
 
-                // zero out anny fixture calues
+                // clear all highlights
                 foreach(var f in allFixtures)
                 {
                     f.SetHighlight(false);
                 }
 
-                // set highliht fixtures to full
+                // highligh selected fixtures
                 foreach (var f in highlightf) {
                     f.SetHighlight(true);
                 }
 
-                // Trigger ouptus send out data
+                // Trigger ouptus to send out data
                 var patchedFix = state.GetPatchedFixtures();
                 foreach(var f in patchedFix)
                 {
@@ -104,8 +102,6 @@ namespace DmxLedPanel.RestApi
                 Utils.LogException(e);
                 WriteErrorMessage(context, e);
             }
-
-
         }
     }
 }

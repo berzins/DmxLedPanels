@@ -55,7 +55,7 @@ namespace DmxLedPanel.Fixtures
             }
         }
 
-        public abstract void HandleDmx(Fixture f, int value);
+        public abstract void HandleDmx(Fixture f, int [] values);
         public abstract FixtureDmxUtil Clone();
 
     }

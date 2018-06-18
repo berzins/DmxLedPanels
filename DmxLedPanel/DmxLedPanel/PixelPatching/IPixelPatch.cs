@@ -20,7 +20,5 @@ namespace DmxLedPanel
 
         int[] GetPixelValues();
 
-        IPixelPatch Clone();
-
     }
 }

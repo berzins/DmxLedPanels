@@ -19,7 +19,7 @@ namespace DmxLedPanel.RestApi
 
             try {
                 var fileName = q.Get(KEY_FILE_NAME);
-                StateManager.Instance.LoadState(fileName);
+                StateManager.Instance.LoadStateFromFile(fileName);
                 SettingManager.Instance.Settings.CurrentProject = fileName;
                 SettingManager.Instance.Save();
                 var data = StateManager.Instance.GetStateSerialized();

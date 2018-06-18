@@ -245,3 +245,50 @@ export const closeEditOutputIpForm = (data = null)  =>{
 }
 
 // ------------- end of edit forms ----------------------------
+
+// ------------- mode manager form ----------------------------
+
+ export const OPEN_MODE_MANAGER_FORM = "OPEN_MODE_MANAGER_FORM"
+
+ export const openModeManagerForm = (data = null) => {
+     return dispatch => {
+         dispatch({type: OPEN_MODE_MANAGER_FORM, payload:data})
+     }
+ }
+
+ export const CLOSE_MODE_MANAGER_FORM = "CLOSE_MODE_MANAGER_FORM"
+
+ export const closeModeManagerForm = (data =  null) => {
+     return dispatch => {
+         return dispatch({type:CLOSE_MODE_MANAGER_FORM, payload: data})
+     }
+ }
+
+
+ export const UPDATE_MODES = 'UPDATE_MODES'
+
+ export const updateModes = (data = null) => {
+     if(data == null) return
+     return dispatch => {
+         dispatch({type: UPDATE_MODES, payload: data})
+     }
+ }
+
+
+ export const SUBMIT_MODES = "SUBMIT_MODES"
+
+export const submitModes = (modes) => {
+    return dispatch => {
+        dispatch({type: SUBMIT_MODES, payload: modes})
+    }
+}
+
+export const RESET_MODES = "RESET_MODES"
+
+export const resetModes = () => {
+    return dispatch => {
+        dispatch({type: RESET_MODES, payload: modes})
+    }
+}
+
+// ------------- end of mode manager form --------------------

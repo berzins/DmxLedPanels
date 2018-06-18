@@ -23,10 +23,10 @@ namespace DmxLedPanel.Fixtures
             return new DmxModeSwitcher(Index, Name, values);
         }
 
-        public override void HandleDmx(Fixture f, int value)
+        public override void HandleDmx(Fixture f, int [] values)
         {
-            int switchInterval = 255 / f.ModeCount;
-            int index = value / switchInterval;
+            float switchInterval = ((float)256 / f.ModeCount);
+            int index = (int)((float)values[0] / switchInterval);
             f.SwitchMode(index);
         }
     }

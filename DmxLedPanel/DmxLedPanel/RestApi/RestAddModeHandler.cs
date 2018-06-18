@@ -37,7 +37,7 @@ namespace DmxLedPanel.RestApi
                 var fixtures = StateManager.Instance.State.GetFixtures(fixIds);
 
                 foreach (var f in fixtures) {
-                    f.AddMode(RestCreateFixtureHandler.getFixtureMode(name));
+                    f.AddMode(RestCreateFixtureHandler.GetFixtureMode(name));
                 }
             }
             catch (Exception e) {

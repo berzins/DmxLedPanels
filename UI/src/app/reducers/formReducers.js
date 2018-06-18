@@ -12,7 +12,6 @@ import {
     MODE_NEW,
     MODE_EDIT,
     MODE_DEFAULT,
-
     FORM_VALUE_ERROR,
     SELECT_FILE,
     FormMode
@@ -39,8 +38,6 @@ export const outputFormReducer = (state = init, action) => {
     }
     return state
 }
-
-
 
 export const fixtureFormReducer = (state = init, action) => {
     switch(action.type) {
@@ -135,8 +132,6 @@ export const fixtureEditNameFormReducer = (state = init, action) => {
     )
 }
 
-
-
 import { 
     OPEN_EDIT_FIXTURE_ADDRESS_FORM,
     CLOSE_EDIT_FIXTURE_ADDRESS_FORM
@@ -150,8 +145,6 @@ export const fixtureEditAddressFormReducer = (state = init, action) => {
     )
 }
 
-
-
 import { 
     OPEN_EDIT_FIXTURE_MODE_FORM,
     CLOSE_EDIT_FIXTURE_MODE_FORM
@@ -164,8 +157,6 @@ export const fixtureEditModeFormReducer = (state = init, action) => {
         CLOSE_EDIT_FIXTURE_MODE_FORM
     )
 }
-
-
 
 import { 
     OPEN_EDIT_FIXTURE_PATCH_FORM,
@@ -222,7 +213,6 @@ export const outputEditIpFormReducer = (state = init, action) => {
     )
 }
 
-
 const genericEditFormEventHandler = (state, action, open, close) => {
     switch(action.type) {
         case open: {
@@ -230,6 +220,119 @@ const genericEditFormEventHandler = (state, action, open, close) => {
         }
         case close: {
             return {...state, opened: false, mode: null, data: action.payload}
+        }
+    }
+    return state
+}
+
+
+
+// ------------ mode manager reducer ------------------
+
+import {
+    OPEN_MODE_MANAGER_FORM,
+    CLOSE_MODE_MANAGER_FORM,
+    UPDATE_MODES
+} from '../actions/formActions'
+
+const modeFormInit = {
+    visible : false,
+    modes: []
+}
+
+import { 
+    getArrayIndexByValue, 
+    getShortNameFixtureMode,
+    FixtureMode,
+    fillIncrementArray
+} from '../util/util'
+import {
+    MODE_COLUMN_VALUES,
+    MODE_ROW_VALUES    
+} from '../constants/const'
+
+import store from '../store'
+export const modeManagerFormReducer = (state = modeFormInit, action) => {
+    switch(action.type) {
+        case OPEN_MODE_MANAGER_FORM: {
+            return { ...state, visible:true }
+        }
+        case CLOSE_MODE_MANAGER_FORM: {
+            return { ...state, visible: false }
+        }
+        case OPEN_FIX_FORM_NEW: {
+            return { ...state, modes: []}
+        }
+        case OPEN_EDIT_FIXTURE_MODE_FORM: {                
+            return { ... state, modes: getSelectedFixtureModeSet()}
+        }
+        case UPDATE_MODES: {
+            return { ...state, modes: action.payload}
+        }
+    }
+    return state
+}
+
+const getModeIdentifyer = (mode) => {
+    return ' ' + mode.typeIndex + mode.colIndex + mode.rowIndex
+}
+
+const getSelectedFixtureModeSet = () => {
+    
+    // get selected fixture ids
+    const selected = store.getState().selectionReducer.fixtures
+
+    // get all fixture objects
+    const fixtures = []
+    const state = store.getState().stateReducer.data
+    const outFixtures = state.Outputs.forEach(out => {
+        out.Fixtures.forEach(fix => {fixtures.push(fix)})
+    })
+    state.FixturePool.forEach(fix => {fixtures.push(fix)})
+
+    // get all fixture modes
+    const modes = [] 
+    fixtures.forEach(fix => {
+        selected.forEach(id => {
+            if(fix.Id == id) {
+                fix.Modes.forEach( mode => {
+                    modes.push(
+                        {
+                            typeIndex: getArrayIndexByValue(FixtureMode.all(), mode.Name),
+                            colIndex: getArrayIndexByValue(MODE_COLUMN_VALUES, mode.Params[0]),
+                            rowIndex: getArrayIndexByValue(MODE_ROW_VALUES, mode.Params[1])
+                        }
+                    )
+                })
+            }
+        });
+    })
+
+    // create set of modes
+    const modeSet = []
+    const modeIds = []
+    modes.forEach(mode => {
+        const id = getModeIdentifyer(mode)
+        if(getArrayIndexByValue(modeIds, id) == null) {
+            modeIds.push(id)
+            modeSet.push(mode)
+        }
+    })
+    return modeSet
+}
+
+import { SUBMIT_MODES } from '../actions/formActions'
+
+export const modesReducer = (state = { modes: [] }, action) => {
+    switch(action.type) {
+        case SUBMIT_MODES: {
+            return {...state, modes: action.payload }
+        }
+        case OPEN_FIX_FORM_NEW: {
+            return { ...state, modes: []}
+        }
+        case OPEN_EDIT_FIXTURE_MODE_FORM: {                
+            return { ... state, modes: getSelectedFixtureModeSet()}
         }
     }
     return state

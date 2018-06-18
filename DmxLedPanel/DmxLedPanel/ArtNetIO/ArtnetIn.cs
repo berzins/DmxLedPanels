@@ -17,6 +17,7 @@ namespace DmxLedPanel.ArtNetIO
         private volatile List<IDmxPacketHandler> dmxPacketHandlers;
         private volatile List<IDmxSignalListener> signalListeners;
         private object lockref = new object();
+        private static readonly object padlock = new object();
 
         private ArtnetIn() {
             dispatcher = initDispatcher();
@@ -30,7 +31,11 @@ namespace DmxLedPanel.ArtNetIO
         public static ArtnetIn Instance {
             get {
                 if (instance == null) {
-                    instance = new ArtnetIn();
+                    lock (padlock) {
+                        if (instance == null) {
+                            instance = new ArtnetIn();
+                        }
+                    }
                 }
                 return instance;
             }

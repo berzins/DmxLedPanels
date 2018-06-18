@@ -55,10 +55,15 @@ namespace DmxLedPanel.State
             }
         }
 
-        public void LoadState(string file)
+        public void LoadStateFromFile(string file)
         {
             this.state = getStateFromFile(file);
-            GetStateSerialized();
+            GetStateSerialized(); // this is for undo / redo stuff
+        }
+
+        public void LoadState(string serializedState) {
+            this.state = inflateAndLoadSerializedState(serializedState);
+            GetStateSerialized(); // this is for undo / redo stuff
         }
 
         private State inflateAndLoadSerializedState(string serState) {

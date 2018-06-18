@@ -26,18 +26,18 @@ namespace DmxLedPanel
 
         /// <summary>
         /// Use this with caution.. 
-        /// Usful when reloading whole state of app. 
+        /// Useful when reloading whole state of app. 
         /// </summary>
         public static void ResetIdCounter() { idCounter = 0; }
 
         public Fixture(List<IMode> modes, IPixelPatch pixelPatch) {
             dmxUtils = new List<FixtureDmxUtil>();
-            modes = new List<IMode>();
+
+            this.modes = modes;
             Fields = new List<Field>();
 
             dmxUtils.Add(new DmxModeSwitcher(0));
             this.pixelPatch = pixelPatch;
-            this.mode = modes[currentModeIndex];
             SetMode(modes[currentModeIndex]);
             Address = new Address();
             updateHandlers = new List<IFixtureUpdateHandler>();
@@ -84,7 +84,7 @@ namespace DmxLedPanel
         public bool IsDmxUtilsEnabled { get; set; } = false;
         
         /// <summary>
-        /// -1 if upatched otherwise value indicates output id
+        /// returns -1 if upatched otherwise value indicates output id
         /// </summary>
         public int PatchedTo { get; set; } = Output.FIXTURE_UNPATCH;
 
@@ -142,6 +142,13 @@ namespace DmxLedPanel
             }
         }
 
+        public void SetModes(List<IMode> modes) {
+            lock (lockref) {
+                this.modes = modes;
+                TrySwitchMode(CurrentModeIndex < this.modes.Count ? CurrentModeIndex : 0);
+            }
+        }
+
         public void AddMode(IMode m) {
             modes.Add(m);
         }
@@ -178,6 +185,20 @@ namespace DmxLedPanel
             currentModeIndex = index;
         }
 
+
+        public bool TrySwitchMode(int index) {
+            try
+            {
+                var mode = modes.ElementAt(index);
+                SetMode(mode);
+                currentModeIndex = index;
+                return true;
+            }
+            catch (IndexOutOfRangeException e) {
+                return false;
+            }
+        }
+
         public void SwitchMode(IMode mode) {
             SetMode(mode);
         }
@@ -194,7 +215,8 @@ namespace DmxLedPanel
         }
 
         /// <summary>
-        /// Will fail if fixture is pattched to output
+        /// Change internal pixel order.
+        /// Will fail if fixture is pattched to output.
         /// </summary>
         /// <param name="patch"></param>
         /// <returns>Return true if patch was successful / false if not</returns>
@@ -251,7 +273,10 @@ namespace DmxLedPanel
             int offset = this.UtilAddress.DmxAddress;
 
             foreach (var du in dmxUtils) {
-                du.HandleDmx(this, Utils.GetSubArray(packet.DmxData, offset + du.Index, 1)[0]);
+                du.HandleDmx(
+                    this, 
+                    Utils.GetSubArray(packet.DmxData, offset + du.Index -1, 1)
+                    .Select(x => (int)x).ToArray());
             }
         }
 

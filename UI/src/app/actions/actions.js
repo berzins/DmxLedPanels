@@ -7,7 +7,6 @@ export const SOMETHING_HIGHLIGHTED = "SOMETHING_HIGHLIGHTED"
 
 export const highlight = () => {
 
-    console.log(store.getState())
     const state = store.getState().selectionReducer
     const fixIds = state.fixtures
     const outIds = state.outputs

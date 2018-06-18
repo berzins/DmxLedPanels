@@ -53,11 +53,12 @@ class Fixture extends Component {
         if(store.getState().hilightStateReducer.on) {
             this.props.highlight();
         }
-
-        this.mode = getShortNameFixtureMode(this.props.fixture.Mode)
+        const i = this.props.fixture.CurrentModeIndex
+        this.mode = getShortNameFixtureMode(this.props.fixture.Modes[i])
         this.patch = getShortNameFixturePatch(this.props.fixture.PixelPatch)
         this.port = getPortString(this.props.fixture.Address.Port)
         this.address = this.props.fixture.Address.DmxAddress
+        this.utilAddress = this.props.fixture.UtilAddress.DmxAddress
         
         const cln = "button btn btn-outline-secondary fixture-button item-button " +
                     (this.selected ? "active" : "")
@@ -74,6 +75,7 @@ class Fixture extends Component {
                     <ItemInfoRow name={'Patch'} value={this.patch} />
                     <ItemInfoRow name={'Port'} value={this.port} />
                     <ItemInfoRow name={'Address'} value={this.address} />
+                    <ItemInfoRow name={'Util address'} value={this.utilAddress}/>
                 </div>
             </div>
         );

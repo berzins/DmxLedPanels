@@ -71,8 +71,6 @@ class StoreStateForm extends Component {
     render() {
         const form = this.props.form
         const filename = this.getFileName()
-        console.log("this.props");
-        console.log(this.props);
         return(
             formModal(
                 form.opened,

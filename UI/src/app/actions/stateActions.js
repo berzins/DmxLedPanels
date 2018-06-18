@@ -101,16 +101,23 @@ export const editOutputIp = (ids, data) => {
 }
 
 
+const createModeString = modes => {
+    return modes.map(m => {return m.typeValue + '_' + m.colValue + '|' + m.rowValue}).join('^')
+}
+
 export const addFixture = (count, data) => {
-    
+ 
+
     let url = API_URL + '/createFixture/?' + 
     'count=' + count + 
     '&name=' + data.name + 
     '&port=' + data.net + '|' + data.sub + '|' + data.uni +
     '&address=' + data.addr +
+    '&utils_enabled=' + 'true' + // TODO: put radio switch in create fixture form
+    '&utils_address=' + data.utilAddr +
     '&increment=' + data.increment +
     '&patch_type=' + data.patch + '_' + data.patchCol + '|' + data.patchRow +
-    '&mode=' + data.mode + '_' + data.modeCol + '|' + data.modeRow
+    '&modes=' + createModeString(data.modes)
 
     return (dispatch) => {
         requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])
@@ -143,12 +150,13 @@ export const editFixtureName = (ids, data) => {
 }
 
 export const editFixtureAddress = (ids, data) => {
-    console.log("Edit fixture address trigered")
 
     let url = API_URL + '/editFixtureAddress/?' + 
     'fixture_id=' + ids.join('|') + 
     '&port=' + data.net + '|' + data.sub + '|' + data.uni +
     '&address=' + data.addr +
+    '&util_address=' + data.utilAddr +
+    '&util_enabled=' + 'true' +
     '&increment=' + data.increment 
 
     return (dispatch) => {
@@ -159,7 +167,7 @@ export const editFixtureAddress = (ids, data) => {
 export const editFixtureMode = (ids, data) => {
     let url = API_URL + '/editFixtureMode/?' + 
     'fixture_id=' + ids.join('|') + 
-    '&mode=' + data.mode + '_' + data.modeCol + '|' + data.modeRow
+    '&modes=' + createModeString(data.modes) 
 
     return (dispatch) => {
         requestServer(url, dispatch, [STATE_CHANGE_SUCCESS])

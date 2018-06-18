@@ -61,7 +61,6 @@ namespace DmxLedPanel.Modes
             }
 
             return fields;
-
         }
     }
 }

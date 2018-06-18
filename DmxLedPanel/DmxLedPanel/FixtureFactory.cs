@@ -1,4 +1,5 @@
 ﻿using DmxLedPanel.Modes;
+using DmxLedPanel.PixelPatching;
 using DmxLedPanel.Template;
 using System;
 using System.Collections.Generic;
@@ -23,32 +24,38 @@ namespace DmxLedPanel
             };
 
             fix.SwitchMode(fixTemplate.CurrentModeIndex);
+            fix.UtilAddress = fixTemplate.UtilAddress;
+            fix.IsDmxUtilsEnabled = fixTemplate.UtilsEnabled;
 
             return fix;
         }
 
         private static IMode getMode(ModeTemplate modeTemplate) {
-            if (modeTemplate.Name.Equals(Mode.MODE_GRID_TOP_LEFT)) {
-                return new ModeGridTopLeft(modeTemplate.Params[0], modeTemplate.Params[1]);
+            var mode =  Mode.InstantiateModeByName(modeTemplate.Name, modeTemplate.Params.ToArray());
+            if (mode == null) {
+                throw new KeyNotFoundException(
+                    "Fixture Factory failed to load a mode with name '" + 
+                    modeTemplate.Name + "'");
             }
-            throw new KeyNotFoundException(
-                "Fixture Factory failed to load a mode with key '" + 
-                modeTemplate.Name + "'");
+            return mode;
         }
 
         private static IPixelPatch getPatchType(FixtureTemplate fixTemplate) {
-            if (fixTemplate.PixelPatch.Name.Equals(PixelPatch.PIXEL_PATCH_SNAKE_COLUMNWISE_TOP_LEFT)) {
-                return new PixelPatchSnakeColumnWiseTopLeft(
-                   fixTemplate.PixelPatch.Columns,
-                   fixTemplate.PixelPatch.Rows,
-                   0,
-                   fixTemplate.PixelPatch.PixelLength
-                    );
+            var pp =  RectaglePixelPatch.InstantiatePixelPatchByName(
+                fixTemplate.PixelPatch.Name,
+                fixTemplate.PixelPatch.Columns,
+                fixTemplate.PixelPatch.Rows,
+                0,
+                fixTemplate.PixelPatch.PixelLength
+                );
+            if (pp == null) {
+                throw new KeyNotFoundException(
+                    "Fixture Factory failed to load a Pixel patch with name '" +
+                    fixTemplate.PixelPatch.Name + "'");
             }
-
-            throw new KeyNotFoundException(
-                "Fixture Factory failed to load a pixel patch with key '" + 
-                fixTemplate.PixelPatch.Name + "'");
+            return pp;
         }
+
+        
     }
 }

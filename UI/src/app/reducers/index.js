@@ -20,6 +20,8 @@ import {
     outputEditNameFormReducer,
     outputEditPortFormReducer,
     outputEditIpFormReducer,
+    modeManagerFormReducer,
+    modesReducer
 } from './formReducers'
 import {selectionReducer, poolItemSelectedReducer} from './selectionReducer'
 
@@ -43,7 +45,10 @@ const reducers = combineReducers(
         outputEditPortFormReducer: outputEditPortFormReducer,
         outputEditIpFormReducer: outputEditIpFormReducer,
         dmxStateReducer: dmxStateReducer,
-        currentProjectReducer: currentProjectReducer
+        currentProjectReducer: currentProjectReducer,
+        modeManagerFormReducer: modeManagerFormReducer,
+        modesReducer: modesReducer
+
     }
 );
 

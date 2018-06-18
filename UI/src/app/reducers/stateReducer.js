@@ -95,8 +95,6 @@ import { CURRENT_PROJECT_UPDATE } from'../actions/stateActions'
 export const currentProjectReducer = (state = {name : null}, action) => {
     switch(action.type) {
         case CURRENT_PROJECT_UPDATE: {
-            console.log("current project reducer")
-            console.log(action.payload)
             return {...state, name: action.payload.Content.split('.')[0]}
         }
     }

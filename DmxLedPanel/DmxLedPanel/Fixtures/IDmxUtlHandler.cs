@@ -8,6 +8,6 @@ namespace DmxLedPanel.Fixtures
 {
     public interface IDmxUtlHandler
     {
-        void HandleDmx(Fixture f, int Value);
+        void HandleDmx(Fixture f, int [] values);
     }
 }

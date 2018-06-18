@@ -66,7 +66,7 @@ class EditOutputButton extends Component {
             >
                 <b>Edit Output</b>
             </button>
-            <div className="dropdown-menu" aria-labelledby="editOutputDropdownButton">
+            <div className="dropdown-menu" aria-labelledby="editOutputDropdownButton123">
                 <a className="dropdown-item" onClick={() => this.handleClick(ITEM_NAME)} href="javascript:void(0)">Name</a>
                 <a className="dropdown-item" onClick={() => this.handleClick(ITEM_PORT)}href="javascript:void(0)">Port</a>
                 <a className="dropdown-item" onClick={() => this.handleClick(ITEM_IP)}href="javascript:void(0)">Ip address</a>

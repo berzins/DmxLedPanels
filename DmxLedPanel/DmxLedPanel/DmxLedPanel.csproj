@@ -68,10 +68,15 @@
     <Compile Include="Fixtures\IDmxUtlHandler.cs" />
     <Compile Include="GetHighlihgtStateHandler.cs" />
     <Compile Include="Modes\Mode.cs" />
+    <Compile Include="Modes\ModeRectBorderOutIn.cs" />
     <Compile Include="PixelPatching\PixelOrder.cs" />
     <Compile Include="PixelPatching\PixelPatch.cs" />
+    <Compile Include="PixelPatching\PixelPatchSnakeColumnWiseBottomLeft.cs" />
+    <Compile Include="PixelPatching\PixelPatchSnakeColumnWiseTopRight.cs" />
+    <Compile Include="PixelPatching\PixelPatchSnakeRowWiseBottomRight.cs" />
     <Compile Include="PixelPatching\PixelPatchSnakeRowWiseTopLeft.cs" />
     <Compile Include="PixelPatching\PixelPosition.cs" />
+    <Compile Include="PixelPatching\RectaglePixelPatch.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -87,6 +92,7 @@
     <Compile Include="RestApi\RestEditFixtureAddressHandler.cs" />
     <Compile Include="RestApi\RestEditFixtureNameHandler.cs" />
     <Compile Include="RestApi\RestEditFixturePixelPatchHandler.cs" />
+    <Compile Include="RestApi\RestDeleteModeHandler.cs" />
     <Compile Include="RestApi\RestEditOutputHandler.cs" />
     <Compile Include="RestApi\GetHighlightStateHandler.cs" />
     <Compile Include="RestApi\HttpRequestHandler.cs" />
@@ -117,6 +123,7 @@
     <Compile Include="RestApi\RestRedoStateHandler.cs" />
     <Compile Include="RestApi\RestResourceFileHandler.cs" />
     <Compile Include="RestApi\RestSaveStateHandler.cs" />
+    <Compile Include="RestApi\RestSwitchModeHandler.cs" />
     <Compile Include="RestApi\RestUndoStateHandler.cs" />
     <Compile Include="RestApi\UIConfig.cs" />
     <Compile Include="State\HighlightState.cs" />

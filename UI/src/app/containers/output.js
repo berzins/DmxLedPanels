@@ -26,7 +26,6 @@ class Output extends Component {
 
 
     render() {
-        console.log(this.props.output)
         return(
             <div 
             className="jumbotron output border border-primary output-button"

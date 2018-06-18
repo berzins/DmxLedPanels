@@ -4,14 +4,22 @@ let key = 5000;
 
 // ----
 
-export const selectItem = (title, id, values) => {
+/*
+/ onChange
+*/
+export const selectItem = (title, id, values, index = 0) => {
+    const defVal = values[index]
     return (
-        <div className="col-auto my-1" key={id + (key++)}>
+        <div className="col-auto my-1" key={id + (key++)} id={id + key}>
         <label className="mr-sm-2" htmlFor="inlineFormCustomSelect">{title}</label>
-        <select className="custom-select mr-sm-2" id={id}>
-            {values.map((val, i) => {
-                return i === 0 ? 
-                <option value={val} key={title + val} defaultValue>{val}</option> : 
+        <select 
+        className="custom-select mr-sm-2" 
+        id={id}
+        >
+            {
+                values.map((val, i) => {
+                return i == index ? 
+                <option value={val} key={title + val} selected='selected'>{val}</option> : 
                 <option value={val} key={title + val}>{val}</option>
                 })
             }
@@ -33,7 +41,7 @@ export const textInputItem = (title, id, value) => {
 
 export const textItem = (value) => {
     return(
-        <div className="form-group" key={(key++)}>
+        <div className="form-group" key={value + (key++)}>
         <label>{value}</label>
         </div>
     )
@@ -41,17 +49,17 @@ export const textItem = (value) => {
 
 // ----
 
-export const radioItem = (title, id, checked, callback) => {
+export const radioItem = (title, id, checked) => {
     let input = null
     if(checked) {
-        input = <input className="form-check-input" type="checkbox" id={id} onChange={() => callback(this)} checked/>
+        input = <input type="checkbox" data-toggle="toggle" id={id} defaultChecked/>
     } else {
-        input = <input className="form-check-input" type="checkbox" id={id} onChange={() => callback(this)} />
+        input = <input type="checkbox" data-toggle="toggle" id={id} />
     }
     return(
-        <div className="form-group" key={id * (key++)}>
-        <div className="form-check">
-        {input}
+        <div className="form-group" key={id + (key++)}>
+        <div className="checkbox">
+            {input}
         <label className="form-check-label" htmlFor="gridCheck">
             {title}
         </label>
@@ -76,7 +84,7 @@ export const rowItem = (child) => {
 
 export const contentItem = (child) => {
     return (
-        <div>
+        <div key={(key++)}>
             {child.map(x => {return x})}
         </div>
     )
@@ -121,5 +129,27 @@ export const errorItem = (visible, error) => {
     }
     return(
         <div key={key++}></div>
+    )
+}
+
+export const buttonItem = (id, title, onClick) => {
+    const k = id + title + (key++)
+
+    return (
+        <button 
+        type="button" 
+        className="btn btn-light"
+        onClick={() => onClick()}
+        key={k}
+        >{title}</button>
+    )
+}
+
+export const labelItem = (text) => {
+    return (
+        <div 
+        key={text + (key++)}
+        className="label label-info"
+        >{text}</div>
     )
 }

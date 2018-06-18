@@ -28,19 +28,43 @@ namespace DmxLedPanel.PixelPatching
         
     }
 
-    public class PixelOrderRowWiseTopLeft : PixelOrder
-    {
+    public abstract class RectanglePixleOrder : PixelOrder {
 
-        private List<PixelPosition> order;
-        private int current = 0;        
+        protected List<PixelPosition> order;
+        protected int current = 0;
 
-        public PixelOrderRowWiseTopLeft(int columns, int rows) : base(columns, rows)
+        public RectanglePixleOrder(int columns, int rows) : base(columns, rows)
         {
             order = new List<PixelPosition>();
-            init();
+            order = init();
         }
 
-        private void init() {
+        protected abstract List<PixelPosition> init();
+        
+        public override PixelPosition Next()
+        {
+            if (current >= order.Count)
+            {
+                return null;
+            }
+            return order.ElementAt(current++);
+        }
+
+        public override void Reset()
+        {
+            current = 0;
+        }
+    }
+
+    public class PixelOrderRowWiseTopLeft : RectanglePixleOrder
+    {
+        public PixelOrderRowWiseTopLeft(int columns, int rows) : base(columns, rows)
+        {
+        }
+
+        protected override List<PixelPosition> init() {
+
+            var order = new List<PixelPosition>();
             // loop through rows
             for (int row = 0; row < rows; row++)
             {
@@ -65,19 +89,97 @@ namespace DmxLedPanel.PixelPatching
                     }
                 }
             }
+            return order;
+        }
+    }
+
+    public class PixelOrderColumnWiseBottomLeft : RectanglePixleOrder
+    {
+        public PixelOrderColumnWiseBottomLeft(int columns, int rows) : base(columns, rows)
+        {
         }
 
-        public override PixelPosition Next()
+        protected override List<PixelPosition> init()
         {
-            if (current >= order.Count) {
-                return null;
+            var order = new List<PixelPosition>();
+
+            for (int col = 0; col < columns; col++) {
+                var inverted = col % 2 == 0;
+
+                if (!inverted) {
+                    for (int row = 0; row < rows; row++) {
+                        order.Add(new PixelPosition(col, row));
+                    }
+                }
+                else
+                {
+                    for (int row = rows - 1; row >= 0; row--) {
+                        order.Add(new PixelPosition(col, row));
+                    }
+                }
             }
-            return order.ElementAt(current++);
+
+            return order;
+        }
+    }
+
+    public class PixelOrderRowWiseBottomRight : RectanglePixleOrder
+    {
+        public PixelOrderRowWiseBottomRight(int columns, int rows) : base(columns, rows)
+        {
         }
 
-        public override void Reset()
+        protected override List<PixelPosition> init()
         {
-            current = 0;
+            var order = new List<PixelPosition>();
+
+            for (var row = rows - 1; row >= 0; row--) {
+                var inverted = row % 2 == 0;
+                if (!inverted)
+                {
+                    for (var col = 0; col < columns; col++)
+                    {
+                        order.Add(new PixelPosition(col, row));
+                    }
+                }
+                else {
+                    for (var col = columns - 1; col >= 0; col--) {
+                        order.Add(new PixelPosition(col, row));
+                    }
+                }
+            }
+
+            return order;
+        }
+    }
+
+    public class PixelOrderColumnWiseTopRight : RectanglePixleOrder
+    {
+        public PixelOrderColumnWiseTopRight(int columns, int rows) : base(columns, rows)
+        {
+        }
+
+        protected override List<PixelPosition> init()
+        {
+            var order = new List<PixelPosition>();
+
+            for (var col = columns - 1; col >= 0; col--) {
+                var inverted = col % 2 != 0;
+                if (!inverted)
+                {
+                    for (var row = 0; row < rows; row++)
+                    {
+                        order.Add(new PixelPosition(col, row));
+                    }
+                }
+                else {
+                    for (var row = rows - 1; row >= 0; row--) {
+                        order.Add(new PixelPosition(col, row));
+                    }
+                }
+            }
+
+            return order;
         }
     }
 }

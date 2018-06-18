@@ -22,7 +22,6 @@ namespace DmxLedPanel.RestApi
         public static readonly string KEY_CURRENT_MODE = "current_mode";
         public static readonly string KEY_UTILS_ENABLED = "utils_enabled";
         public static readonly string KEY_UTIL_ADDRESS = "utils_address";
-        public static readonly string KEY_UTIL_ADDRESS_INCREMET = "util_addr_increment";
         public static readonly string KEY_INCREMENT = "increment";
 
         public override void HandleRequest(HttpListenerContext context)
@@ -34,56 +33,59 @@ namespace DmxLedPanel.RestApi
                 string name = q.Get(KEY_FIX_NAME);
 
                 int dmxAddress = int.Parse(q.Get(KEY_ADDRESS));
-
+                bool dmxUtilsEnabled = bool.Parse(q.Get(KEY_UTILS_ENABLED));
 
                 int[] portVals = getIntArgArray(q.Get(KEY_PORT));
+                var port = new Port()
+                {
+                    Net = portVals[0],
+                    SubNet = portVals[1],
+                    Universe = portVals[2]
+                };
+
                 Address address = new Address()
                 {
                     DmxAddress = int.Parse(q.Get(KEY_ADDRESS)),
-                    Port = new Port()
-                    {
-                        Net = portVals[0],
-                        SubNet = portVals[1],
-                        Universe = portVals[2]
-                    }
+                    Port = port.Clone()
                 };
 
-                //var utilsEnabled = bool.Parse(q.Get(KEY_UTILS_ENABLED));
-                //var utilAddress = q.Get(KEY_UTIL_ADDRESS);
-                //var utilAddrIncrement = bool.Parse(q.Get(KEY_UTIL_ADDRESS_INCREMET));
-
+                var utilsEnabled = bool.Parse(q.Get(KEY_UTILS_ENABLED));
+                var utilAddress = new Address() {
+                    DmxAddress = int.Parse(q.Get(KEY_UTIL_ADDRESS)),
+                    Port = port.Clone()
+                };
 
                 bool increment = bool.Parse(q.Get(KEY_INCREMENT));
 
+                //validate pixel and mode values
+                var modes = GetFixtureModes(q.Get(KEY_MODES));
+                var pp = q.Get(KEY_PATCH_TYPE);
+                ValidateModeValues(modes, getPixelPatch(pp));
+                
+                // create fixtures
                 for (int i = 0; i < int.Parse(q.Get(KEY_COUNT)); i++)
                 {
 
-                    var fix = new Fixture(
-                        getFixtureModes(q.Get(KEY_MODES)), 
-                        getPixelPatch(q.Get(KEY_PATCH_TYPE))
-                        );
+                    var fix = new Fixture(modes, getPixelPatch(pp));
                     fix.Name = name + " " + i;
 
+                    fix.UtilAddress = utilAddress.Clone();
                     fix.Address =  address.Clone();
                     if (increment)
                     {
                         address.DmxAddress += fix.InputAddressCount;
                     }
+                    fix.IsDmxUtilsEnabled = dmxUtilsEnabled;
 
-                    //TODO: fix this. 
-                    //fix.UtilAddress = utilAddress.Clone();
-                    // if (ut ilAddrIncrement) {
-
-                    //}
-                    
                     fixtures.Add(fix);
                 }
 
                 StateManager.Instance.State.FixturePool.AddRange(fixtures);
                 string state = StateManager.Instance.GetStateSerialized();
+
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
             }
-            catch (EntryPointNotFoundException e) {
+            catch (ArgumentNullException e) {
                 Utils.LogException(e);
                 WriteErrorMessage(context, e);
             }
@@ -96,25 +98,24 @@ namespace DmxLedPanel.RestApi
         /// </summary>
         public static IPixelPatch getPixelPatch(string param) {
             string[] args = param.Split(VALUE_SPLITTER);
-            if (args[0].Equals(PixelPatch.PIXEL_PATCH_SNAKE_COLUMNWISE_TOP_LEFT)) {
-                int[] dim = args[1].Split(PARAM_SPLITTER).Select(x => int.Parse(x)).ToArray();
-                return new PixelPatchSnakeColumnWiseTopLeft(dim[0], dim[1], 0, Const.PIXEL_LENGTH);
-            }
-            if (args[0].Equals(PixelPatch.PIXEL_PATCH_SNAKE_ROWWISE_TOP_LEFT)) {
-                int[] dim = args[1].Split(PARAM_SPLITTER).Select(x => int.Parse(x)).ToArray();
-                return new PixelPatchSnakeRowWiseTopLeft(dim[0], dim[1], 0, Const.PIXEL_LENGTH);
-            }
-            return null;
+            int[] dim = args[1].Split(PARAM_SPLITTER).Select(x => int.Parse(x)).ToArray();
+            return RectaglePixelPatch.InstantiatePixelPatchByName(
+                args[0], // name
+                dim[0], //columns
+                dim[1], //rows
+                0,
+                Const.PIXEL_LENGTH
+                );
         }
 
 
-        public static List<IMode> getFixtureModes(string param) {
+        public static List<IMode> GetFixtureModes(string param) {
 
             List<IMode> modes = new List<IMode>();
             string[] args = param.Split(ITEM_SPLITTER);
 
             foreach (var m in args) {
-                modes.Add(getFixtureMode(m));
+                modes.Add(GetFixtureMode(m));
             }
 
             return modes;
@@ -124,13 +125,12 @@ namespace DmxLedPanel.RestApi
         /// Figure out 'KEY_MODE' parmeter
         /// Expected syntax is [mode name] VALUE_SPILTTER [columns] PARAM_SPILTTER [rows]
         /// </summary>
-        public static IMode getFixtureMode(string param) {
+        public static IMode GetFixtureMode(string param) {
             string[] args = param.Split(VALUE_SPLITTER);
-            if (args[0].Equals(Mode.MODE_GRID_TOP_LEFT)) {
-                int[] dim = args[1].Split(PARAM_SPLITTER).Select(x => int.Parse(x)).ToArray();
-                return new ModeGridTopLeft(dim[0], dim[1]);
-            }
-            return null;
+            return Mode.InstantiateModeByName(
+                args[0],
+                args[1].Split(PARAM_SPLITTER).Select(x => int.Parse(x)).ToArray()
+                );
         }
 
         private List<Address> createAddresses(Address addr, bool increment, int spacing, int count) {
@@ -145,6 +145,23 @@ namespace DmxLedPanel.RestApi
                 }
             }
             return addresses;
+        }
+
+        public static void ValidateModeValues(List<IMode> modes, IPixelPatch pp) {
+
+            bool colsValid = true;
+            bool rowsValid = true;
+
+            foreach (var m in modes)
+            {
+                if (pp.Columns < m.Params[0]) colsValid = false;
+                if (pp.Rows < m.Params[1]) rowsValid = false;
+            }
+
+            if (!colsValid && !rowsValid) throw new ArgumentException("Row and column values not valid");
+            if (!colsValid) throw new ArgumentException("Column values not valid");
+            if (!rowsValid) throw new ArgumentException("Row values not valid");
+
         }
     }
 }

@@ -12,7 +12,7 @@ namespace DmxLedPanel.RestApi
     {
 
         public static readonly string KEY_FIXTURE_ID = "fixture_id";
-        public static readonly string KEY_MODE = "mode";
+        public static readonly string KEY_MODES = "modes";
 
 
         public override void HandleRequest(HttpListenerContext context)
@@ -22,18 +22,26 @@ namespace DmxLedPanel.RestApi
             try
             {
                 var fids = getIntArgArray(q.Get(KEY_FIXTURE_ID));
-                var mode = q.Get(KEY_MODE);
+                var modesStr = (q.Get(KEY_MODES));
 
-                if (fids == null || mode == null)
+                if (fids == null || modesStr == null)
                 {
                     throw new ArgumentNullException("Some of fixture edit properties was null");
                 }
 
                 var fixtures = StateManager.Instance.State.GetFixtures(fids);
-                
-                foreach (var f in fixtures)
+
+                //validate pixel and mode values
+                // The validation method will throw an Argument exception if mode values are not valid
+                var modes =  RestCreateFixtureHandler.GetFixtureModes(modesStr);
+                foreach (var fix in fixtures) {
+                    RestCreateFixtureHandler.ValidateModeValues(modes, fix.PixelPatch);
+                }
+
+                // modes are valid .. 
+                foreach (var fix in fixtures)
                 {
-                    f.SetMode(RestCreateFixtureHandler.getFixtureMode(mode));
+                    fix.SetModes(modes);
                 }
 
                 string state = StateManager.Instance.GetStateSerialized();
