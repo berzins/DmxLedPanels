@@ -81,6 +81,8 @@ namespace DmxLedPanel.Util
         public string CurrentProject { get; set; }
 
         public string CloseHash { get; set; }
+
+        public string ArtNetPollReplyBindIp { get; set; }
         
     }
 }

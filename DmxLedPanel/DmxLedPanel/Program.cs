@@ -92,6 +92,9 @@ namespace DmxLedPanel
 
             StateManager.Instance.LoadStateFromFile(SettingManager.Instance.Settings.CurrentProject);
             ArtnetIn.Instance.Start();
+            ArtnetOut.Init();
+
+            var whosInNetwork = new WhosInNetwork();
 
 
                 //new Thread(() => {

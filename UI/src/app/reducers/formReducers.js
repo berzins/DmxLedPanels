@@ -322,6 +322,7 @@ const getSelectedFixtureModeSet = () => {
 }
 
 import { SUBMIT_MODES } from '../actions/formActions'
+import { STATE_CHANGE_SERVER_ERROR } from '../actions/stateActions';
 
 export const modesReducer = (state = { modes: [] }, action) => {
     switch(action.type) {
@@ -337,3 +338,49 @@ export const modesReducer = (state = { modes: [] }, action) => {
     }
     return state
 }
+
+// ------------ error reducer ---------------------
+
+import {CLOSE_ERROR_FORM, CONNECTION_ERROR} from '../actions/formActions'
+
+const errorState = {
+    visible: false,
+    msg: null,
+}
+
+export const errorReducer = (state = errorState, action) => {
+    switch(action.type) {
+        case STATE_CHANGE_SERVER_ERROR: {
+            let data = getErrorData(action.payload)
+            return {...state, 
+                visible: data.isVisible, 
+                msg: data.msg }
+        }
+        case CONNECTION_ERROR: {
+            return {...state,
+                visible: true,
+                msg: "Connection error " + action.payload
+            }
+        }
+        case CLOSE_ERROR_FORM: {
+            return {...state,
+                visible: false,
+                msg: null
+            }
+        }
+    }
+    return state
+}
+
+const getErrorData = (error) => {
+    console.log("PAYLOAD AT ERROR IS: ")
+    console.log(error)
+    let isVisible = error != null ? true : false
+    let msg = error != null ? 
+        error.Content : "Unknow error accured"
+    return {
+        isVisible: isVisible,
+        msg: msg
+    }
+}
+

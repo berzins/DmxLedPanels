@@ -42,7 +42,7 @@ export const textInputItem = (title, id, value) => {
 export const textItem = (value) => {
     return(
         <div className="form-group" key={value + (key++)}>
-        <label>{value}</label>
+        {value}
         </div>
     )
 }

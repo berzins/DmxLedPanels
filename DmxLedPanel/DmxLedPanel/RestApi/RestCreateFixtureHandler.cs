@@ -1,6 +1,7 @@
 ﻿using DmxLedPanel.Modes;
 using DmxLedPanel.PixelPatching;
 using DmxLedPanel.State;
+using DmxLedPanel.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,7 +86,7 @@ namespace DmxLedPanel.RestApi
 
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
             }
-            catch (ArgumentNullException e) {
+            catch (ArgumentException e) {
                 Utils.LogException(e);
                 WriteErrorMessage(context, e);
             }
@@ -110,7 +111,7 @@ namespace DmxLedPanel.RestApi
 
 
         public static List<IMode> GetFixtureModes(string param) {
-
+            Utils.ThrowArgumetExceptionIfEmpty(param, "Modes not set. Please set the modes and try again.");
             List<IMode> modes = new List<IMode>();
             string[] args = param.Split(ITEM_SPLITTER);
 
@@ -126,6 +127,7 @@ namespace DmxLedPanel.RestApi
         /// Expected syntax is [mode name] VALUE_SPILTTER [columns] PARAM_SPILTTER [rows]
         /// </summary>
         public static IMode GetFixtureMode(string param) {
+            Utils.ThrowArgumetExceptionIfEmpty(param, "The mode parameter is null or empty.. hint: check suspicious values of modes. ");
             string[] args = param.Split(VALUE_SPLITTER);
             return Mode.InstantiateModeByName(
                 args[0],

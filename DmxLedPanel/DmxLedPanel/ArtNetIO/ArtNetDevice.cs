@@ -18,5 +18,15 @@ namespace DmxLedPanel.ArtNetIO
         public string Name { get; set; }
         public string Ip { get; set; }
         public DateTime LastSeen { get; set; }
+
+        public int HashCode {
+            get {
+                return getHashCode(Name, Ip);
+            }
+        }
+
+        public static int getHashCode(string name, string ip) {
+            return (name + ip).GetHashCode(); 
+        }
     }
 }

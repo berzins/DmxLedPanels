@@ -151,10 +151,12 @@
     <Compile Include="Util\FixedSizeStack.cs" />
     <Compile Include="Util\InitSystemManager.cs" />
     <Compile Include="Util\ISerializable.cs" />
+    <Compile Include="Util\NetworkUtils.cs" />
     <Compile Include="Util\Settings.cs" />
     <Compile Include="State\State.cs" />
     <Compile Include="Util\SettingsHash.cs" />
     <Compile Include="Util\StaticSerializer.cs" />
+    <Compile Include="Util\StringUtil.cs" />
     <Compile Include="Util\SystemInitializer.cs" />
     <Compile Include="Util\Utils.cs" />
   </ItemGroup>

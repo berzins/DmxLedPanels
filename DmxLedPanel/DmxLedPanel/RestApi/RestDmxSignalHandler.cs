@@ -60,9 +60,7 @@ namespace DmxLedPanel.RestApi
             {
                 Console.WriteLine("Dmx signal litener remove failed." + ee.Message);
                 ArtnetIn.Instance.RemoveDmxSignalListener(this);
-            }
-
-            
+            } 
         }
 
         private void Respond(HttpListenerContext context, bool hasSignal) {

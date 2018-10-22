@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArtNet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,14 +10,35 @@ namespace DmxLedPanel.ArtNetIO
     public class ArtnetOut
     {
         private static ArtnetOut instance;
-        private ArtNet.ArtNetWritter artWriter;
+        private ArtNetWritter artWriter;
+
+        //for polling device in network
+        private ArtNetReader reader;
+        private ArtDispatcher dispatcher;
+
+        private ArtDispatcher InitDispatcher()
+        {
+            ArtDispatcher d = new ArtDispatcher();
+            d.AddArtPollReplyListener(new WhosInNetwork());
+            return d;
+        }
+
 
         private ArtnetOut() {
-            artWriter = new ArtNet.ArtNetWritter(
+            artWriter = new ArtNetWritter(
                 System.Net.IPAddress.Parse(
                     Util.SettingManager.Instance.Settings.ArtNetBroadcastIp
                     )
                 );
+            reader = new ArtNetReader(InitDispatcher(),
+                System.Net.IPAddress.Parse(Util.SettingManager.Instance.Settings.ArtNetPollReplyBindIp));
+            reader.Start();
+        }
+
+        public static void Init() {
+            if (instance == null) {
+                instance = ArtnetOut.Instance;
+            }
         }
 
         public static ArtnetOut Instance {

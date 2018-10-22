@@ -47,7 +47,7 @@ namespace DmxLedPanel.RestApi
 
         public void WriteErrorMessage(HttpListenerContext context, Exception e) {
             var error = Util.StaticSerializer.Serialize(
-                    new ResponseMessage(ResponseMessage.TYPE_ERROR, e.Message + " || " + e.StackTrace));
+                    new ResponseMessage(ResponseMessage.TYPE_ERROR, e.Message));
             WriteResponse(context, RestConst.RESPONSE_INTERNAL_ERROR, RestConst.CONTENT_TEXT_JSON, error);
         }
 
@@ -55,4 +55,5 @@ namespace DmxLedPanel.RestApi
             return args.Split(PARAM_SPLITTER).Select(x => int.Parse(x)).ToArray();
         }
     }
+
 }

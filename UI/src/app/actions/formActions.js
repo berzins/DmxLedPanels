@@ -246,6 +246,19 @@ export const closeEditOutputIpForm = (data = null)  =>{
 
 // ------------- end of edit forms ----------------------------
 
+// -------------- erorr form ----------------------------------
+
+export const CLOSE_ERROR_FORM = "CLOSE_ERROR_FORM";
+
+export const closeErrorForm = (data = null) => {
+    return dispatch => {
+        dispatch({type: CLOSE_ERROR_FORM, payload: data})
+    }
+}
+
+// ------------- end of error form ----------------------------
+
+
 // ------------- mode manager form ----------------------------
 
  export const OPEN_MODE_MANAGER_FORM = "OPEN_MODE_MANAGER_FORM"

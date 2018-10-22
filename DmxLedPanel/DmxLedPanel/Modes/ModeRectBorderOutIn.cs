@@ -33,14 +33,14 @@ namespace DmxLedPanel.Modes
             // slect zones
             for (var zone = 0; zone < zones; zone ++) {
 
-            Field field = new Field();
-            field.Index = zone;
+                Field field = new Field();
+                field.Index = zone;
                 
                 for (int col = zone; col < cols - zone; col++) {
                     for (int row = zone; row < rows - zone; row++) {
                         if (col == zone || row == zone) {
                             field.Pixels.Add(patch[col, row]);
-                            field.Pixels.Add(patch[cols - col - 1, rows - row - 1]);
+                            field.Pixels.Add(patch[cols - col - 1, rows - row - 1]); // -1 : convert collon count to array index
                         }
                     }
                 }

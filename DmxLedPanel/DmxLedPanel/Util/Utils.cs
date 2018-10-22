@@ -1,4 +1,5 @@
 ﻿using ArtNet;
+using DmxLedPanel.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,12 @@ namespace DmxLedPanel
 
         public static void LogException(Exception e) {
             Logger.Log("Message: " + e.Message + ", StackTrace: " + e.StackTrace, LogLevel.ERROR);
+        }
+        
+        public static void ThrowArgumetExceptionIfEmpty(String arg, String errorMsg) {
+            if (StringUtil.IsEmpty(arg)) {
+                throw new ArgumentException(errorMsg);
+            }
         }
     
     }

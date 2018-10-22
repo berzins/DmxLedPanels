@@ -20,7 +20,7 @@ namespace DmxLedPanel.ArtNetIO
         private static readonly object padlock = new object();
 
         private ArtnetIn() {
-            dispatcher = initDispatcher();
+            dispatcher = InitDispatcher();
             reader = new ArtNetReader(dispatcher, IPAddress.Parse(
                 SettingManager.Instance.Settings.ArtNetBindIp
                 ));
@@ -113,14 +113,10 @@ namespace DmxLedPanel.ArtNetIO
         }
 
 
-        private ArtDispatcher initDispatcher() {
+        private ArtDispatcher InitDispatcher() {
             ArtDispatcher d = new ArtDispatcher();
             d.AddArtDmxListener(new ArtDmxListener(this));
-            d.AddArtPollListener(new ArtPollListener(this));
-
-            //TODO: Have to fix ArtNetPollReply constructor
-            // seems its broken and data is invalid
-            //d.AddArtPollReplyListener(new WhosInNetwork(this));
+            d.AddArtPollListener(new ArtPollListener());
             return d;
         }
 
@@ -148,7 +144,7 @@ namespace DmxLedPanel.ArtNetIO
                 this.artin = artin;
             }
 
-            public abstract void Action(Packet p);
+            public abstract void Action(Packet p, IPAddress source);
         }
 
         private class ArtDmxListener : ArtnetListener
@@ -185,7 +181,7 @@ namespace DmxLedPanel.ArtNetIO
                 }).Start();
             }
 
-            public override void Action(Packet p)
+            public override void Action(Packet p, IPAddress source)
             {
                 recieved = true;
                
@@ -197,19 +193,20 @@ namespace DmxLedPanel.ArtNetIO
             }
         }
 
-        private class ArtPollListener : ArtnetListener
+        private class ArtPollListener : ArtListener
         {
-            public ArtPollListener(ArtnetIn artin) : base(artin)
-            {
-            }
 
-            public override void Action(Packet p)
+            public void Action(Packet p, IPAddress source)
             {
-                var reply = new ArtPollReplyPacket();
-                reply.ShortName = "a-sound led ctrl";
-                ArtnetOut.Instance.Writer.Write(reply);
+                var reply = new ArtPollReplyPacket()
+                {
+                    ShortName = "a-sound led ctrl",
+                    LongName = "Dievs sveti Latviju!"
+                };
 
-                var pollPacket = (ArtPollPacket)p;
+                IPAddress ip = NetworkUtils.GetBroadcastAddress(source, NetworkUtils.GetSubnetMask(source));
+
+                new ArtNetWritter(ip).Write(reply);
             }
         }
     }
