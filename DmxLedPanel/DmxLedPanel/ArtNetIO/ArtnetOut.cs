@@ -13,27 +13,31 @@ namespace DmxLedPanel.ArtNetIO
         private ArtNetWritter artWriter;
 
         //for polling device in network
-        private ArtNetReader reader;
+        private ArtNetReader reader6454;
         private ArtDispatcher dispatcher;
 
         private ArtDispatcher InitDispatcher()
         {
             ArtDispatcher d = new ArtDispatcher();
-            d.AddArtPollReplyListener(new WhosInNetwork());
+            WhoTheFuckAreYou = new WhosInNetwork();
+            d.AddArtPollReplyListener(WhoTheFuckAreYou);
             return d;
         }
-
-
+        
         private ArtnetOut() {
             artWriter = new ArtNetWritter(
                 System.Net.IPAddress.Parse(
                     Util.SettingManager.Instance.Settings.ArtNetBroadcastIp
                     )
                 );
-            reader = new ArtNetReader(InitDispatcher(),
+            dispatcher = InitDispatcher();
+            reader6454 = new ArtNetReader(dispatcher,
                 System.Net.IPAddress.Parse(Util.SettingManager.Instance.Settings.ArtNetPollReplyBindIp));
-            reader.Start();
+            reader6454.Start();
         }
+
+        public WhosInNetwork WhoTheFuckAreYou { get; private set; }
+
 
         public static void Init() {
             if (instance == null) {

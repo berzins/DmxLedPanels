@@ -23,6 +23,14 @@ import DmxSignalItem from '../containers/justItems/dmxSignalItem'
 import ModeManagerForm from '../containers/forms/modeForm'
 import ErrorForm from '../containers/forms/errorForm'
 
+// modify buttons
+import AddFixtureButton from '../containers/addFixtureButton'
+import DeleteFixtureButton from '../containers/deleteFixtureButton'
+import EditFixtureButton from '../containers/edditFixtureButton'
+import EditOutputButton from '../containers/editOutputButton'
+import AddOutputButton from '../containers/addOutputButton'
+import DeleteOutputButton from '../containers/deleteOutputButton'
+
 class App extends Component { 
 
     constructor(props) {
@@ -41,15 +49,39 @@ class App extends Component {
     render() {
         return(
             <div className="container-fluid">
-            <DmxSignalItem click={this.click}/>
-                <div className= "col-12 btn-group">
-                    <SaveButton  click={this.click}/>
-                    <LoadButton  click={this.click}/>
-                    <ButtonUndoState click={this.click}/>
-                    <ButtonRedoState click={this.click}/>
-                    <HighlightButton click={this.click}/>
-                    <DeselectButton click={this.click}/>
+                <div className="fixed-top">
+                    <DmxSignalItem click={this.click}/>
+                    <div className= "col-12 btn-group">
+                        <SaveButton  click={this.click}/>
+                        <LoadButton  click={this.click}/>
+                        <ButtonUndoState click={this.click}/>
+                        <ButtonRedoState click={this.click}/>
+                        <HighlightButton click={this.click}/>
+                        <DeselectButton click={this.click}/>
 
+                    </div>
+
+                    <div className="row">
+
+                    <div className="col-6 col-md-8">
+                    <div className="row">
+                        <div className='col-12 btn-group'>
+                                <AddOutputButton click={this.click}/>
+                                <EditOutputButton click={this.click}/>
+                                <DeleteOutputButton click={this.click}/>
+                        </div>
+                    </div>
+                    </div>
+                    <div className="col-6 col-md-4">
+                    <div className="row">
+                        <div className="col-12 btn-group">
+                            <AddFixtureButton click={this.click}/>
+                            <EditFixtureButton click={this.click}/>
+                            <DeleteFixtureButton click={this.click}/>
+                        </div>
+                    </div> 
+                    </div>
+                    </div>
                 </div>
 
                 <div className= "col-12">

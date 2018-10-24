@@ -40,6 +40,7 @@ class FixturePool extends Component {
     }
 
     handleClick() {
+
         // handle global click
         this.props.click.clicked = this.poolClick.clicked
 
@@ -63,9 +64,16 @@ class FixturePool extends Component {
     }
 
     render() {
+
+        var style = {
+            paddingBottom: '20vh',
+            borderBottom: 'solid',
+            borderTop: 'solid'
+        }
         return(
             <div 
             className="output fixture-pool"
+            style={style}
             onClick={() => this.handleClick()}
             >
                 <div className="row">

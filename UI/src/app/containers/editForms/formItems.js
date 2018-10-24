@@ -70,14 +70,25 @@ export const radioItem = (title, id, checked) => {
 
 // ----
 
-export const rowItem = (child) => {
-    return (
-        <div className="col-12" key={key++} >
-            <div className="form-row align-items-center">
-                {child.map((x) => {return x})}
-            </div>    
-        </div>
-    )
+export const rowItem = (child, fill = false) => {
+    return getRowWithFill(fill, 
+        <div className="form-row align-items-center">
+            {child.map((x) => {return x})}
+        </div>)
+
+    // return (
+
+    //     <div className="col-12" key={key++}>
+                
+    //     </div>
+    // )
+}
+
+const getRowWithFill = (fill, html) => {
+    if(fill == true) {
+       return(<div className="col-12" key={key++} bgcolor="405030">{html}</div>)
+    } 
+    return(<div className="col-12" key={key++}>{html}</div>)
 }
 
 // ----
@@ -138,7 +149,7 @@ export const buttonItem = (id, title, onClick) => {
     return (
         <button 
         type="button" 
-        className="btn btn-light"
+        className="btn btn-warning"
         onClick={() => onClick()}
         key={k}
         >{title}</button>

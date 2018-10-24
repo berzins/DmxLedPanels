@@ -22,10 +22,16 @@ class OutputPool extends Component {
     }
 
     render() {
+        var style = {
+            paddingBottom: '20vh',
+            borderBottom: 'solid',
+            borderTop: 'solid'
+        }
         return(
             <div 
             onClick={() => this.handleClick() }
-            className="output output-pool">
+            className="output output-pool"
+            style={style}>
             <div className="row">
                     {this.createOutputItems(this.props.outputs)}
             </div>

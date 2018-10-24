@@ -16,11 +16,15 @@ export default class ModeItem extends Component {
         const mi = this.props.modeIndex
         return(
            rowItem([
-               selectItem("Type", createModeId(MODE_TYPE_ID, mi), FixtureMode.all(), mode.typeIndex),
-               selectItem("Columns" , createModeId(MODE_COLUMNS_ID, mi), sizeValues, mode.colIndex ),
-               selectItem("Rows" , createModeId(MODE_ROWS_ID, mi), sizeValues, mode.rowIndex),
-               radioItem('Select', createModeId(MODE_SELECT_ID, mi), false)
-           ]) 
+                rowItem([
+                    selectItem("Type", createModeId(MODE_TYPE_ID, mi), FixtureMode.all(), mode.typeIndex),
+                    radioItem('Select', createModeId(MODE_SELECT_ID, mi), false)
+                ], true),
+                rowItem([
+                    selectItem("Columns" , createModeId(MODE_COLUMNS_ID, mi), sizeValues, mode.colIndex ),
+                    selectItem("Rows" , createModeId(MODE_ROWS_ID, mi), sizeValues, mode.rowIndex),
+                ])
+           ])
         ) 
     }
 }

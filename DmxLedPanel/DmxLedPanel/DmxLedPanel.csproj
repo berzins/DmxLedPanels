@@ -125,6 +125,7 @@
     <Compile Include="RestApi\RestSaveStateHandler.cs" />
     <Compile Include="RestApi\RestSwitchModeHandler.cs" />
     <Compile Include="RestApi\RestUndoStateHandler.cs" />
+    <Compile Include="RestApi\RestWhosInNetworkHandler.cs" />
     <Compile Include="RestApi\UIConfig.cs" />
     <Compile Include="State\HighlightState.cs" />
     <Compile Include="State\StateManager.cs" />

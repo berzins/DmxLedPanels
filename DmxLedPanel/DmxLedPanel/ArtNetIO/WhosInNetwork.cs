@@ -18,21 +18,30 @@ namespace DmxLedPanel.ArtNetIO
         private volatile Dictionary<int, ArtNetDevice> devices;
         private object lockref = new object();
 
-        private volatile ArtPollReplyPacket lastRepy = null;
+        public delegate void DeviceConnectedDelegate(ArtNetDevice device);
+        public event DeviceConnectedDelegate DeviceConnected;
+
+        public delegate void DeviceDisconnectedDelegate(ArtNetDevice device);
+        public event DeviceDisconnectedDelegate DeviceDisconnected;
+
+        public delegate void DevicesChangedDelegate(List<ArtNetDevice> devices);
+        public event DevicesChangedDelegate DevicesChanged;
+
 
         public WhosInNetwork()
         {
             devices = new Dictionary<int, ArtNetDevice>();
             StartDeviceDisvorey();
-        
-            
+
+
         }
 
         public void Action(Packet p, IPAddress source)
         {
             var reply = (ArtPollReplyPacket)p;
             var dev = new ArtNetDevice(reply.LongName, reply.IP, DateTime.Now);
-            if (devices.TryGetValue(dev.HashCode, out dev)) {
+            if (devices.TryGetValue(dev.HashCode, out dev))
+            {
                 dev.LastSeen = DateTime.Now;
                 return;
             }
@@ -41,6 +50,8 @@ namespace DmxLedPanel.ArtNetIO
             devices.Add(dev.HashCode, dev);
 
             Logger.Log(dev.LastSeen.ToLocalTime() + ", Connected: " + dev.Name + " " + dev.Ip, LogLevel.INFO);
+            DeviceConnected?.Invoke(dev);
+            DevicesChanged?.Invoke(Devices);
         }
 
         public void StopDeviceDiscovery()
@@ -48,7 +59,8 @@ namespace DmxLedPanel.ArtNetIO
             alive = false;
         }
 
-        public void StartDeviceDisvorey() {
+        public void StartDeviceDisvorey()
+        {
 
             // polling thread
             new Thread(() =>
@@ -82,16 +94,21 @@ namespace DmxLedPanel.ArtNetIO
                 {
                     lock (this.lockref)
                     {
-                        for (int i = 0; i < devices.Count; i++) {
+                        for (int i = 0; i < devices.Count; i++)
+                        {
                             ArtNetDevice d = devices.ElementAt(i).Value;
-                        if (DateTime.Now - d.LastSeen > TimeSpan.FromSeconds(3.0)) {
-                            
+                            if (DateTime.Now - d.LastSeen > TimeSpan.FromSeconds(3.0))
+                            {
+
                                 devices.Remove(d.HashCode);
-                            
-                            Logger.Log(d.LastSeen.ToLocalTime() + ", Disconnected: " + d.Name + " " + d.Ip, LogLevel.INFO);
+
+                                Logger.Log(d.LastSeen.ToLocalTime() + ", Disconnected: " + d.Name + " " + d.Ip, LogLevel.INFO);
+
+                                DeviceDisconnected?.Invoke(d);
+                                DevicesChanged?.Invoke(Devices);
+                            }
                         }
-                        }
-                    }  
+                    }
                     Thread.Sleep(500);
                 }
             }).Start();
@@ -99,12 +116,14 @@ namespace DmxLedPanel.ArtNetIO
 
         public List<ArtNetDevice> Devices {
             get {
-                List<ArtNetDevice> list =  new List<ArtNetDevice>();
-                foreach(var d in devices) {
+                List<ArtNetDevice> list = new List<ArtNetDevice>();
+                foreach (var d in devices)
+                {
                     list.Add(d.Value);
                 }
                 return list;
             }
         }
     }
+
 }
