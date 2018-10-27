@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap4-modal'
 import { fixtureEditPatchFormReducer } from '../../reducers/formReducers'
 import { closeEditFixturePatchForm } from '../../actions/formActions'
 import {  editFixturePatch } from '../../actions/stateActions'
-import {  FixturePatch } from '../../util/util'
+import {  FixturePatch, patchSizeValues } from '../../util/util'
 import store from '../../store'
 
 const FOMR_ID_PATCH = "EDIT_FIXTURE_FOMR_ID_PATCH"
@@ -85,7 +85,8 @@ class FixtureEditPatchFrom extends Component {
 
     render() {
         let form = this.props.form
-        let patchVals = this.fillIncrementArray(30, 1)
+        // let patchVals = this.fillIncrementArray(30, 1)
+        const patchVals = patchSizeValues
         return(
             <Modal visible={form.opened} onClickBackdrop={() => this.onClose() }>
                 <div className="modal-header">

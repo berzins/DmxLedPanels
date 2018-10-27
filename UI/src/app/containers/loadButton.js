@@ -13,6 +13,7 @@ class LoadButton extends Component {
     render() {
         return(
             <div
+            style={this.props.style}
             className={"button btn btn-dark util-button btn-margin-right"}
             autoComplete="off"
             onClick={ () => this.handleClick() }

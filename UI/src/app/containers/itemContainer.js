@@ -45,6 +45,7 @@ class ItemContainer extends Component {
             paddingRight: '20px'
         }
 
+
         return(
 
             <div onClick={() => this.handleClick()}>

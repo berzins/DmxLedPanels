@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArtNet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -11,9 +12,23 @@ namespace DmxLedPanel.Util
 {
     public static class NetworkUtils
     {
-       
 
-        public static IPAddress GetSubnetMask(IPAddress address)
+
+        public static bool TryGetSubnetMask(IPAddress source, out IPAddress result) {
+            try
+            {
+                result = GetSubnetMask(source);
+                return true;
+
+            }
+            catch (ArgumentException)
+            {
+                result = null;
+                return false;
+            }
+        }
+
+        private static IPAddress GetSubnetMask(IPAddress address)
         {
             foreach (NetworkInterface adapter in NetworkInterface.GetAllNetworkInterfaces())
             {
@@ -31,7 +46,7 @@ namespace DmxLedPanel.Util
             throw new ArgumentException(string.Format("Can't find subnetmask for IP address '{0}'", address));
         }
 
-        public static IPAddress GetBroadcastAddress(this IPAddress address, IPAddress subnetMask)
+        private static IPAddress GetBroadcastAddress(this IPAddress address, IPAddress subnetMask)
         {
             byte[] ipAdressBytes = address.GetAddressBytes();
             byte[] subnetMaskBytes = subnetMask.GetAddressBytes();
@@ -45,6 +60,18 @@ namespace DmxLedPanel.Util
                 broadcastAddress[i] = (byte)(ipAdressBytes[i] | (subnetMaskBytes[i] ^ 255));
             }
             return new IPAddress(broadcastAddress);
+        }
+
+        public static bool TryGetBroadcastAddress(this IPAddress source, out IPAddress result) {
+
+            IPAddress subnet;
+            if (TryGetSubnetMask(source, out subnet)) {
+                result = GetBroadcastAddress(source, GetSubnetMask(source));
+                return true;
+
+            }
+            result = null;
+            return false;
         }
     }
 }

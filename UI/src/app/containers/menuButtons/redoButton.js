@@ -13,6 +13,7 @@ class ButtonRedoState extends Component {
     render() {
         return(
             <div
+            style={this.props.style}
             className={"button btn util-button btn-primary btn-margin-right "}
             autoComplete="off"
             onClick={ () => this.handleClick()}>

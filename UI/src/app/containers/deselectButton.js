@@ -32,6 +32,7 @@ class DeselectButton extends Component {
     render() {
         return(
             <div
+            style={this.props.style}
             className={"button btn util-button btn-margin-right " + (this.enabled ? "btn-info" : "btn-outline-dark")}
             autoComplete="off"
             onClick={ () => this.handleClick()}

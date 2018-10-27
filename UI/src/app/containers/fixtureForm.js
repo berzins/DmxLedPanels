@@ -18,7 +18,8 @@ import {
     FixturePatch, 
     isInteger, 
     fillIncrementArray,
-    validateInteger
+    validateInteger,
+    patchSizeValues
 } from '../util/util'
 import store from '../store'
 import {
@@ -126,8 +127,10 @@ class FixtureForm extends Component {
     render() {
 
         let form = this.props.form
-        let patchVals = this.fillIncrementArray(30, 1)
+        // let patchVals = this.fillIncrementArray(56, 1)
+        let patchVals = patchSizeValues
         let portVals = this.fillIncrementArray(16, 0)
+        
 
         return formModal(
             form.opened,

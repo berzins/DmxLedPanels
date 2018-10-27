@@ -47,21 +47,42 @@ class App extends Component {
     }
 
     render() {
+
+        const fixLeftOffest = {
+            paddingLeft: '20px'
+        }
+
+        const btnContainerStyle = {
+            border: 'solid',
+            backgroundColor: 'rgb(25,25,25)'
+        }
+
+        const butotnStyle = {
+            marginRight: '8px'
+        }
+
+        const gradient = {
+            height: '3px',
+            backgroundImage: 'linear-gradient(rgb(25,25,25), rgba(0,0,0,0.0))'
+        }
+
+
         return(
             <div className="container-fluid">
                 <div className="fixed-top">
-                    <DmxSignalItem click={this.click}/>
+                    <div style={btnContainerStyle}>
+                    <DmxSignalItem click={this.click} />
                     <div className= "col-12 btn-group">
-                        <SaveButton  click={this.click}/>
-                        <LoadButton  click={this.click}/>
-                        <ButtonUndoState click={this.click}/>
-                        <ButtonRedoState click={this.click}/>
-                        <HighlightButton click={this.click}/>
-                        <DeselectButton click={this.click}/>
+                        <SaveButton  click={this.click} style={butotnStyle}/>
+                        <LoadButton  click={this.click} style={butotnStyle}/>
+                        <ButtonUndoState click={this.click} style={butotnStyle}/>
+                        <ButtonRedoState click={this.click} style={butotnStyle}/>
+                        <HighlightButton click={this.click} style={butotnStyle}/>
+                        <DeselectButton click={this.click} style={butotnStyle}/>
 
                     </div>
 
-                    <div className="row">
+                    <div className="row" style={fixLeftOffest}>
 
                     <div className="col-6 col-md-8">
                     <div className="row">
@@ -82,6 +103,8 @@ class App extends Component {
                     </div> 
                     </div>
                     </div>
+                    </div>
+                    <div style={gradient}></div>
                 </div>
 
                 <div className= "col-12">

@@ -62,8 +62,9 @@ namespace DmxLedPanel.RestApi
                 var modes = GetFixtureModes(q.Get(KEY_MODES));
                 var pp = q.Get(KEY_PATCH_TYPE);
                 ValidateModeValues(modes, getPixelPatch(pp));
-                
+
                 // create fixtures
+                int previousAddressCount = 0;
                 for (int i = 0; i < int.Parse(q.Get(KEY_COUNT)); i++)
                 {
 
@@ -74,7 +75,12 @@ namespace DmxLedPanel.RestApi
                     fix.Address =  address.Clone();
                     if (increment)
                     {
-                        address.DmxAddress += fix.InputAddressCount;
+                        address.DmxAddress += fix.InputAddressCount + previousAddressCount;
+                        if (address.DmxAddress > 512) {
+                            address.DmxAddress = 1;
+                            address.Port++;
+                        }
+                        previousAddressCount = fix.InputAddressCount;
                     }
                     fix.IsDmxUtilsEnabled = dmxUtilsEnabled;
 

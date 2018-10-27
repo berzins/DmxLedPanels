@@ -203,10 +203,11 @@ namespace DmxLedPanel.ArtNetIO
                     ShortName = "a-sound led ctrl",
                     LongName = "Dievs sveti Latviju!"
                 };
-
-                IPAddress ip = NetworkUtils.GetBroadcastAddress(source, NetworkUtils.GetSubnetMask(source));
-
-                new ArtNetWritter(ip).Write(reply);
+                
+                IPAddress ip;
+                if (NetworkUtils.TryGetBroadcastAddress(source, out ip)) {
+                    new ArtNetWritter(ip).Write(reply);
+                }
             }
         }
     }

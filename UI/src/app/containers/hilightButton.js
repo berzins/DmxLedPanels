@@ -28,6 +28,7 @@ class HighlightButton extends Component {
 
         return(
             <div
+            style={this.props.style}
             className={"button btn util-button btn-margin-right " + look}
             autoComplete="off"
             onClick={ () => this.handleClick() }

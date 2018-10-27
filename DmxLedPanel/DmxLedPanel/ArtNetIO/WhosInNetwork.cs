@@ -68,22 +68,27 @@ namespace DmxLedPanel.ArtNetIO
 
                 IPAddress binIp = IPAddress.Parse(
                     SettingManager.Instance.Settings.ArtNetPollReplyBindIp);
-                var writter = new ArtNetWritter(
-                    NetworkUtils.GetBroadcastAddress(binIp, NetworkUtils.GetSubnetMask(binIp)));
+                IPAddress broadcast;
+                if (NetworkUtils.TryGetBroadcastAddress(binIp, out broadcast)) {
+                    var writter = new ArtNetWritter(broadcast);
 
-                while (alive)
-                {
-                    try
+                    while (alive)
                     {
-                        var poll = new ArtPollPacket();
-                        writter.Write(poll);
-                        Thread.Sleep(3000);
+                        try
+                        {
+                            var poll = new ArtPollPacket();
+                            writter.Write(poll);
+                            Thread.Sleep(3000);
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Log("Poll packt write failed. " + e.Message, LogLevel.ERROR);
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        Logger.Log("Poll packt write failed. " + e.Message, LogLevel.ERROR);
-                    }
-                }
+                } 
+
+
+                
 
             }).Start();
 

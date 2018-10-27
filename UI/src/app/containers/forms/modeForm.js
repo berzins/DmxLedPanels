@@ -82,9 +82,6 @@ class ModeManagerForm extends Component {
 
     getModeIndexValues() {
 
-        console.log('MODE SLECT looooks liiiikeeee thiiiisss')
-        console.log(document.getElementById(createModeId(MODE_SELECT_ID, 3)))
-
         return this.props.formState.modes.map((m, i) => {
             return {
                 ...m,

@@ -11,7 +11,7 @@ export default class ModeItem extends Component {
 
 
     render() {
-        const sizeValues = fillIncrementArray(30, 1)
+        const sizeValues = fillIncrementArray(56, 1)
         const mode = this.props.mode
         const mi = this.props.modeIndex
         return(
