@@ -123,6 +123,7 @@
     <Compile Include="RestApi\RestRedoStateHandler.cs" />
     <Compile Include="RestApi\RestResourceFileHandler.cs" />
     <Compile Include="RestApi\RestSaveStateHandler.cs" />
+    <Compile Include="RestApi\RestSessionHandler.cs" />
     <Compile Include="RestApi\RestSwitchModeHandler.cs" />
     <Compile Include="RestApi\RestUndoStateHandler.cs" />
     <Compile Include="RestApi\RestWhosInNetworkHandler.cs" />

@@ -101,5 +101,26 @@ export const currentProjectReducer = (state = {name : null}, action) => {
     return state
 }
 
+import { LOGGIN_ACTION, } from '../actions/stateActions'
+import { setCookie, getCookie } from '../util/util'
+export const LOGIN_COOKIE_KEY = "LOGIN_COOKIE"
+
+export const sessionReducer = (state = {logged: getCookie(LOGIN_COOKIE_KEY) == "true", msg: ""}, action ) => {
+
+    switch(action.type) {
+        case LOGGIN_ACTION: {
+            if(action.payload.Content.Logged == true) {
+                setCookie(LOGIN_COOKIE_KEY, "true", 0.5) 
+            }
+            return {
+                ...state, 
+                logged: action.payload.Content.Logged, 
+                msg: action.payload.Content.Message
+            }
+        }
+    }
+    return state;
+}
+
 
 

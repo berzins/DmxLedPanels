@@ -5,6 +5,7 @@ import {
     hilightStateReducer,
     dmxStateReducer,
     currentProjectReducer,
+    sessionReducer
 } from './stateReducer'
 import {
     outputFormReducer, 
@@ -49,8 +50,8 @@ const reducers = combineReducers(
         currentProjectReducer: currentProjectReducer,
         modeManagerFormReducer: modeManagerFormReducer,
         modesReducer: modesReducer,
-        errorReducer: errorReducer
-
+        errorReducer: errorReducer,
+        sessionReducer: sessionReducer
     }
 );
 

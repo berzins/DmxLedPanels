@@ -54,6 +54,7 @@ namespace DmxLedPanel.RestApi
             addRequestHandler("/redoState/", new RestRedoStateHandler());
             addRequestHandler("/dmxSignal/", new RestDmxSignalHandler());
             addRequestHandler("/currentProject/", new RestGetCurrentProject());
+            addRequestHandler("/session/", new RestSessionHandler());
         }
 
         public void InitSystem() {

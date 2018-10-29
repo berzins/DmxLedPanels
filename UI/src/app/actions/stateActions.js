@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { API_URL } from '../constants/const'
+import { getCookie } from '../util/util';
 
 
 export const STATE_CHANGE_SUCCESS = "STATE_CHANGE_SUCCESS"
@@ -293,6 +294,17 @@ export const getCurretProject = () => {
     const url = API_URL + '/currentProject/'
     return (dispatch) => {
         requestServer(url, dispatch, [CURRENT_PROJECT_UPDATE])
+    }
+}
+
+export const LOGGIN_ACTION = "LOGGIN_ACTION"
+
+export const loggIn = (password) => {
+    console.log("lggin in action called with password: " + password)
+    const url = API_URL + '/session/?' +
+    'pass=' + password
+    return (dispatch) => {
+        requestServer(url, dispatch, [LOGGIN_ACTION])
     }
 }
 

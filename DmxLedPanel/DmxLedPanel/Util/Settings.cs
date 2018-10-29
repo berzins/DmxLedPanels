@@ -83,6 +83,8 @@ namespace DmxLedPanel.Util
         public string CloseHash { get; set; }
 
         public string ArtNetPollReplyBindIp { get; set; }
+
+        public string Password { get; set; }
         
     }
 }
