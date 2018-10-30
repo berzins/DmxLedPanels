@@ -39,6 +39,29 @@ export const getShortNameFixtureMode = (mode) => {
     return "short name not set"
 }
 
+export const getModePixelCount = (modes) => {
+    let addressCount = 0
+    modes.forEach(m => {
+        let ac = 0
+        switch(m.Name) {
+            case MODE_GTL: {
+                ac = m.Params[0] * m.Params[1]
+                break;
+            }
+            case MODE_RBOI: {
+                ac = m.Params[0];
+                break;
+            }
+        }
+        addressCount = ac > addressCount ? ac : addressCount
+    })
+    return addressCount
+}
+
+export const getPatchPixelCount = (patch) => {
+    return patch.Columns * patch.Rows 
+}
+
 export const getShortNameFixturePatch = (patch) => {
     switch(patch.Name) {
         case PATCH_SCTL: {

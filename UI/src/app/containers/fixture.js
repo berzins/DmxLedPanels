@@ -5,7 +5,9 @@ import { ItemInfoRow } from '../components/itemInfoRow'
 import {
     getShortNameFixtureMode,
     getShortNameFixturePatch,
-    getPortString
+    getPortString,
+    getPatchPixelCount,
+    getModePixelCount
 } from '../util/util'
 import { selectFixture, deselectFixture } from '../actions/selectActions'
 import { highlight } from '../actions/actions'
@@ -73,9 +75,11 @@ class Fixture extends Component {
                 <div>
                     <ItemInfoRow name={'Mode'} value={this.mode} />
                     <ItemInfoRow name={'Patch'} value={this.patch} />
-                    <ItemInfoRow name={'Port'} value={this.port} />
-                    <ItemInfoRow name={'Address'} value={this.address} />
+                    <ItemInfoRow name={'Address'} value={this.port + "/" + this.address} />
                     <ItemInfoRow name={'Util address'} value={this.utilAddress}/>
+                    <ItemInfoRow 
+                    name={'Pixel count'} 
+                    value={getModePixelCount(this.props.fixture.Modes) + "/" + getPatchPixelCount(this.props.fixture.PixelPatch)} />
                 </div>
             </div>
         );
