@@ -51,7 +51,7 @@ namespace DmxLedPanel.RestApi
             WriteResponse(context, RestConst.RESPONSE_INTERNAL_ERROR, RestConst.CONTENT_TEXT_JSON, error);
         }
 
-        protected int[] getIntArgArray(string args) {
+        protected static int[] getIntArgArray(string args) {
             return args.Split(PARAM_SPLITTER).Select(x => int.Parse(x)).ToArray();
         }
     }

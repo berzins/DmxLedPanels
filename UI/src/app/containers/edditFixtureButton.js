@@ -8,11 +8,13 @@ import {
     openEditFixturePatchForm
 } from '../actions/formActions'
 import { selectionReducer } from '../reducers/selectionReducer'
+import { storeFixtureTemplate } from '../actions/stateActions'
 
 const ITEM_NAME = "ITEM_NAME"
 const ITEM_ADDRESS = "ITEM_ADDRESS"
 const ITEM_MODE = "ITEM_MODE"
 const ITEM_PATCH = "ITEM_PATCH"
+const ITEM_STORE_TEMPLATE = "ITEM_STORE_TEMPLATE"
 
 
 class EditFixtureButton extends Component {
@@ -20,6 +22,7 @@ class EditFixtureButton extends Component {
     constructor(props) {
         super(props)
         this.enabled = this.shouldBeEnabled(this.props)
+        this.templateEnabled = false
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -27,11 +30,19 @@ class EditFixtureButton extends Component {
             this.enabled = !this.enabled
             return true
         }
+        if(this.templateEnabled != this.shouldEnableTemplate(nextProps)) {
+            this.templateEnabled = !this.templateEnabled
+            return true
+        }
         return false
     }
 
     shouldBeEnabled(props) {
         return props.selection.hasFixture ? true : false
+    }
+
+    shouldEnableTemplate(props) {
+        return props.selection.length == 1
     }
 
     handleClick(item) {
@@ -54,11 +65,19 @@ class EditFixtureButton extends Component {
                     this.props.openEditFixturePatchForm()
                     break;
                 }
+                case ITEM_STORE_TEMPLATE: {
+                    console.log(this.props.selection)
+                    // if(this.templateEnabled){
+                        this.props.storeFixtureTemplate(this.props.selection.fixtures[0])
+                    // }
+                }
             }
         }
     }
 
     render() {
+        
+        console.log(this.props.selection.fixtures.length)
         return(
             <div>
             <div className="dropdown">
@@ -77,6 +96,10 @@ class EditFixtureButton extends Component {
                 <a className="dropdown-item" onClick={() => this.handleClick(ITEM_ADDRESS)}href="javascript:void(0)">Address</a>
                 <a className="dropdown-item" onClick={() => this.handleClick(ITEM_MODE)}href="javascript:void(0)">Mode</a>
                 <a className="dropdown-item" onClick={() => this.handleClick(ITEM_PATCH)}href="javascript:void(0)">Patch</a>
+                <a 
+                className={this.shouldEnableTemplate(this.props) ? "dropdown-item" : "dropdown-item disabled"} 
+                onClick={() => this.handleClick(ITEM_STORE_TEMPLATE)}
+                href="javascript:void(0)">Store template</a>
             </div>
             </div>
             </div>
@@ -97,7 +120,8 @@ const mapDispatchToProps = (dispatch) => {
         openEditFixtureNameForm: openEditFixtureNameForm,
         openEditFixtureAddressForm, openEditFixtureAddressForm,
         openEditFixtureModeForm: openEditFixtureModeForm,
-        openEditFixturePatchForm: openEditFixturePatchForm
+        openEditFixturePatchForm: openEditFixturePatchForm,
+        storeFixtureTemplate: storeFixtureTemplate
     }, dispatch)
 }
 

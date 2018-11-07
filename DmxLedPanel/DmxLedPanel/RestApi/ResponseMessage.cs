@@ -15,8 +15,8 @@ namespace DmxLedPanel.RestApi
         public static readonly string TYPE_CURRENT_PROJECT = "current_project";
         public static readonly string TYPE_HWOS_IN_NETWORK = "whos_in_network";
         public static readonly string TYPE_SESSION = "session";
+        internal static readonly string TYPE_FIXTURE_TEMPLATE = "fixture_template";
 
-        
         public ResponseMessage(string type, object content) {
             Type = type;
             Content = content;

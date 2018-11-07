@@ -29,8 +29,6 @@ namespace DmxLedPanel.RestApi
                 Utils.LogException(e);
                 WriteErrorMessage(context, e);
             }
-          
-
         }
     }
 }

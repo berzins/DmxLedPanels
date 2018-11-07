@@ -27,9 +27,9 @@ namespace DmxLedPanel.Fixtures
         }
 
         // copy constructor
-        public FixtureDmxUtil(int index, string name, int[] values) {
-            Index = index;
-            Name = name;
+        public FixtureDmxUtil(int index, string name, int[] values) : this(index, values.Length) {
+            //Index = index;
+            //Name = name;
             Values = values;
         }
 

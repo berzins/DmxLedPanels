@@ -12,7 +12,7 @@ import {
     SELECT_FILE,
     openModeManagerForm
 } from '../actions/formActions'
-import { addFixture, editFixture } from '../actions/stateActions'
+import { addFixture, editFixture, getFixtureTemplates } from '../actions/stateActions'
 import { 
     FixtureMode, 
     FixturePatch, 
@@ -52,6 +52,10 @@ const FORM_ID_PORT_ADR = "FORM_ID_PORT_ADR"
 const FORM_IOD_PROT_UTIL_ADR = "FORM_IOD_PROT_UTIL_ADR"
 const FORM_ID_ADR_INCREM = "FORM_ID_ADR_INCREM"
 const FORM_ID_COUNT = "FORM_ID_COUNT"
+const FORM_ID_TEMPLATE = "FORM_ID_TEMPLATE"
+const APPLY_TEMPLATE_BUTTON = "APPLY_TEMPLATE_BUTTON"
+
+const DEFAULT_TEMPLATE = "default"
 
 
 class FixtureForm extends Component {
@@ -60,6 +64,12 @@ class FixtureForm extends Component {
         super(props) 
         this.incrment = true
         this.modeItemList = null
+        this.state = {
+            currentTemplate : DEFAULT_TEMPLATE,
+            patchTypeIndex: 0,
+            patchColumnIndex: 0,
+            patchRowIndex: 0
+        }
     }
 
     handleClick() {
@@ -124,14 +134,43 @@ class FixtureForm extends Component {
         return document.getElementById(id).value
     }
 
+    selectTemplate() {
+        this.state.currentTemplate = this.getValue(FORM_ID_TEMPLATE)
+    }
+
+    getCurrentTemplate() {
+        return this.props.templates.data.find(t => {return t.Name == this.state.currentTemplate})
+    }
+
+    zeroIfLess(values) {
+        return values.forEach(v => {v = v >= 0 ? v : 0})
+    }
+
     render() {
 
         let form = this.props.form
         // let patchVals = this.fillIncrementArray(56, 1)
         let patchVals = patchSizeValues
         let portVals = this.fillIncrementArray(16, 0)
-        
 
+
+        const templates = this.props.templates.data.map(t => {return t.Name})
+        const template = this.getCurrentTemplate()
+
+        if(template != undefined) {
+            this.state.patchTypeIndex = FixturePatch.all().findIndex(m => {return template.PixelPatch.Name == m})
+            this.state.patchColumnIndex = patchVals.findIndex(v => {return template.PixelPatch.Columns == v})
+            this.state.patchRowIndex = patchVals.findIndex(v => {return template.PixelPatch.Rows == v})
+        }
+
+        this.zeroIfLess([
+            this.state.patchTypeIndex,
+            this.state.patchColumnIndex,
+            this.state.patchRowIndex
+        ])
+
+        
+        
         return formModal(
             form.opened,
             "Create fixture",
@@ -140,6 +179,10 @@ class FixtureForm extends Component {
             this,
             () => contentItem([
                 rowItem([
+                    selectItem("Templates", FORM_ID_TEMPLATE, templates),
+                    buttonItem(APPLY_TEMPLATE_BUTTON, "Apply", () => { this.selectTemplate.bind(this) })
+                ]),
+                rowItem([
                     errorItem(this.props.error != null, this.props.error)
                 ]),
                 rowItem([
@@ -147,11 +190,11 @@ class FixtureForm extends Component {
                     textInputItem("Count", FORM_ID_COUNT, "1" )
                 ]),
                 rowItem([
-                    selectItem("Patch type", FOMR_ID_PATCH, FixturePatch.all())
+                    selectItem("Patch type", FOMR_ID_PATCH, FixturePatch.all(), this.state.patchTypeIndex)
                 ]),
                 rowItem([
-                    selectItem("Patch columns", FORM_ID_PATCH_COLS, patchVals),
-                    selectItem("Patch rows", FORM_ID_PATCH_ROWS, patchVals)
+                    selectItem("Patch columns", FORM_ID_PATCH_COLS, patchVals, this.state.patchColumnIndex),
+                    selectItem("Patch rows", FORM_ID_PATCH_ROWS, patchVals, this.state.patchRowIndex)
                 ]),
                 rowItem([
                    <ModeItemList ref={this.modeItemList}/>
@@ -177,7 +220,8 @@ class FixtureForm extends Component {
 const mapStateToProps = (state) => {
     return {
         form: state.fixtureFormReducer,
-        error: state.formErrorReducer
+        error: state.formErrorReducer,
+        templates: state.fixtureTemplateReducer
     }
 }
 
@@ -188,7 +232,8 @@ const mapDispatchToProps = (dispatch) => {
         closeFixtureForm: closeFixtureForm,
         riseFormValueError: riseFormValueError,
         clearFormValueError: clearFormValueError,
-        openModeManagerForm: openModeManagerForm
+        openModeManagerForm: openModeManagerForm,
+        getFixtureTemplates: getFixtureTemplates
     }, dispatch)
 }
 

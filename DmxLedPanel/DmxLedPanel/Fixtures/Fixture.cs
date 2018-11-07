@@ -36,7 +36,7 @@ namespace DmxLedPanel
             this.modes = modes;
             Fields = new List<Field>();
 
-            dmxUtils.Add(new DmxModeSwitcher(0));
+            AddDmxUtil(new DmxModeSwitcher(0) { Values = new int[] { 256 } });
             this.pixelPatch = pixelPatch;
             SetMode(modes[currentModeIndex]);
             Address = new Address();
@@ -78,7 +78,7 @@ namespace DmxLedPanel
         }
 
         protected void AddDmxUtil(FixtureDmxUtil dmxUtil) {
-            DmxUtils.Add(dmxUtil);
+            dmxUtils.Add(dmxUtil);
         }
 
         public bool IsDmxUtilsEnabled { get; set; } = false;
@@ -169,7 +169,7 @@ namespace DmxLedPanel
                 var mode = modes.ElementAt(index);
                 modes.RemoveAt(index);
                 return mode;
-            } catch (IndexOutOfRangeException e) {
+            } catch (IndexOutOfRangeException) {
                 return null;
             }
         }

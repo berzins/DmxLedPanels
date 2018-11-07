@@ -35,14 +35,8 @@ namespace DmxLedPanel.RestApi
 
                 int dmxAddress = int.Parse(q.Get(KEY_ADDRESS));
                 bool dmxUtilsEnabled = bool.Parse(q.Get(KEY_UTILS_ENABLED));
-
-                int[] portVals = getIntArgArray(q.Get(KEY_PORT));
-                var port = new Port()
-                {
-                    Net = portVals[0],
-                    SubNet = portVals[1],
-                    Universe = portVals[2]
-                };
+                
+                var port = getPortFromArgs(q.Get(KEY_PORT));
 
                 Address address = new Address()
                 {
@@ -69,7 +63,7 @@ namespace DmxLedPanel.RestApi
                 {
 
                     var fix = new Fixture(modes, getPixelPatch(pp));
-                    fix.Name = name + " " + i;
+                    fix.Name = name + " " + i;  
 
                     fix.UtilAddress = utilAddress.Clone();
                     fix.Address =  address.Clone();
@@ -86,7 +80,7 @@ namespace DmxLedPanel.RestApi
 
                     fixtures.Add(fix);
                 }
-
+                var dmxUtils = fixtures[0].DmxUtils;
                 StateManager.Instance.State.FixturePool.AddRange(fixtures);
                 string state = StateManager.Instance.GetStateSerialized();
 
@@ -96,6 +90,16 @@ namespace DmxLedPanel.RestApi
                 Utils.LogException(e);
                 WriteErrorMessage(context, e);
             }
+        }
+
+        public static Port getPortFromArgs(string portStr) {
+            int[] portVals = getIntArgArray(portStr);
+            return new Port()
+            {
+                Net = portVals[0],
+                SubNet = portVals[1],
+                Universe = portVals[2]
+            };
         }
 
 

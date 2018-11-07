@@ -300,13 +300,36 @@ export const getCurretProject = () => {
 export const LOGGIN_ACTION = "LOGGIN_ACTION"
 
 export const loggIn = (password) => {
-    console.log("lggin in action called with password: " + password)
     const url = API_URL + '/session/?' +
     'pass=' + password
     return (dispatch) => {
         requestServer(url, dispatch, [LOGGIN_ACTION])
     }
 }
+
+// ------------- fixture template stuff ----------------------
+
+export const FIXTURE_TEMPLATE_ACTION = "FIXTURE_TEMPLATE_ACTION"
+
+export const storeFixtureTemplate = (fixtureId) => {
+    console.log(fixtureId)
+    const url = API_URL + "/storeFixtureTemplate/?" +
+    'fixture_id=' + fixtureId
+    return (dispatch) => {
+        requestServer(url, dispatch, [FIXTURE_TEMPLATE_ACTION])
+    }
+}
+
+export const getFixtureTemplates = () => {
+    const url = API_URL + "/getTemplates/?"
+    return (dispatch) => {
+        requestServer(url, dispatch, [FIXTURE_TEMPLATE_ACTION])
+    }
+}
+
+
+
+// ------------- end of fixture template stuff ----------------
 
 
 

@@ -55,6 +55,8 @@ namespace DmxLedPanel.RestApi
             addRequestHandler("/dmxSignal/", new RestDmxSignalHandler());
             addRequestHandler("/currentProject/", new RestGetCurrentProject());
             addRequestHandler("/session/", new RestSessionHandler());
+            addRequestHandler("/getTemplates/", new RestGetFixtureTemplatesHandler());
+            addRequestHandler("/storeFixtureTemplate/", new RestStoreFixtureTemplateHandler());
         }
 
         public void InitSystem() {

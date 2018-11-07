@@ -142,12 +142,16 @@ namespace DmxLedPanel.State
             return fl;
         }
 
-        public List<Fixture> GetFixture(int id) {
-            var fix = new List<Fixture>();
+        public bool TryGetFixture(int id, out Fixture fixture) {
             foreach (var f in GetAllFixtures()) {
-                if (f.ID == id) fix.Add(f);
+                if (f.ID == id)
+                {
+                    fixture = f;
+                    return true;
+                }
             }
-            return fix;
+            fixture = null;
+            return false;
         }
 
         public List<Fixture> GetFixtures(int [] ids) {

@@ -111,6 +111,7 @@
     <Compile Include="RestApi\RestEnableHighlightHandler.cs" />
     <Compile Include="RestApi\RestFixtureEditModeHandler.cs" />
     <Compile Include="RestApi\RestGetCurrentProject.cs" />
+    <Compile Include="RestApi\RestGetFixtureTemplatesHandler.cs" />
     <Compile Include="RestApi\RestGetSavedStates.cs" />
     <Compile Include="RestApi\RestGetStateHandler.cs" />
     <Compile Include="RestApi\RestHighlightHandler.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="RestApi\RestResourceFileHandler.cs" />
     <Compile Include="RestApi\RestSaveStateHandler.cs" />
     <Compile Include="RestApi\RestSessionHandler.cs" />
+    <Compile Include="RestApi\RestStoreFixtureTemplate.cs" />
     <Compile Include="RestApi\RestSwitchModeHandler.cs" />
     <Compile Include="RestApi\RestUndoStateHandler.cs" />
     <Compile Include="RestApi\RestWhosInNetworkHandler.cs" />
@@ -151,6 +153,7 @@
     <Compile Include="Template\StateTemplate.cs" />
     <Compile Include="Util\Cmd.cs" />
     <Compile Include="Util\FixedSizeStack.cs" />
+    <Compile Include="Util\FixtureTemplateUtils.cs" />
     <Compile Include="Util\InitSystemManager.cs" />
     <Compile Include="Util\ISerializable.cs" />
     <Compile Include="Util\NetworkUtils.cs" />
