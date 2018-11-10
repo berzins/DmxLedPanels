@@ -7,6 +7,11 @@ import { patchFixture } from '../actions/stateActions'
 import { ItemInfoRow } from '../components/itemInfoRow'
 import store from '../store'
 import { highlight } from '../actions/actions'
+import {
+    getPatchPixelCount
+} from '../util/util'
+
+const OUTPUT_PIXEL_COUNT = 340
 
 class OutputButton extends Component {
 
@@ -55,6 +60,38 @@ class OutputButton extends Component {
         })
     }
 
+    renderLeftSpace() {
+
+        const fixtures = this.props.data.fixtures
+        const fixTotal = fixtures.reduce((sum, f) => {
+            return sum + getPatchPixelCount(f.PixelPatch)
+        }, 0)
+        const pixLeft = OUTPUT_PIXEL_COUNT - fixTotal
+        const percentsLeft = 100 / OUTPUT_PIXEL_COUNT * pixLeft
+        let red = 255 / 100 * (100 - percentsLeft) * 2
+        red = red > 255 ? 255 : red
+        let green = 255 / 100 * percentsLeft * 2
+        green = green > 255 ? 255 : green
+        // red = red - 30
+        // green = green - 30
+        
+
+        console.log(percentsLeft)
+        const style = {
+            position: "relateive",
+            width: percentsLeft + "%",
+            height: "3px",
+            textAlign: "left",
+            backgroundColor: "rgb(" + red +"," + green + ",0)",
+            fontWeight:"bold",
+            borderStyle:"solid",
+            borderWidth: 0.3,
+        }
+        return(
+            <div style={style}>{pixLeft}</div>
+        )
+    }
+
     render() {
         if(store.getState().hilightStateReducer.on) {
             this.props.highlight();
@@ -70,6 +107,7 @@ class OutputButton extends Component {
             autoComplete="off"
             onClick={() => this.handleClick() }
             >
+            {this.renderLeftSpace()}
                 <div><b>{this.props.data.name}</b></div>
                 { this.getPorts(this.props.data.ports) }
                 <ItemInfoRow 

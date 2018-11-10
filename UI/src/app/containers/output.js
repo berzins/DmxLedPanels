@@ -24,7 +24,6 @@ class Output extends Component {
         })
     }
 
-
     render() {
         return(
             <div 
@@ -42,7 +41,8 @@ class Output extends Component {
                         id: this.props.output.ID, 
                         name: this.props.output.Name, 
                         ports: this.props.output.Ports,
-                        ip: this.props.output.IPAddress
+                        ip: this.props.output.IPAddress,
+                        fixtures: this.props.output.Fixtures
                     }}
                     click={this.props.click}
                     />
