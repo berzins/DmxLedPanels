@@ -26,12 +26,18 @@ class Fixture extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
 
-        if(this.selected != this.isSelected(this.props.fixture.Id, nextProps)) {
+        const selected = this.isSelected(this.props.fixture.Id, nextProps)
+
+        if(this.selected != selected) {
             this.selected = !this.selected
             return true
         }
 
         if(this.props.fixture != nextProps.fixture) {
+            return true
+        }
+
+        if(selected) {
             return true
         }
         
@@ -49,6 +55,22 @@ class Fixture extends Component {
         const action = this.selected ? this.props.deselectFixture : this.props.selectFixture
         action(this.props.fixture.Id, false)
     }
+
+    renderSelectoinNr() {
+
+        const index = this.props.selection.fixtures.findIndex(f => f == this.props.fixture.Id)
+
+        const style = {
+            position: "absolute",
+            color: "rgb(127,255,255)"
+        }
+
+        return(
+            <div style={style}>{this.selected ? index : ""}</div>
+        )
+    }
+
+
 
     render() {
 
@@ -71,6 +93,7 @@ class Fixture extends Component {
             area-pressed={this.selected ? "true" : "false" }
             onClick={() => this.handleClick() } 
             >
+                {this.renderSelectoinNr()}
                 <div><b>{this.props.fixture.Name}</b></div>
                 <div>
                     <ItemInfoRow name={'Mode'} value={this.mode} />

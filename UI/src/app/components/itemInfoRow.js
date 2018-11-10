@@ -8,5 +8,4 @@ export const ItemInfoRow = ({name, value}) => {
             <span>{value}</span>
         </div>
     ) 
-    
 }
