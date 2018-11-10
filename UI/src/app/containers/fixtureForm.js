@@ -10,7 +10,10 @@ import {
     MODE_EDIT, 
     clearFormValueError, 
     SELECT_FILE,
-    openModeManagerForm
+    openModeManagerForm,
+    submitModes,
+    updateModes,
+    setFixtureTemplate
 } from '../actions/formActions'
 import { addFixture, editFixture, getFixtureTemplates } from '../actions/stateActions'
 import { 
@@ -30,7 +33,8 @@ import {
     selectItem,
     radioItem,
     buttonItem,
-    errorItem
+    errorItem,
+    textItem
 } from './editForms/formItems'
 import ModeItemList from './justItems/modeItemList'
 import { 
@@ -38,6 +42,7 @@ import {
     MODE_COLUMNS_ID, 
     MODE_ROWS_ID
  } from './justItems/modeItem'
+ import { getFixtureTemplateData, getValuesIndexPair } from './helpers/fixtureTemplateReader'
 import {convertModeIndexesToModevalues} from '../util/mode'
  
 
@@ -55,7 +60,7 @@ const FORM_ID_COUNT = "FORM_ID_COUNT"
 const FORM_ID_TEMPLATE = "FORM_ID_TEMPLATE"
 const APPLY_TEMPLATE_BUTTON = "APPLY_TEMPLATE_BUTTON"
 
-const DEFAULT_TEMPLATE = "default"
+const DEFAULT_TEMPLATE = "Fixture"
 
 
 class FixtureForm extends Component {
@@ -135,41 +140,67 @@ class FixtureForm extends Component {
     }
 
     selectTemplate() {
-        this.state.currentTemplate = this.getValue(FORM_ID_TEMPLATE)
+        console.log("selectTemplate called")
+        this.props.setFixtureTemplate(this.getValue(FORM_ID_TEMPLATE))
     }
 
     getCurrentTemplate() {
-        return this.props.templates.data.find(t => {return t.Name == this.state.currentTemplate})
+        const prop = {...this.props}
+        return prop.templates.data.find(t => {
+            return t.Name == this.props.templates.current
+        })
     }
 
     zeroIfLess(values) {
         return values.forEach(v => {v = v >= 0 ? v : 0})
     }
 
-    render() {
+    getModeIndexies(uidata) {
+        return uidata.modes.map(m => {
+            return {
+                typeIndex: m.name.index,
+                colIndex: m.params[0].index,
+                rowIndex: m.params[1].index
+            }
+        })
+    }
 
+    updateModes(uidata) {
+        const modeIndexies = this.getModeIndexies(uidata)
+        this.props.updateModes(modeIndexies)
+        setTimeout(() => {
+            this.props.submitModes(modeIndexies)
+        }, 200)
+    } 
+
+    render() {
         let form = this.props.form
-        // let patchVals = this.fillIncrementArray(56, 1)
-        let patchVals = patchSizeValues
         let portVals = this.fillIncrementArray(16, 0)
 
-
-        const templates = this.props.templates.data.map(t => {return t.Name})
-        const template = this.getCurrentTemplate()
-
-        if(template != undefined) {
-            this.state.patchTypeIndex = FixturePatch.all().findIndex(m => {return template.PixelPatch.Name == m})
-            this.state.patchColumnIndex = patchVals.findIndex(v => {return template.PixelPatch.Columns == v})
-            this.state.patchRowIndex = patchVals.findIndex(v => {return template.PixelPatch.Rows == v})
+        const templateNames = this.props.templates.data.map(t => {return t.Name})
+        if(templateNames.length == 0) {
+            this.props.getFixtureTemplates()
+            return formModal(
+                form.opened,
+                "Create fixture",
+                "Amen",
+                "No no no no",
+                this,
+                () => contentItem([
+                    rowItem([
+                        textItem("Waiting data")
+                    ])
+                ])
+            )
         }
 
-        this.zeroIfLess([
-            this.state.patchTypeIndex,
-            this.state.patchColumnIndex,
-            this.state.patchRowIndex
-        ])
-
         
+        const template = this.getCurrentTemplate()
+        const uidata = getFixtureTemplateData(template)
+        
+        if(uidata.modes.length > 0) {
+            this.updateModes(uidata)
+        }
         
         return formModal(
             form.opened,
@@ -179,22 +210,22 @@ class FixtureForm extends Component {
             this,
             () => contentItem([
                 rowItem([
-                    selectItem("Templates", FORM_ID_TEMPLATE, templates),
-                    buttonItem(APPLY_TEMPLATE_BUTTON, "Apply", () => { this.selectTemplate.bind(this) })
+                    selectItem("Templates", FORM_ID_TEMPLATE, templateNames, getValuesIndexPair(templateNames, this.props.templates.current).index),
+                    buttonItem(APPLY_TEMPLATE_BUTTON, "Apply", () => this.selectTemplate())
                 ]),
                 rowItem([
                     errorItem(this.props.error != null, this.props.error)
                 ]),
                 rowItem([
-                    textInputItem("Name", FORM_ID_NAME, "Fixture"),
+                    textInputItem("Name", FORM_ID_NAME, uidata.name),
                     textInputItem("Count", FORM_ID_COUNT, "1" )
                 ]),
                 rowItem([
-                    selectItem("Patch type", FOMR_ID_PATCH, FixturePatch.all(), this.state.patchTypeIndex)
+                    selectItem("Patch type", FOMR_ID_PATCH, uidata.pixelPatch.name.values, uidata.pixelPatch.name.index)
                 ]),
                 rowItem([
-                    selectItem("Patch columns", FORM_ID_PATCH_COLS, patchVals, this.state.patchColumnIndex),
-                    selectItem("Patch rows", FORM_ID_PATCH_ROWS, patchVals, this.state.patchRowIndex)
+                    selectItem("Patch columns", FORM_ID_PATCH_COLS, uidata.pixelPatch.columns.values, uidata.pixelPatch.columns.index),
+                    selectItem("Patch rows", FORM_ID_PATCH_ROWS, uidata.pixelPatch.rows.values, uidata.pixelPatch.rows.index)
                 ]),
                 rowItem([
                    <ModeItemList ref={this.modeItemList}/>
@@ -233,7 +264,10 @@ const mapDispatchToProps = (dispatch) => {
         riseFormValueError: riseFormValueError,
         clearFormValueError: clearFormValueError,
         openModeManagerForm: openModeManagerForm,
-        getFixtureTemplates: getFixtureTemplates
+        getFixtureTemplates: getFixtureTemplates,
+        submitModes: submitModes,
+        updateModes: updateModes,
+        setFixtureTemplate: setFixtureTemplate
     }, dispatch)
 }
 

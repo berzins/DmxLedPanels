@@ -119,6 +119,14 @@ export const selectFile = (fileItemId, selector = null) => {
     }
 }
 
+export const SET_FIXTURE_TEMPLATE = "SET_FIXTURE_TEMPLATE"
+
+export const setFixtureTemplate = (name) => {
+    return (dispatch) => {
+        dispatch({type: SET_FIXTURE_TEMPLATE, payload:{name: name}})
+    }
+}
+
 
 // ------------- edit form actions ----------------
 

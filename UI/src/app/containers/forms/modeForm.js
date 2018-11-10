@@ -60,7 +60,6 @@ class ModeManagerForm extends Component {
         const modes = []
         const mIndexes = this.getModeIndexValues()
         mIndexes.forEach((m) => {
-            console.log(m.selected)
             if(m.selected != true) {
                 modes.push(m)
             }

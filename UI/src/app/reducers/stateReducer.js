@@ -125,13 +125,20 @@ export const sessionReducer = (state = {logged: getCookie(LOGIN_COOKIE_KEY) == "
 // ------------- fixture template stuff ----------------------
 
 import { FIXTURE_TEMPLATE_ACTION } from '../actions/stateActions'
+import { SET_FIXTURE_TEMPLATE } from '../actions/formActions'
 
-export const fixtureTemplateReducer = (state = {data: []}, action) => {
+export const fixtureTemplateReducer = (state = {data: [], current: "Fixture"}, action) => {
     switch(action.type) {
         case FIXTURE_TEMPLATE_ACTION: {
             return {
                 ...state,
                 data: action.payload.Content
+            }
+        }
+        case SET_FIXTURE_TEMPLATE: {
+            return {
+                ...state,
+                current: action.payload.name
             }
         } 
     }

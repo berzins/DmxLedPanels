@@ -312,7 +312,6 @@ export const loggIn = (password) => {
 export const FIXTURE_TEMPLATE_ACTION = "FIXTURE_TEMPLATE_ACTION"
 
 export const storeFixtureTemplate = (fixtureId) => {
-    console.log(fixtureId)
     const url = API_URL + "/storeFixtureTemplate/?" +
     'fixture_id=' + fixtureId
     return (dispatch) => {

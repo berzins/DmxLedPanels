@@ -19,6 +19,5 @@ namespace DmxLedPanel.Util
         {
             return JsonConvert.SerializeObject(obj, Formatting.Indented);
         }
-
     }
 }
