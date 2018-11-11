@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DmxLedPanel.State;
 using DmxLedPanel.ArtNetIO;
+using DmxLedPanel.Containers;
 
 namespace DmxLedPanel.RestApi
 {
@@ -51,17 +52,5 @@ namespace DmxLedPanel.RestApi
                 WriteErrorMessage(context, e);
             }
         }
-
-        private class FixtureOutputMap {
-
-            public FixtureOutputMap(int id, Output o) {
-                FixtureId = id;
-                Output = o;
-            }
-
-            public int FixtureId { get; set; }
-            public Output Output { get; set; }
-        }
-
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using DmxLedPanel.Containers;
 
 namespace DmxLedPanel
 {
@@ -202,6 +203,16 @@ namespace DmxLedPanel
             foreach (Fixture f in fixtures) {
                 updatePending.Add(f);
             }
+        }
+
+        public static List<FixtureOutputMap> GetPatchedFixtureOutputMap(List<Fixture> fixtures) {
+            var state = StateManager.Instance.State;
+            return fixtures.Aggregate(new List<FixtureOutputMap>(), (fom, f) => {
+                if (f.PatchedTo >= 0) {
+                    fom.Add(new FixtureOutputMap(f.ID, state.GetOutputByFixture(f.ID), f));
+                }
+                return fom;
+            });
         }
     }
 }

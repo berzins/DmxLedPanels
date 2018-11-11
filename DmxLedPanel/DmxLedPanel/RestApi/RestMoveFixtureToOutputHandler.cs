@@ -35,9 +35,24 @@ namespace DmxLedPanel.RestApi
                 }
 
                 var fixtures = state.GetFixturesFromFixturePool(fixIds);
+
+                // Lets get patched fixtures and their outputs
+                var patchedFixtureOutputs = Output.GetPatchedFixtureOutputMap(fixtures);
+                foreach (var fo in patchedFixtureOutputs)
+                {
+                    fo.Output.UnpatchFixture(fo.FixtureId);
+                }
+
                 var success = state.GetOutput(outId).
                     TryPatchFixtures(fixtures);
                 if (!success) {
+                    // patch unpatched fixtures back so we don't loose them forever
+                    foreach (var fo in patchedFixtureOutputs) {
+                        if (!state.GetOutput(fo.Output.ID).TryPatchFixture(fo.Fixture))
+                        {
+                            throw new InvalidOperationException("Faild to repatch fixtures on patch cancelation. I suggest you to do the 'undo' as this state is more than unexpected! :)");
+                        }
+                    }
                     throw new ArgumentOutOfRangeException("Faild to patch fixtures.. not enough address space");
                 }
 

@@ -61,6 +61,7 @@
     <Compile Include="ArtNetIO\IDmxSignalListener.cs" />
     <Compile Include="ArtNetIO\WhosInNetwork.cs" />
     <Compile Include="Const.cs" />
+    <Compile Include="Containers\FixtureOutputMap.cs" />
     <Compile Include="FileIO.cs" />
     <Compile Include="FixtureFactory.cs" />
     <Compile Include="Fixtures\DmxModeSwitcher.cs" />
