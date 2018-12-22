@@ -30,6 +30,7 @@ namespace DmxLedPanel.RestApi
                     if (output == null) {
                         throw new ArgumentException("No ouputs contain fixture with id '" + id + "', move failed.");
                     }
+
                     fixOutMap.Add(new FixtureOutputMap(id, output));        
                 }
 
@@ -44,6 +45,9 @@ namespace DmxLedPanel.RestApi
                     Select(x => (IDmxPacketHandler)x).ToList()
                     );
 
+                Message.Message = "Fixtures: " + Fixture.GetFixtureInfoStr(FixtureOutputMap.GetFixtures(fixOutMap))
+                    + " unpatched from Otuputs: " + Output.GetOutputInfoStr(FixtureOutputMap.GetOutputs(fixOutMap));
+                
                 var data = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, data);   
             }

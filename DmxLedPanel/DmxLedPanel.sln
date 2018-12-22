@@ -11,6 +11,8 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DmxLedPanelsSetup", "DmxLed
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DmxLedPanelTester", "DmxLedPanelTester\DmxLedPanelTester.csproj", "{114AD1FD-4667-435B-9EB2-F5F058544E83}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Talker", "Talker\Talker.csproj", "{5EF19DF5-D38C-4F94-9BE1-41777ED561A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{114AD1FD-4667-435B-9EB2-F5F058544E83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{114AD1FD-4667-435B-9EB2-F5F058544E83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{114AD1FD-4667-435B-9EB2-F5F058544E83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EF19DF5-D38C-4F94-9BE1-41777ED561A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EF19DF5-D38C-4F94-9BE1-41777ED561A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EF19DF5-D38C-4F94-9BE1-41777ED561A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EF19DF5-D38C-4F94-9BE1-41777ED561A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

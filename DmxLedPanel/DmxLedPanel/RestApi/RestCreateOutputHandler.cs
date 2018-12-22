@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Talker;
 
 namespace DmxLedPanel.RestApi
 {
@@ -40,11 +41,15 @@ namespace DmxLedPanel.RestApi
                     });    
                 }
                 StateManager.Instance.State.Outputs.AddRange(outputs);
+                SetInfoMessage(
+                    "Outputs: " + outputs.Aggregate("", (s, o) => s + o.Name + " ") + "created.",
+                    IS_PART_OF_STATE
+                    );
                 var state = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
             }
             catch (Exception e) {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE);
                 WriteErrorMessage(context, e);
             }
         }

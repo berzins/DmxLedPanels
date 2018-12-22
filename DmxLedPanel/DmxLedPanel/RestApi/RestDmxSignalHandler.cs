@@ -43,12 +43,16 @@ namespace DmxLedPanel.RestApi
         {
             try
             {
+                SetInfoMessage(
+                    "Dmx signal " + (detected ? "detected" : "lost")
+                    , IS_PART_OF_STATE);
                 context.Request.GetClientCertificate();
                 Respond(this.context, detected);
             }
             catch (Exception e) {
-                Console.WriteLine("Dmx state response failed. Refresh UI to sync dmx state");
-                Console.WriteLine(e.Message);
+                LogException(
+                    "Dmx state response failed. Refresh UI to sync dmx state" + "\n\r" 
+                    + e.Message);
             }
 
             // our job is done.. wait for next ui call

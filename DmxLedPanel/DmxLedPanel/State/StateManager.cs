@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Talker;
 
 namespace DmxLedPanel.State
 {
@@ -127,6 +128,17 @@ namespace DmxLedPanel.State
             stateStatckIndex -= steps;  
             this.state = inflateAndLoadSerializedState(stateStack[stateStatckIndex]);
             return State;
+        }
+
+        public void SetActonMessage(ActionMessage msg) {
+            state.ActionMessage = msg;
+        }
+
+        public ActionMessage GetActionMessage() {
+            if (state != null && state.ActionMessage != null) {
+                return state.ActionMessage;
+            }
+            return new ActionMessage();
         }
     }
 }

@@ -66,14 +66,13 @@ namespace DmxLedPanel.RestApi
         public void Start() {
             if (server != null)
             {
-
                 try
                 {
                     server.Start();
-                    Console.WriteLine("Rest API server started on port " + port);
+                    ArtNet.Logger.Log("Rest API server started on port " + port, ArtNet.LogLevel.INFO);
                 }
                 catch (Exception e) {
-                    Console.WriteLine("API server failed to start on port " + port + ". " + e.Message);
+                    ArtNet.Logger.Log("API server failed to start on port " + port + ". " + e.Message, ArtNet.LogLevel.ERROR);
                     return;
                 }
 
@@ -84,7 +83,7 @@ namespace DmxLedPanel.RestApi
                         var context = server.GetContext();
                         IHttpRequestHandler handler = null;
 
-                        Console.WriteLine(context.Request.Url);
+                        ArtNet.Logger.Log("Request => '" + context.Request.Url, ArtNet.LogLevel.INFO);
 
                         // get relative url cause handlers are sotred by relative keys
                         var url = GetRealtiveUrl(context.Request.Url.ToString());
@@ -101,7 +100,7 @@ namespace DmxLedPanel.RestApi
                 }).Start(); 
             }
             else {
-                Console.WriteLine("Rest Api Server not initialized. Server not started.");
+                ArtNet.Logger.Log("Rest Api Server not initialized. Server not started.", ArtNet.LogLevel.WARNING);
             }
         }
 

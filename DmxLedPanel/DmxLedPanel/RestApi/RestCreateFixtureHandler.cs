@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Talker;
 
 namespace DmxLedPanel.RestApi
 {
@@ -82,12 +83,18 @@ namespace DmxLedPanel.RestApi
                 }
                 var dmxUtils = fixtures[0].DmxUtils;
                 StateManager.Instance.State.FixturePool.AddRange(fixtures);
-                string state = StateManager.Instance.GetStateSerialized();
 
+                SetMessage(
+                    "Fixtures created: " + Fixture.GetFixtureInfoStr(fixtures) + ".",
+                    LogLevel.INFO,
+                    IS_PART_OF_STATE
+                    );
+
+                string state = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
             }
             catch (ArgumentException e) {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE);
                 WriteErrorMessage(context, e);
             }
         }
@@ -176,4 +183,5 @@ namespace DmxLedPanel.RestApi
 
         }
     }
+
 }

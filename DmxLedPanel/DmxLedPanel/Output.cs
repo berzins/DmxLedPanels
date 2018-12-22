@@ -214,5 +214,20 @@ namespace DmxLedPanel
                 return fom;
             });
         }
+
+        public static string GetOutputInfoStr(List<Output> outputs)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var o in outputs)
+            {
+                sb.Append(o.Name + " ");
+            }
+            return sb.ToString().Trim();
+        }
+
+        public static string getOutputInfoStr(Fixture f)
+        {
+            return f.Name;
+        }
     }
 }

@@ -25,16 +25,23 @@ namespace DmxLedPanel.RestApi
                     }          
                 }
 
+                var rmFixtures = new List<Fixture>();
                 foreach (int id in ids) {
-                    state.RemoveFixtureFromFixturePool(id);
+                    rmFixtures.Add(state.RemoveFixtureFromFixturePool(id));
                 }
+
+                SetInfoMessage(
+                    "Fixture with name: '"
+                    + rmFixtures.Aggregate("", (s, f) => s + f.Name + ",")
+                    + "' removed.",
+                    IS_PART_OF_STATE);
 
                 var data = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, data);
 
             }
             catch (Exception e) {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE);
                 WriteErrorMessage(context, e);
             }
            

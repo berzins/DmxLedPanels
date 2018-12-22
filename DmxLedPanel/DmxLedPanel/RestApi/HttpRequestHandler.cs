@@ -1,13 +1,18 @@
-﻿using System;
+﻿using DmxLedPanel.RestApi.Log;
+using DmxLedPanel.State;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Talker;
 
 namespace DmxLedPanel.RestApi
 {
-    public abstract class HttpRequestHandler : IHttpRequestHandler
+    public abstract class HttpRequestHandler 
+        : MessageLogger, 
+        IHttpRequestHandler
     {
 
         public static readonly char[] PARAM_SPLITTER = {  '|' };
@@ -33,6 +38,7 @@ namespace DmxLedPanel.RestApi
             response.OutputStream.Close();
             response = null;
             context = null;
+            Log();
         }
 
         protected void WriteResponse(
@@ -46,6 +52,7 @@ namespace DmxLedPanel.RestApi
 
 
         public void WriteErrorMessage(HttpListenerContext context, Exception e) {
+            Message.Message = e.ToString();
             var error = Util.StaticSerializer.Serialize(
                     new ResponseMessage(ResponseMessage.TYPE_ERROR, e.Message));
             WriteResponse(context, RestConst.RESPONSE_INTERNAL_ERROR, RestConst.CONTENT_TEXT_JSON, error);

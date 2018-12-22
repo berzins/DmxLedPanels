@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Talker;
 
 namespace DmxLedPanel.State
 {
@@ -13,6 +14,7 @@ namespace DmxLedPanel.State
     {
         public List<Output> Outputs { get; set; }
         public List<Fixture> FixturePool { get; set; }
+        public ActionMessage ActionMessage { get; set; } = new ActionMessage();
 
         public int GetLastFixtureId() {
             int last = 0;
@@ -66,6 +68,7 @@ namespace DmxLedPanel.State
                 f.Name = ft.Name;
                 state.FixturePool.Add(f);
             }
+            state.ActionMessage = stateTemp.ActionMessage;
             return (T) Convert.ChangeType(state, typeof(State));
         }
 
@@ -89,6 +92,7 @@ namespace DmxLedPanel.State
             foreach (Fixture f in FixturePool) {
                 temp.FixturePool.Add(FixtureTemplateFactory.createFixtureTemplate(f));
             }
+            temp.ActionMessage = ActionMessage;
 
             return JsonConvert.SerializeObject(temp);
         }

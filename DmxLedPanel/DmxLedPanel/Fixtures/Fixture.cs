@@ -304,5 +304,17 @@ namespace DmxLedPanel
                 f.SetDmxValues(Enumerable.Repeat(inteisty, f.AddressCount).ToArray());
             }
         }
+
+        public static string GetFixtureInfoStr(List<Fixture> fixtures) {
+            StringBuilder sb = new StringBuilder();
+            foreach (var f in fixtures) {
+                sb.Append(f.Name + " ");
+            }
+            return sb.ToString().Trim();
+        }
+
+        public static string getFixtureInfoStr(Fixture f) {
+            return f.Name;
+        }
     }
 }

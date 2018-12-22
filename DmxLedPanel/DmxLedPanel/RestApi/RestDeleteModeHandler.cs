@@ -30,20 +30,29 @@ namespace DmxLedPanel.RestApi
 
                 var isRemovedForAllFixtures = true;
 
+                var failedFix = new List<Fixture>();
                 foreach (var fix in fixtures) {
                     IMode mode = null;
                     if ((mode = fix.TryRemoveMode(modeId)) == null) {
+                        failedFix.Add(fix);
                         isRemovedForAllFixtures = false;
                     }
                 }
 
                 // let to know that this mode index was not walid for all fixtures.
                 if (!isRemovedForAllFixtures) {
-                    Logger.Log("Mode index was not valid for all fixtures.", LogLevel.WARNING);
-                } 
+                    SetWarningMessage("Mode index was not valid for all fixtures.", IS_PART_OF_STATE);
+                    return;
+                }
+
+                SetInfoMessage(
+                    "Mode with the index: " + modeId + "wasn't present for fixture '"
+                    + failedFix.Aggregate("", (s, f) => s + f.Name + ",") + "'",
+                    IS_PART_OF_STATE);
 
             }
             catch (Exception e) {
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE);
                 Utils.LogException(e);
                 WriteErrorMessage(context, e);
             }

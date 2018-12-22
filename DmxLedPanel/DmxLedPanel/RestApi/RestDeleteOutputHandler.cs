@@ -26,6 +26,7 @@ namespace DmxLedPanel.RestApi
                 }
 
                 //remove outputs and move contained fixtures to fixture pool
+                var rmOutputs = new List<Output>();
                 foreach (int id in ids) {
                     var o = state.RemoveOutput(id);
                     var fixIds = new List<int>();
@@ -36,7 +37,15 @@ namespace DmxLedPanel.RestApi
                     foreach (int fixId in fixIds) {
                         state.FixturePool.Add(o.UnpatchFixture(fixId));
                     }
+                    rmOutputs.Add(o);
                 }
+
+                SetInfoMessage( 
+                    "Output with name: "
+                    + rmOutputs.Aggregate("", (s, o) => s + o.Name + ",")
+                    + "removed."
+                    , IS_PART_OF_STATE);
+
 
                 // send back state
                 var data = StateManager.Instance.GetStateSerialized();
@@ -44,7 +53,7 @@ namespace DmxLedPanel.RestApi
 
             }
             catch (Exception e) {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE);
                 WriteErrorMessage(context, e);
             }
         }

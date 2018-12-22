@@ -131,6 +131,8 @@
     <Compile Include="RestApi\RestUndoStateHandler.cs" />
     <Compile Include="RestApi\RestWhosInNetworkHandler.cs" />
     <Compile Include="RestApi\UIConfig.cs" />
+    <Compile Include="RestApi\Log\MessageLogger.cs" />
+    <Compile Include="State\ActionMessage.cs" />
     <Compile Include="State\HighlightState.cs" />
     <Compile Include="State\StateManager.cs" />
     <Compile Include="Template\FixtureTemplate.cs" />
@@ -189,6 +191,10 @@
     <ProjectReference Include="..\..\..\..\Libraries\ArtNet\ArtNet\ArtNet\ArtNet.csproj">
       <Project>{188c5ef2-1406-4ed3-80f8-32f9921721ba}</Project>
       <Name>ArtNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Talker\Talker.csproj">
+      <Project>{5EF19DF5-D38C-4F94-9BE1-41777ED561A2}</Project>
+      <Name>Talker</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

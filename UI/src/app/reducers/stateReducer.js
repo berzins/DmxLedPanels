@@ -24,6 +24,8 @@ export const stateReducer = (state = init, action) => {
             return{...sate, loaded:false, error: null, data:null }
         }
         case STATE_CHANGE_SUCCESS: {
+            console.log("IS ACTION MESSAGE HERE?")
+            console.log(action.payload)
             return {...state, 
                 loaded:true,  
                 error:null, 
