@@ -27,6 +27,7 @@ namespace DmxLedPanel.RestApi
                 };
 
                 ArtnetOut.Instance.WhoTheFuckAreYou.DevicesChanged += handler;
+                //TODO: is this finished?
 
             }
             catch (Exception e) {

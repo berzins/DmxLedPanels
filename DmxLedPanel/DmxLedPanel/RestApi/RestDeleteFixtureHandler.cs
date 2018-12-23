@@ -34,14 +34,15 @@ namespace DmxLedPanel.RestApi
                     "Fixture with name: '"
                     + rmFixtures.Aggregate("", (s, f) => s + f.Name + ",")
                     + "' removed.",
-                    IS_PART_OF_STATE);
+                    IS_PART_OF_STATE,
+                    Talker.Talker.GetSource());
 
                 var data = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, data);
 
             }
             catch (Exception e) {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
            

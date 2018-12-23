@@ -34,13 +34,28 @@ namespace DmxLedPanel.RestApi
                         isModeSwitchedForAllFixtures = false;
                     }
                 }
+                
+                SetInfoMessage(
+                        "The mode for fixture: " + Fixture.GetFixtureListNameString(fixtures)
+                        + " is set to index: " + modeId,
+                        IS_NOT_PART_OF_STATE,
+                        Talker.Talker.GetSource()
+                        );
+                Log();
 
-                if (!isModeSwitchedForAllFixtures) {
-                    Logger.Log("Not all fixtures has switched mode.. probably not existing mode index", LogLevel.WARNING);
+                if (!isModeSwitchedForAllFixtures)
+                {
+                    SetWarningMessage(
+                        "Not all fixtures has switched mode.. probably not existing mode index",
+                        IS_NOT_PART_OF_STATE,
+                        Talker.Talker.GetSource()
+                        );
+                    Log();
                 }
             }
-            catch (Exception e) {
-                Utils.LogException(e);
+            catch (Exception e)
+            {
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

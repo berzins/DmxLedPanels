@@ -1,4 +1,5 @@
 ﻿using DmxLedPanel.Util;
+using System;
 using System.Net;
 
 
@@ -10,9 +11,24 @@ namespace DmxLedPanel.RestApi
 
         public override void HandleRequest(HttpListenerContext context)
         {
-            createUiConfigFile(context);
-            string html = FileIO.ReadFile(SettingManager.Instance.Settings.UIHomePath + UI_FILE_NAME, true);
-            WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_HTML, html);
+            try
+            {
+                createUiConfigFile(context);
+                string html = FileIO.ReadFile(SettingManager.Instance.Settings.UIHomePath + UI_FILE_NAME, true);
+
+                SetInfoMessage(
+                        "index.html => read ok, confing.js => creation ok",
+                        IS_NOT_PART_OF_STATE,
+                        Talker.Talker.GetSource()
+                        );
+
+                WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_HTML, html);
+            }
+            catch (Exception e)
+            {
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                WriteErrorMessage(context, e);
+            }
         }
 
         private void createUiConfigFile(HttpListenerContext context)

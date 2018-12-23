@@ -11,13 +11,18 @@ namespace DmxLedPanel.RestApi
             try
             {
                 var state = StateManager.Instance.Redo(1).Serialize();
+                SetInfoMessage(
+                        "'Redo' action successful.",
+                        IS_NOT_PART_OF_STATE,
+                        Talker.Talker.GetSource()
+                        );
                 WriteResponse(
                     context, RestConst.RESPONSE_OK,
                     RestConst.CONTENT_TEXT_JSON, state);
             }
             catch (Exception e)
             {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

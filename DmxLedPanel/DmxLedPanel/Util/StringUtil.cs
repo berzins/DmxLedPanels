@@ -12,6 +12,10 @@ namespace DmxLedPanel.Util
             return str == null || str.Length == 0 ? true : false;
         }
 
+        public static string RemoveLastChars(string str, int count) {
+            return str.Substring(0, str.Length - count);
+        }
+
 
     }
 }

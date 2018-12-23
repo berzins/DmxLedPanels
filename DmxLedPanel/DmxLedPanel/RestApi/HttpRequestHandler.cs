@@ -21,6 +21,16 @@ namespace DmxLedPanel.RestApi
 
         public static readonly string KEY_ID = "id";
 
+        protected string name = "";
+
+        public string Name {
+            get {
+                return name;
+            }
+        }
+
+        
+
         public abstract void HandleRequest(HttpListenerContext context);
 
         protected void WriteResponse(

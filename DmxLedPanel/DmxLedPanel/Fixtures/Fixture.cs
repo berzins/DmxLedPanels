@@ -316,5 +316,10 @@ namespace DmxLedPanel
         public static string getFixtureInfoStr(Fixture f) {
             return f.Name;
         }
+
+        public static string GetFixtureListNameString(List<Fixture> list) {
+            string str = list.Aggregate("", (s, f) => s + f.Name + ", ");
+            return str.Substring(0, str.Length - 2);
+        }
     }
 }

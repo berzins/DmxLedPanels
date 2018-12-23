@@ -79,6 +79,14 @@ namespace DmxLedPanel
                 values.Add(val);
             }
         }
+
+        public override string ToString()
+        {
+            return "name: " + Name
+                + ", cols : " + Columns
+                + ", rows: " + Rows
+                + ", pixel length: " + PixelLength;
+        }
     }
 
 }

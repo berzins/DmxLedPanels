@@ -29,6 +29,7 @@ namespace DmxLedPanel.RestApi
 
                 var outputs = StateManager.Instance.State.GetOutputs(oids);
                 var port = new Port() { Net = po[0], SubNet = po[1], Universe = po[2] };
+                var startProt = port.ToString();
                 
                 foreach (var o in outputs)
                 {
@@ -38,12 +39,19 @@ namespace DmxLedPanel.RestApi
                     o.Ports = ports;
                 }
 
+                SetInfoMessage(
+                    "The port for otputs: " + Output.GetOutputListNameString(outputs)
+                    + " is set from: " + startProt + " to " + port.ToString(),
+                    IS_PART_OF_STATE,
+                    Talker.Talker.GetSource()
+                    );
+
                 var state = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
             }
             catch (Exception e)
             {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

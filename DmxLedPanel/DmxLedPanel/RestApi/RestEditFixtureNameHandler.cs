@@ -31,6 +31,7 @@ namespace DmxLedPanel.RestApi
 
 
                 var fixtures = StateManager.Instance.State.GetFixtures(fids);
+                var fixNameList = Fixture.GetFixtureListNameString(fixtures);
 
                 var i = 0;
                 foreach (var f in fixtures)
@@ -38,13 +39,19 @@ namespace DmxLedPanel.RestApi
                     f.Name = name + " " + i++;
                 }
 
+                SetInfoMessage(
+                    "The name for fixtures: " + fixNameList
+                    + " is set to: " + name,
+                    IS_PART_OF_STATE,
+                    Talker.Talker.GetSource());
+
                 string state = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
 
             }
             catch (Exception e)
             {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
 

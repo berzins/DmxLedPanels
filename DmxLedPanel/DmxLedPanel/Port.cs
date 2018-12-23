@@ -85,6 +85,13 @@ namespace DmxLedPanel
             }
             return p;
         }
+
+        public override string ToString()
+        {
+            return "net: " + Net
+                + ", sub net: " + SubNet
+                + ", universe: " + Universe;
+        }
     }
 }
 

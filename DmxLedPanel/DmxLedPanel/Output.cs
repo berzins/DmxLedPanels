@@ -229,5 +229,10 @@ namespace DmxLedPanel
         {
             return f.Name;
         }
+
+        public static string GetOutputListNameString(List<Output> list) {
+            string str = list.Aggregate("", (s, o) => s + o.Name + ", ");
+            return str.Substring(0, str.Length - 2);
+        }
     }
 }

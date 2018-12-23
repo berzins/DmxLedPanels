@@ -36,5 +36,11 @@ namespace DmxLedPanel
             a.DmxAddress += lenght;
             return a.Clone();
         }
+
+        public override string ToString()
+        {
+            return Port.ToString()
+                + ", address: " + DmxAddress;
+        }
     }
 }

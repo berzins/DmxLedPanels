@@ -39,9 +39,16 @@ namespace DmxLedPanel.RestApi
                 foreach (var f in fixtures) {
                     f.AddMode(RestCreateFixtureHandler.GetFixtureMode(name));
                 }
+
+                SetInfoMessage(
+                    "The mode '" + name + " cols:" + cols + ", rows:" + rows +"' added to fixtures: "
+                    + fixtures.Aggregate("", (s, f) => s + f.Name + " "),
+                    IS_NOT_PART_OF_STATE,
+                    Talker.Talker.GetSource()
+                    );
             }
             catch (Exception e) {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

@@ -30,18 +30,26 @@ namespace DmxLedPanel.RestApi
                 }
                 
                 var fixtures = StateManager.Instance.State.GetFixtures(fids);
-                
+
+                IPixelPatch pixelPatch = RestCreateFixtureHandler.getPixelPatch(patch);
                 foreach (var f in fixtures)
                 {
-                    f.TrySetPatch(RestCreateFixtureHandler.getPixelPatch(patch));    
+                    f.TrySetPatch(pixelPatch);    
                 }
+
+                SetInfoMessage(
+                    "Pixel patch for fixtures: " + Fixture.GetFixtureListNameString(fixtures)
+                    + " is set to: " + pixelPatch.ToString(),
+                    IS_PART_OF_STATE,
+                    Talker.Talker.GetSource()
+                    );
 
                 string state = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
             }
             catch (Exception e)
             {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
 

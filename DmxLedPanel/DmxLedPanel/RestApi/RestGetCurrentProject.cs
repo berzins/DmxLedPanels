@@ -18,12 +18,19 @@ namespace DmxLedPanel.RestApi
             {
                 var cp = SettingManager.Instance.Settings.CurrentProject;
                 var msg = new ResponseMessage(ResponseMessage.TYPE_CURRENT_PROJECT, cp);
+
+                SetInfoMessage(
+                    "The current project is: " + cp,
+                    IS_NOT_PART_OF_STATE,
+                    Talker.Talker.GetSource()
+                    );
+
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON,
                     StaticSerializer.Serialize(msg)
                     );
             }
             catch (Exception e) {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

@@ -40,11 +40,18 @@ namespace DmxLedPanel.RestApi
                     o.Name += name + " " + i++;
                 }
 
+                SetInfoMessage(
+                    "Outputs: " + Output.GetOutputListNameString(outputs)
+                    + "edit successfull",
+                    IS_PART_OF_STATE,
+                    Talker.Talker.GetSource()
+                    );
+
                 var state = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
             }
             catch (Exception e) {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

@@ -87,14 +87,15 @@ namespace DmxLedPanel.RestApi
                 SetMessage(
                     "Fixtures created: " + Fixture.GetFixtureInfoStr(fixtures) + ".",
                     LogLevel.INFO,
-                    IS_PART_OF_STATE
+                    IS_PART_OF_STATE,
+                    Talker.Talker.GetSource()
                     );
 
                 string state = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
             }
             catch (ArgumentException e) {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

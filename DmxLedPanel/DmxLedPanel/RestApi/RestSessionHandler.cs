@@ -26,12 +26,20 @@ namespace DmxLedPanel.RestApi
                     Message = correct ? "logged" : "wrong password"
                 };
 
+                SetInfoMessage(
+                        context.Request.RemoteEndPoint.ToString() +
+                        " login atempt status is: '" + body.Message + "'",
+                        IS_NOT_PART_OF_STATE,
+                        Talker.Talker.GetSource()
+                        );
+
                 var msg = new ResponseMessage(ResponseMessage.TYPE_SESSION, body);
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON,
                     StaticSerializer.Serialize(msg)
                     );
             }
             catch (Exception e) {
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

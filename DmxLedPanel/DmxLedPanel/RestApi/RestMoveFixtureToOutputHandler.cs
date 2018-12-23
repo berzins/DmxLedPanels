@@ -43,8 +43,8 @@ namespace DmxLedPanel.RestApi
                     fo.Output.UnpatchFixture(fo.FixtureId);
                 }
 
-                var success = state.GetOutput(outId).
-                    TryPatchFixtures(fixtures);
+                var output = state.GetOutput(outId);
+                var success = output.TryPatchFixtures(fixtures);
                 if (!success) {
                     // patch unpatched fixtures back so we don't loose them forever
                     foreach (var fo in patchedFixtureOutputs) {
@@ -63,11 +63,19 @@ namespace DmxLedPanel.RestApi
                     Select(x => (IDmxPacketHandler)x).ToList()
                     );
 
+                SetInfoMessage(
+                        "Fixtures: " + Fixture.GetFixtureListNameString(fixtures)
+                        + " is patched to output: " + output.Name,
+                        IS_PART_OF_STATE,
+                        Talker.Talker.GetSource()
+                        );
+
                 var data = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, data);
             }
-            catch (Exception e) {
-                //Utils.LogException(e);
+            catch (Exception e)
+            {
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

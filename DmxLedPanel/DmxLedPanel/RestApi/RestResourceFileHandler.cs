@@ -31,7 +31,9 @@ namespace DmxLedPanel.RestApi
                 mime = RestConst.CONTENT_TEXT_JAVASCRIPT;
             }
 
-            byte[] buf = File.ReadAllBytes(file);   
+            byte[] buf = File.ReadAllBytes(file);
+            SetInfoMessage("'" + file + "' -> read ok.", IS_NOT_PART_OF_STATE,
+                Talker.Talker.GetSource());
             WriteResponse(context, RestConst.RESPONSE_OK, mime, buf);
         }
     }

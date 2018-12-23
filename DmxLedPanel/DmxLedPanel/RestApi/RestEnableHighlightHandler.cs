@@ -33,6 +33,13 @@ namespace DmxLedPanel.RestApi
                     HighlightState.Instance.Enabled = false;
                     msg = new ResponseMessage(ResponseMessage.TYPE_INFO, false);
                 }
+
+                SetInfoMessage(
+                    "The highlight state is set to: " + enabled,
+                    IS_PART_OF_STATE,
+                    Talker.Talker.GetSource()
+                    );
+
                 WriteResponse(
                     context, 
                     RestConst.RESPONSE_OK, 
@@ -40,7 +47,7 @@ namespace DmxLedPanel.RestApi
                     Util.StaticSerializer.Serialize(msg));
             }
             catch (Exception e) {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

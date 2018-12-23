@@ -91,6 +91,12 @@ namespace DmxLedPanel.RestApi
                     hids.Add(f.ID);
                 }
 
+                SetInfoMessage(
+                        "Fixture: " + Fixture.GetFixtureListNameString(highlightf.ToList()) + " highilghted.",
+                        IS_NOT_PART_OF_STATE,
+                        Talker.Talker.GetSource()
+                        );
+
                 var msg = Util.StaticSerializer.Serialize(new ResponseMessage(ResponseMessage.TYPE_INFO,
                     Util.StaticSerializer.Serialize(hids)
                     ));
@@ -99,7 +105,7 @@ namespace DmxLedPanel.RestApi
             }
             catch (Exception e)
             {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

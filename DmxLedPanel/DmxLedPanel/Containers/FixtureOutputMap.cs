@@ -41,7 +41,9 @@ namespace DmxLedPanel.Containers
         public static List<Output> GetOutputs(List<FixtureOutputMap> map) {
             var outputs = new List<Output>();
             foreach (var fom in map) {
-                outputs.Add(fom.Output);
+                if (!outputs.Contains(fom.Output)) {
+                    outputs.Add(fom.Output);
+                }
             }
             return outputs;
         } 

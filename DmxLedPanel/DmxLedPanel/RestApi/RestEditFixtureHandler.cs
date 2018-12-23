@@ -39,15 +39,17 @@ namespace DmxLedPanel.RestApi
                     throw new ArgumentNullException("Some of fixture edit properties was null");
                 }
 
+                var portObj = new Port()
+                {
+                    Net = port[0],
+                    SubNet = port[1],
+                    Universe = port[2]
+                };
+
                 Address address = new Address()
                 {
                     DmxAddress = int.Parse(addr),
-                    Port = new Port()
-                    {
-                        Net = port[0],
-                        SubNet = port[1],
-                        Universe = port[2]
-                    }
+                    Port = portObj
                 };
 
                 var fixtures = StateManager.Instance.State.GetFixtures(fids);
@@ -71,12 +73,18 @@ namespace DmxLedPanel.RestApi
                     i++;
                 }
 
+                SetInfoMessage(
+                    "Fixtures: " + Fixture.GetFixtureListNameString(fixtures)
+                    + " edit successfull",
+                    IS_PART_OF_STATE,
+                    Talker.Talker.GetSource());
+
                 string state = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
 
             }
             catch (Exception e) {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
             

@@ -16,9 +16,19 @@ namespace DmxLedPanel.RestApi
             {
                 var templates = FixtureTemplateUtils.GetTemplates();
                 var msg = new ResponseMessage(ResponseMessage.TYPE_FIXTURE_TEMPLATE, templates);
+
+                SetInfoMessage(
+                    "The templates are: " 
+                    + StringUtil.RemoveLastChars(
+                        templates.Aggregate("", (s, t) => s + t.Name + ", "), 2),
+                    IS_NOT_PART_OF_STATE,
+                    Talker.Talker.GetSource()
+                    );
+
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, StaticSerializer.Serialize(msg));
             }
             catch (Exception e) {
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
 

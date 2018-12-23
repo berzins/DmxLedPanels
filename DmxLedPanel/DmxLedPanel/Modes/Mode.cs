@@ -43,5 +43,18 @@ namespace DmxLedPanel.Modes
             }
             return null;
         }
+
+        public override string ToString()
+        {
+            string str = "name: " + Name
+                + "id: " + Id
+                + ", params: " + Params.Aggregate("", (s, p) => s +  + p + "/");
+            return str.Substring(0, str.Length - 1);
+        }
+
+        public static string ModeListToString(List<IMode> list) {
+            var str = list.Aggregate("", (s, m) => s + m.ToString() + ", ");
+            return str.Substring(0, str.Length - 2);
+        }
     }
 }

@@ -41,18 +41,20 @@ namespace DmxLedPanel.RestApi
 
                 // let to know that this mode index was not walid for all fixtures.
                 if (!isRemovedForAllFixtures) {
-                    SetWarningMessage("Mode index was not valid for all fixtures.", IS_PART_OF_STATE);
+                    SetWarningMessage("Mode index was not valid for all fixtures.", IS_PART_OF_STATE,
+                        Talker.Talker.GetSource());
                     return;
                 }
 
                 SetInfoMessage(
                     "Mode with the index: " + modeId + "wasn't present for fixture '"
                     + failedFix.Aggregate("", (s, f) => s + f.Name + ",") + "'",
-                    IS_PART_OF_STATE);
+                    IS_PART_OF_STATE,
+                    Talker.Talker.GetSource());
 
             }
             catch (Exception e) {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 Utils.LogException(e);
                 WriteErrorMessage(context, e);
             }

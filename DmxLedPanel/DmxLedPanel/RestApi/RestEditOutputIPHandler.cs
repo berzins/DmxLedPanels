@@ -37,13 +37,21 @@ namespace DmxLedPanel.RestApi
                     o.IP = ip;
                 }
 
+
+                SetInfoMessage(
+                    "The IP for otputs: " + Output.GetOutputListNameString(outputs)
+                    + " is set to: " + ip,
+                    IS_PART_OF_STATE,
+                    Talker.Talker.GetSource()
+                    );
+
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON,
                     StateManager.Instance.GetStateSerialized()
                     );
             }
             catch (Exception e)
             {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

@@ -1,4 +1,5 @@
 ﻿using DmxLedPanel.State;
+using DmxLedPanel.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,23 @@ namespace DmxLedPanel.RestApi
     {
         public override void HandleRequest(HttpListenerContext context)
         {
-            var state = StateManager.Instance.State.Serialize();
-            WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
+            try
+            {
+                var state = StateManager.Instance.State.Serialize();
+
+                SetInfoMessage(
+                        "State to be returned is: " + SettingManager.Instance.Settings.CurrentProject,
+                        IS_NOT_PART_OF_STATE,
+                        Talker.Talker.GetSource()
+                        );
+
+                WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
+            }
+            catch (Exception e)
+            {
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                WriteErrorMessage(context, e);
+            }
         }
     }
 }

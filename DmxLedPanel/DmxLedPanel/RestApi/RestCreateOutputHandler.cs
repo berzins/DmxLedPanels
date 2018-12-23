@@ -43,13 +43,14 @@ namespace DmxLedPanel.RestApi
                 StateManager.Instance.State.Outputs.AddRange(outputs);
                 SetInfoMessage(
                     "Outputs: " + outputs.Aggregate("", (s, o) => s + o.Name + " ") + "created.",
-                    IS_PART_OF_STATE
+                    IS_PART_OF_STATE,
+                    Talker.Talker.GetSource()
                     );
                 var state = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
             }
             catch (Exception e) {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

@@ -44,15 +44,19 @@ namespace DmxLedPanel.RestApi
                     StateManager.Instance.State.GetPatchedFixtures().
                     Select(x => (IDmxPacketHandler)x).ToList()
                     );
-
-                Message.Message = "Fixtures: " + Fixture.GetFixtureInfoStr(FixtureOutputMap.GetFixtures(fixOutMap))
-                    + " unpatched from Otuputs: " + Output.GetOutputInfoStr(FixtureOutputMap.GetOutputs(fixOutMap));
                 
+                SetInfoMessage(
+                        "Fixtures: " + Fixture.GetFixtureInfoStr(FixtureOutputMap.GetFixtures(fixOutMap))
+                        + " unpatched from Otuputs: " + Output.GetOutputInfoStr(FixtureOutputMap.GetOutputs(fixOutMap)),
+                        IS_PART_OF_STATE,
+                        Talker.Talker.GetSource()
+                        );
+
                 var data = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, data);   
             }
             catch (Exception e) {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

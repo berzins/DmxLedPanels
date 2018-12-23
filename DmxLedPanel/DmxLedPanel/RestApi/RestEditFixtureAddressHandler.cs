@@ -70,13 +70,21 @@ namespace DmxLedPanel.RestApi
                     }
                 }
 
+                SetInfoMessage(
+                    "Address for fixtures: " + Fixture.GetFixtureListNameString(fixtures)
+                    + "is set to => "
+                    + "address: " + address.ToString()
+                    + "util address: " + utilAddress.ToString(),
+                    IS_PART_OF_STATE,
+                    Talker.Talker.GetSource());
+
                 string state = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
 
             }
             catch (Exception e)
             {
-                Utils.LogException(e);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
 

@@ -38,6 +38,12 @@ namespace DmxLedPanel.RestApi
 
                 FixtureTemplateUtils.StoreTemplate(template);
 
+                SetInfoMessage(
+                        "Fixture template: '" + template.Name + "' successfully stored.",
+                        IS_NOT_PART_OF_STATE,
+                        Talker.Talker.GetSource()
+                        );
+
                 //get all templates and send back as a new template state
                 List<FixtureTemplate> templates = FixtureTemplateUtils.GetTemplates();
                 ResponseMessage msg = new ResponseMessage(ResponseMessage.TYPE_FIXTURE_TEMPLATE, templates);
@@ -45,6 +51,7 @@ namespace DmxLedPanel.RestApi
 
             }
             catch (Exception e) {
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

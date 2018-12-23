@@ -45,14 +45,16 @@ namespace DmxLedPanel.RestApi
             {
                 SetInfoMessage(
                     "Dmx signal " + (detected ? "detected" : "lost")
-                    , IS_PART_OF_STATE);
+                    , IS_PART_OF_STATE,
+                    Talker.Talker.GetSource());
                 context.Request.GetClientCertificate();
                 Respond(this.context, detected);
             }
             catch (Exception e) {
                 LogException(
                     "Dmx state response failed. Refresh UI to sync dmx state" + "\n\r" 
-                    + e.Message);
+                    + e.Message,
+                    Talker.Talker.GetSource());
             }
 
             // our job is done.. wait for next ui call

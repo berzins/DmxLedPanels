@@ -55,7 +55,7 @@ namespace Talker
 
         public static string GetSource()
         {
-            return GetSource(1);
+            return GetSource(2);
         }
 
         public static string GetSource(int frameIndex)

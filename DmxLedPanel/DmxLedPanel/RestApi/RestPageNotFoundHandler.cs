@@ -14,6 +14,11 @@ namespace DmxLedPanel.RestApi
 
         public override void HandleRequest(HttpListenerContext context)
         {
+            SetInfoMessage(
+                        "What are you trying to do?",
+                        IS_NOT_PART_OF_STATE,
+                        Talker.Talker.GetSource()
+                        );
             WriteResponse(context, RestConst.RESPONSE_NOT_FOUND, RestConst.CONTENT_TEXT_HTML, html);
         }
     }

@@ -44,7 +44,8 @@ namespace DmxLedPanel.RestApi
                     "Output with name: "
                     + rmOutputs.Aggregate("", (s, o) => s + o.Name + ",")
                     + "removed."
-                    , IS_PART_OF_STATE);
+                    , IS_PART_OF_STATE,
+                    Talker.Talker.GetSource());
 
 
                 // send back state
@@ -53,7 +54,7 @@ namespace DmxLedPanel.RestApi
 
             }
             catch (Exception e) {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE);
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }
