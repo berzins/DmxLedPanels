@@ -133,6 +133,7 @@
     <Compile Include="RestApi\UIConfig.cs" />
     <Compile Include="RestApi\Log\MessageLogger.cs" />
     <Compile Include="State\ActionMessage.cs" />
+    <Compile Include="State\AutoSave.cs" />
     <Compile Include="State\HighlightState.cs" />
     <Compile Include="State\StateManager.cs" />
     <Compile Include="Template\FixtureTemplate.cs" />

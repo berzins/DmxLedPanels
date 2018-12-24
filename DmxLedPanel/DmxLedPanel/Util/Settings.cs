@@ -85,6 +85,8 @@ namespace DmxLedPanel.Util
         public string ArtNetPollReplyBindIp { get; set; }
 
         public string Password { get; set; }
+
+        public int AutoSave { get; set; }
         
     }
 }

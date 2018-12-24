@@ -32,7 +32,8 @@ namespace DmxLedPanel.RestApi
                 var data = Util.StaticSerializer.Serialize(msg);
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, data);
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }

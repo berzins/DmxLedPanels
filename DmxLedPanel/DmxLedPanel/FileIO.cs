@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace DmxLedPanel
@@ -16,11 +17,30 @@ namespace DmxLedPanel
         }
 
         public static void WriteFile(string path, bool relative, string data) {
-            if (relative) {
-                File.WriteAllText(GetRelativePath() + path, data);
+            var dir = Path.GetDirectoryName(GetRelativePath() + path);
+            if (!Directory.Exists(dir)) {
+                Directory.CreateDirectory(dir);
             }
-            else {
+            if (relative) {
+                path = GetRelativePath() + path;
+            }
+            try
+            {
                 File.WriteAllText(path, data);
+                Talker.Talker.Log(new Talker.ActionMessage()
+                {
+                    Message = path + " written successfully.",
+                    Level = Talker.LogLevel.INFO,
+                    Source = Talker.Talker.GetSource()
+                });
+            }
+            catch (Exception e) {
+                Talker.Talker.Log(new Talker.ActionMessage()
+                {
+                    Message = path + "write error => " + e.ToString(),
+                    Level = Talker.LogLevel.ERROR,
+                    Source = Talker.Talker.GetSource()
+                });
             }
         }
 

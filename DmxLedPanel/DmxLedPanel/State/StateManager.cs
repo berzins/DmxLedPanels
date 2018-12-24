@@ -16,6 +16,7 @@ namespace DmxLedPanel.State
         public static readonly int DEFAULT_STATE_STACK_SIZE = 20;
 
         public static readonly string DEFAULT_RELATIVE_STATE_FIEL_PATH = "projects\\";
+        public static readonly string DEFAULT_RELATIVE_BACKUP_PATH = DEFAULT_RELATIVE_STATE_FIEL_PATH + "backup\\";
         public static readonly string DEFAULT_STATE_FILE = "default.json";
 
         private static StateManager instance;
@@ -102,6 +103,11 @@ namespace DmxLedPanel.State
         public void SaveState(string filename)
         {
             FileIO.WriteFile(DEFAULT_RELATIVE_STATE_FIEL_PATH + filename + ".json", true, GetStateSerialized());
+        }
+
+        public void SaveStateBackup(string filename, int index) {
+            var path = DEFAULT_RELATIVE_BACKUP_PATH + filename + "\\" + filename + "_backup" + index + ".json";
+            FileIO.WriteFile(path, true, GetStateSerialized());
         }
 
         public string [] GetAllStateFiles() {

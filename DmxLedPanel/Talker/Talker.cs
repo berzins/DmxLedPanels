@@ -11,6 +11,7 @@ namespace Talker
     {
         public static void Log(ActionMessage msg) {
             printLevel(msg.Level);
+            PrintCurrentTime();
             printCaller(msg.Source);
             printMessage(msg.Message);
         }
@@ -25,6 +26,12 @@ namespace Talker
         private static void printCaller(string from) {
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write(from + " => ");
+        }
+
+        private static void PrintCurrentTime() {
+            var time = DateTime.Now;
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write(time.ToString("H:mm:ss:fff") + " ");
         }
 
         private static void printLevel(int lvl) {
