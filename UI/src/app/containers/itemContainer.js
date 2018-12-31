@@ -102,7 +102,6 @@ class ItemContainer extends Component {
 
     render() {
         if(this.props.state.loaded) {
-            console.log(this.props.state.data)
             let error = this.props.state.error
             if(this.props.state.error != null){
                 if(this.props.state.error.type !== 'connection-error') { return this.renderContent() }

@@ -44,6 +44,7 @@ import {
  } from '../containers/editForms/formItems'
 
  import { getFieldValue } from '../util/util'
+ import { RemoteEventManager } from '../util/remoteEventManager'
 
  const ENTER_LOGIN = "enter_magic_field"
 
@@ -58,6 +59,7 @@ class App extends Component {
             id: 0, 
             clicked: false
         }
+        this.remoteEventManager = RemoteEventManager.getInstance()
     }
 
     handleClick() {
@@ -167,6 +169,8 @@ class App extends Component {
     }
 
     render() {
+
+
         return (
             this.props.session.logged ? this.getAppScreen() : this.getLoggingScreen()
         )

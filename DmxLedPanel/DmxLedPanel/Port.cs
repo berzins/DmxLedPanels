@@ -92,6 +92,13 @@ namespace DmxLedPanel
                 + ", sub net: " + SubNet
                 + ", universe: " + Universe;
         }
+
+        public static List<Port> CopyList(List<Port> list) {
+            return list.Aggregate(new List<Port>(), (l, p) => {
+                l.Add(p.Clone());
+                return l;
+            });
+        }
     }
 }
 

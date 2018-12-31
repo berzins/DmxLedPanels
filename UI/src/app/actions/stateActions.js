@@ -280,11 +280,19 @@ export const redoState = () => {
 
 export const DMX_STATE_UPDATE = "DMX_STATE_UPDATE" 
 
-export const getDmxState = current => {
-    const url = API_URL + '/dmxSignal/?' + 
-    'has_signal=' + current
-    return (dispatch) => {
-        requestServer(url, dispatch, [DMX_STATE_UPDATE])
+export const getUpdateDmxStateDispatchObject = (hasSignal) => {
+    return {
+        type: DMX_STATE_UPDATE,
+        payload: hasSignal
+    }
+}
+
+export const PORT_DMX_STATE_UPDATE = "PORT_DMX_STATE_UPDATE"
+
+export const getUpdatePortDmxStateDispatchObject = (activePorts) => {
+    return {
+        type: PORT_DMX_STATE_UPDATE,
+        payload: activePorts
     }
 }
 

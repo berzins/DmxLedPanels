@@ -267,9 +267,6 @@ export const modeManagerFormReducer = (state = modeFormInit, action) => {
             return { ... state, modes: getSelectedFixtureModeSet()}
         }
         case UPDATE_MODES: {
-
-            console.log("ON MODE UPDATE")
-            console.log(action.payload)
             return { ...state, modes: action.payload}
         }
     }
@@ -328,10 +325,6 @@ import { SUBMIT_MODES } from '../actions/formActions'
 import { STATE_CHANGE_SERVER_ERROR } from '../actions/stateActions';
 
 export const modesReducer = (state = { modes: [] }, action) => {
-    console.log("SUMBITED MODES LOOK LIKE THIS") 
-    console.log(action.payload)
-
-
     switch(action.type) {
         case SUBMIT_MODES: {
             return {...state, modes: action.payload }
@@ -380,8 +373,6 @@ export const errorReducer = (state = errorState, action) => {
 }
 
 const getErrorData = (error) => {
-    console.log("PAYLOAD AT ERROR IS: ")
-    console.log(error)
     let isVisible = error != null ? true : false
     let msg = error != null ? 
         error.Content : "Unknow error accured"

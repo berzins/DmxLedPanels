@@ -60,7 +60,6 @@ namespace DmxLedPanel.RestApi
             WriteResponse(context, status, contType, Encoding.UTF8.GetBytes(data));
         }
 
-
         public void WriteErrorMessage(HttpListenerContext context, Exception e) {
             Message.Message = e.ToString();
             var error = Util.StaticSerializer.Serialize(

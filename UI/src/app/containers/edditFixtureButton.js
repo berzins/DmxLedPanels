@@ -66,18 +66,13 @@ class EditFixtureButton extends Component {
                     break;
                 }
                 case ITEM_STORE_TEMPLATE: {
-                    console.log(this.props.selection)
-                    // if(this.templateEnabled){
-                        this.props.storeFixtureTemplate(this.props.selection.fixtures[0])
-                    // }
+                    this.props.storeFixtureTemplate(this.props.selection.fixtures[0])
                 }
             }
         }
     }
 
     render() {
-        
-        console.log(this.props.selection.fixtures.length)
         return(
             <div>
             <div className="dropdown">

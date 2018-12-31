@@ -102,8 +102,6 @@ class FixtureForm extends Component {
         let ids = store.getState().selectionReducer.fixtures
         const count = this.getValue(FORM_ID_COUNT);
         
-        console.log('increment value is')
-        console.log(document.getElementById(FORM_ID_ADR_INCREM).checked)
         let data = {
             name : this.getValue(FORM_ID_NAME),
             patch : this.getValue(FOMR_ID_PATCH),
@@ -140,7 +138,6 @@ class FixtureForm extends Component {
     }
 
     selectTemplate() {
-        console.log("selectTemplate called")
         this.props.setFixtureTemplate(this.getValue(FORM_ID_TEMPLATE))
     }
 

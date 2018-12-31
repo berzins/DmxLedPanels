@@ -6,6 +6,7 @@ using System.Net;
 using System.Diagnostics;
 using System.Threading;
 using DmxLedPanel.Util;
+using System.Threading.Tasks;
 
 namespace DmxLedPanel.ArtNetIO
 {
@@ -13,9 +14,12 @@ namespace DmxLedPanel.ArtNetIO
     {
         private static ArtnetIn instance;
         private ArtNetReader reader;
-        private ArtDispatcher dispatcher;
+        private readonly ArtDispatcher dispatcher;
         private volatile List<IDmxPacketHandler> dmxPacketHandlers;
-        private volatile List<IDmxSignalListener> signalListeners;
+        public delegate void DmxSignalDeleage(bool hasSingal);
+        public event DmxSignalDeleage DmxSignalChanged;
+        public delegate void PortDmxSignalDelegate(List<Port> activeProts);
+        public event PortDmxSignalDelegate PortDmxSignalChanged;
         private object lockref = new object();
         private static readonly object padlock = new object();
 
@@ -25,7 +29,6 @@ namespace DmxLedPanel.ArtNetIO
                 SettingManager.Instance.Settings.ArtNetBindIp
                 ));
             dmxPacketHandlers = new List<IDmxPacketHandler>();
-            signalListeners = new List<IDmxSignalListener>();
         }
 
         public static ArtnetIn Instance {
@@ -48,8 +51,7 @@ namespace DmxLedPanel.ArtNetIO
         public void Stop() {
             reader.Stop();
         }
-
-
+        
         public void AddDmxPacketListener(IDmxPacketHandler handler) {
             lock (lockref) {
                 var c = new List<IDmxPacketHandler>(dmxPacketHandlers);
@@ -78,33 +80,9 @@ namespace DmxLedPanel.ArtNetIO
             return r;
         }
 
-        
-        public void AddDmxSignalListener(IDmxSignalListener l) {
-            lock (lockref) {
-                var c = new List<IDmxSignalListener>(signalListeners);
-                c.Add(l);
-                signalListeners = c;
-            }
-        }
-
-        public void RemoveDmxSignalListener(IDmxSignalListener l)
-        {
-            lock (lockref)
-            {
-                var c = new List<IDmxSignalListener>(signalListeners);
-                c.Remove(l);
-                signalListeners = c;
-            }
-        }
-
         public void ClearDmxSignalListeners()
         {
-            lock (lockref)
-            {
-                var c = new List<IDmxSignalListener>(signalListeners);
-                c.Clear();
-                signalListeners = c;
-            }
+            DmxSignalChanged = null;
         }
 
         public void UpdateDmxPacketListeners(List<IDmxPacketHandler> handlers) {
@@ -126,16 +104,17 @@ namespace DmxLedPanel.ArtNetIO
         public void OnSignalChange(bool detected)
         {
             HasSignal = detected;
-            
-            foreach (IDmxSignalListener l in signalListeners) {
-                l.OnSignalChange(HasSignal);
-            }
-            
+            DmxSignalChanged?.Invoke(HasSignal);
         }
-        
+
+        public List<Port> PortsWithDmxSignal { get; private set; } = new List<Port>();
+
+        public void OnPortSignalChange(List<Port> activePorts) {
+            PortsWithDmxSignal = activePorts;
+            PortDmxSignalChanged?.Invoke(PortsWithDmxSignal);    
+        } 
         
         // Art Net packet handlers down there
-
         public abstract class ArtnetListener : ArtListener{
             protected ArtnetIn artin;
 
@@ -149,17 +128,23 @@ namespace DmxLedPanel.ArtNetIO
 
         private class ArtDmxListener : ArtnetListener
         {
+            private static readonly int DMX_INPUT_TIMEOUT = 500;
+
             private object synclock = new object();
             private static bool recieved = false;
             private bool hasSignal = false;
 
+            private volatile List<Port> recievedUniverses;
+            private volatile List<Port> dmxDetectedUniverses;
 
             public ArtDmxListener(ArtnetIn artin) : base(artin){
-               watchDmxInput();
-            }
+                recievedUniverses = new List<Port>();
+                dmxDetectedUniverses = new List<Port>();
+                WatchDmxInput();
+                WatchPortDmxInput();
+            }   
 
-            private void watchDmxInput() {
-
+            private void WatchDmxInput() {
                 new Thread(() => {
                     while (true) {
                         if (recieved)
@@ -176,20 +161,89 @@ namespace DmxLedPanel.ArtNetIO
                                 artin.OnSignalChange(hasSignal);
                             }
                         }
-                        Thread.Sleep(500);
+                        Thread.Sleep(DMX_INPUT_TIMEOUT);
                     }
                 }).Start();
             }
 
+            private bool IsDmxForPortsChanged() {
+                if (dmxDetectedUniverses.Count != recievedUniverses.Count)
+                { // something has changed definetly
+                    return true;
+                }
+                // check if new input ports has apeard
+                foreach (var port in recievedUniverses)
+                {
+                    if (dmxDetectedUniverses.Find(p => p.Equals(port)) == null)
+                    {
+                        return true;
+                    }
+                }
+                // check if input has lost for ports
+                foreach (var port in dmxDetectedUniverses)
+                {
+                    if (recievedUniverses.Find(p => p.Equals(port)) == null)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            private void WatchPortDmxInput() {
+                new Thread(() => {
+                    while (true) {
+                        var isChanged = IsDmxForPortsChanged();
+                        if (isChanged)
+                        {
+                            artin.OnPortSignalChange(Port.CopyList(recievedUniverses));
+
+                            lock (synclock)
+                            {
+                                var l = dmxDetectedUniverses;
+                                l = new List<Port>();
+                                l.AddRange(recievedUniverses);
+                                dmxDetectedUniverses = l;
+                            }
+                        }
+
+                        lock (synclock) {
+                            var l = recievedUniverses;
+                            l.Clear();
+                            recievedUniverses = l;
+                        }
+                        
+                        Thread.Sleep(DMX_INPUT_TIMEOUT);
+                    }
+                }).Start();
+            }
+
+            private bool HasEntry(List<Port> data, Port key) {
+                var p = data.Find(o => o.Equals(key));
+                return p != null;
+            }
+
             public override void Action(Packet p, IPAddress source)
             {
-                recieved = true;
-               
+                var packet = ((ArtDmxPacket)p);
                 foreach (IDmxPacketHandler h in artin.dmxPacketHandlers)
                 {
-                    h.HandlePacket((ArtDmxPacket)p);
+                    h.HandlePacket(packet);
                 }
-                
+
+                recieved = true;
+                new Thread(() =>
+                {
+                    var port = new Port(packet.PhysicalPort, packet.SubNet, packet.Universe);
+                    if (!HasEntry(recievedUniverses, port))
+                    {
+                        lock (synclock) {
+                            var l = recievedUniverses;
+                            l.Add(port);
+                            recievedUniverses = l;
+                        }
+                    }
+                }).Start();
             }
         }
 

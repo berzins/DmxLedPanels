@@ -125,6 +125,7 @@
     <Compile Include="RestApi\RestRedoStateHandler.cs" />
     <Compile Include="RestApi\RestResourceFileHandler.cs" />
     <Compile Include="RestApi\RestSaveStateHandler.cs" />
+    <Compile Include="RestApi\RestServerSentEventHandler.cs" />
     <Compile Include="RestApi\RestSessionHandler.cs" />
     <Compile Include="RestApi\RestStoreFixtureTemplate.cs" />
     <Compile Include="RestApi\RestSwitchModeHandler.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Util\FixtureTemplateUtils.cs" />
     <Compile Include="Util\InitSystemManager.cs" />
     <Compile Include="Util\ISerializable.cs" />
+    <Compile Include="Util\ListWithLock.cs" />
     <Compile Include="Util\NetworkUtils.cs" />
     <Compile Include="Util\Settings.cs" />
     <Compile Include="State\State.cs" />

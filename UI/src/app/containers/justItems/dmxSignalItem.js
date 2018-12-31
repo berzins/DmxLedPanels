@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getDmxState } from '../../actions/stateActions'
 import { dmxStateReducer } from '../../reducers/stateReducer'
 
 class DmxSignalItem extends Component {
 
     render() {
-        this.props.getDmxState(this.props.hasSignal);
         return(
             <div 
             className={"badge " + (this.props.hasSignal ? "badge-success" : "badge-danger")}
@@ -28,7 +26,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return bindActionCreators(
         {
-            getDmxState: getDmxState
+            
         }, dispatch
     )
 }

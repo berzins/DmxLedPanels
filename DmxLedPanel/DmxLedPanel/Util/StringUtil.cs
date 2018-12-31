@@ -16,6 +16,11 @@ namespace DmxLedPanel.Util
             return str.Substring(0, str.Length - count);
         }
 
+        public static string MapToString<T>(Dictionary<T, T> map) {
+            var str = map.Aggregate("", (s, e) => s + "'" + e.Key + "':" + "'" + e.Value + "', ");
+            return str.Substring(0, str.Length - 2);
+        }
+
 
     }
 }

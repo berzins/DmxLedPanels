@@ -22,6 +22,8 @@ class Fixture extends Component {
         super(props)
         this.selected = this.isSelected(this.props.fixture.Id, props)
         this.htmlId = this.props.fixture.Id + this.props.fixture.Name
+        this.dmxActive = false
+        this.dmxReducerEventId = -1;
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -40,8 +42,28 @@ class Fixture extends Component {
         if(selected) {
             return true
         }
-        
+
+        const eid = nextProps.dmxActiveProts.eventId
+        if(this.dmxReducerEventId != eid) {
+            this.dmxReducerEventId = eid
+            let hasDmx = this.isDmxActive(nextProps)
+            if(hasDmx != this.dmxActive) {
+                this.dmxActive = hasDmx
+                return true
+            }
+        }
+
         return false
+    }
+
+    isDmxActive(props) {
+        let ports = props.dmxActiveProts.content
+        let port = this.props.fixture.Address.Port
+        return ports.findIndex(p => 
+            p.Net == port.Net 
+            && p.SubNet == port.SubNet 
+            && p.Universe == port.Universe) 
+            >= 0
     }
 
     isSelected(id, nextProps) {      
@@ -77,6 +99,7 @@ class Fixture extends Component {
         if(store.getState().hilightStateReducer.on) {
             this.props.highlight();
         }
+
         const i = this.props.fixture.CurrentModeIndex
         this.mode = getShortNameFixtureMode(this.props.fixture.Modes[i])
         this.patch = getShortNameFixturePatch(this.props.fixture.PixelPatch)
@@ -86,6 +109,11 @@ class Fixture extends Component {
         
         const cln = "button btn btn-outline-secondary fixture-button item-button " +
                     (this.selected ? "active" : "")
+
+        const dmxStyle = {
+            backgroundColor: this.dmxActive ? 'rgba(0,200,0,0.5)' : 'rgba(0,0,0,0.0)'
+        }
+
         return(          
             <div
             className={cln}
@@ -98,7 +126,7 @@ class Fixture extends Component {
                 <div>
                     <ItemInfoRow name={'Mode'} value={this.mode} />
                     <ItemInfoRow name={'Patch'} value={this.patch} />
-                    <ItemInfoRow name={'Address'} value={this.port + "/" + this.address} />
+                    <ItemInfoRow name={'Address'} value={this.port + "/" + this.address} style={dmxStyle} />
                     <ItemInfoRow name={'Util address'} value={this.utilAddress}/>
                     <ItemInfoRow 
                     name={'Pixel count'} 
@@ -111,7 +139,8 @@ class Fixture extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        selection: state.selectionReducer
+        selection: state.selectionReducer,
+        dmxActiveProts: state.portDmxStateReducer
     }
 }
 

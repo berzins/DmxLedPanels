@@ -52,11 +52,12 @@ namespace DmxLedPanel.RestApi
             addRequestHandler("/getHighlightState/", new GetHighlightStateHandler());
             addRequestHandler("/undoState/", new RestUndoStateHandler());
             addRequestHandler("/redoState/", new RestRedoStateHandler());
-            addRequestHandler("/dmxSignal/", new RestDmxSignalHandler());
+            //addRequestHandler("/dmxSignal/", new RestDmxSignalHandler());
             addRequestHandler("/currentProject/", new RestGetCurrentProject());
             addRequestHandler("/session/", new RestSessionHandler());
             addRequestHandler("/getTemplates/", new RestGetFixtureTemplatesHandler());
             addRequestHandler("/storeFixtureTemplate/", new RestStoreFixtureTemplateHandler());
+            addRequestHandler("/events/", RestServerSentEventHandler.Instance);
         }
 
         public void InitSystem() {
@@ -69,10 +70,11 @@ namespace DmxLedPanel.RestApi
                 try
                 {
                     server.Start();
-                    ArtNet.Logger.Log("Rest API server started on port " + port, ArtNet.LogLevel.INFO);
+                    LogInfo("Started on port " + port);
                 }
                 catch (Exception e) {
-                    ArtNet.Logger.Log("API server failed to start on port " + port + ". " + e.Message, ArtNet.LogLevel.ERROR);
+                    Log("Failed to start on port " + port + ". " + e.ToString(), 
+                        Talker.LogLevel.ERROR);
                     return;
                 }
 
@@ -83,7 +85,7 @@ namespace DmxLedPanel.RestApi
                         var context = server.GetContext();
                         IHttpRequestHandler handler = null;
 
-                        ArtNet.Logger.Log("Request => '" + context.Request.Url, ArtNet.LogLevel.INFO);
+                        LogInfo("From: '" + context.Request.RemoteEndPoint.Address + ", Request => " + context.Request.Url);
 
                         // get relative url cause handlers are sotred by relative keys
                         var url = GetRealtiveUrl(context.Request.Url.ToString());
@@ -100,7 +102,7 @@ namespace DmxLedPanel.RestApi
                 }).Start(); 
             }
             else {
-                ArtNet.Logger.Log("Rest Api Server not initialized. Server not started.", ArtNet.LogLevel.WARNING);
+                Log("Not initialized. Server not started.", Talker.LogLevel.WARNING);
             }
         }
 
@@ -131,6 +133,18 @@ namespace DmxLedPanel.RestApi
 
         protected string createPrefix(string pf) {
             return "http://*:" + port + pf;
+        }
+
+        private void Log(string msg, int level) {
+            Talker.Talker.Log(new Talker.ActionMessage() {
+                Message = msg,
+                Level = level,
+                Source = Talker.Talker.GetSource()
+            });
+        }
+
+        private void LogInfo(string msg) {
+            Log(msg, Talker.LogLevel.INFO);
         }
     }
 }

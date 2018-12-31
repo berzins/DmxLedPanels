@@ -72,11 +72,7 @@ class OutputButton extends Component {
         red = red > 255 ? 255 : red
         let green = 255 / 100 * percentsLeft * 2
         green = green > 255 ? 255 : green
-        // red = red - 30
-        // green = green - 30
         
-
-        console.log(percentsLeft)
         const style = {
             position: "relateive",
             width: percentsLeft + "%",

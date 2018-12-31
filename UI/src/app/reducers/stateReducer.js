@@ -24,8 +24,6 @@ export const stateReducer = (state = init, action) => {
             return{...sate, loaded:false, error: null, data:null }
         }
         case STATE_CHANGE_SUCCESS: {
-            console.log("IS ACTION MESSAGE HERE?")
-            console.log(action.payload)
             return {...state, 
                 loaded:true,  
                 error:null, 
@@ -81,16 +79,31 @@ export const hilightStateReducer = (state = getHighlightState, action) => {
     return state
 }
 
-import { DMX_STATE_UPDATE } from '../actions/stateActions'
+import { DMX_STATE_UPDATE, PORT_DMX_STATE_UPDATE } from '../actions/stateActions'
 
 export const dmxStateReducer = (state = false, action) => {
     switch(action.type) {
         case DMX_STATE_UPDATE: {
-            return action.payload.Content
+            return action.payload
         }
     }
     return state;
 }
+
+var protDmxEventIndex = 0
+export const portDmxStateReducer = (state = {eventId: protDmxEventIndex, content: []}, action) => {
+    switch(action.type) {
+        case PORT_DMX_STATE_UPDATE: {
+            protDmxEventIndex++
+            return {...state, 
+                eventId: protDmxEventIndex,
+                content: action.payload
+            }
+        }
+    }
+    return state
+}
+
 
 import { CURRENT_PROJECT_UPDATE } from'../actions/stateActions'
 

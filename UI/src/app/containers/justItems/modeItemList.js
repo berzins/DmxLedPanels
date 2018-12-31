@@ -35,7 +35,6 @@ class ModeItemList extends Component {
     }
 
     render() {
-        console.log(this.props)
         return(
             contentItem([
                 rowItem([
@@ -50,7 +49,6 @@ class ModeItemList extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state.modesReducer)
     return {
         modes: state.modesReducer.modes
     }

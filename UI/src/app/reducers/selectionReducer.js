@@ -22,18 +22,6 @@ const newSelection = {
     outputs: []
 }
 
-
-const printSomething = (state) => {
-    console.log(state.fixtures)
-    console.log(state.outputs)
-    console.log(
-        ", has fix = " + state.hasFixture +
-        ", has out = " + state.hasOutput +
-        ", only fix = " + state.onlyFixture + 
-        ", only out = "+  state.onlyOutput
-    )
-}
-
 const removeItem = (array, id) => {
     const index = array.indexOf(id)
     if(index > -1) { 

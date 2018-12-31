@@ -12,7 +12,7 @@ namespace DmxLedPanel.RestApi
             {
                 var state = StateManager.Instance.Undo(1).Serialize();
                 SetInfoMessage(
-                        "'Undo' action successful.",
+                        "'Undo' successful. State message: " + StateManager.Instance.State.ActionMessage.Message,
                         IS_NOT_PART_OF_STATE,
                         Talker.Talker.GetSource()
                         );
