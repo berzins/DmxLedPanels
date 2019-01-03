@@ -26,24 +26,45 @@ class EditFixtureButton extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        let res = false
+
         if(this.enabled != this.shouldBeEnabled(nextProps)) {
             this.enabled = !this.enabled
-            return true
+            res = true
         }
         if(this.templateEnabled != this.shouldEnableTemplate(nextProps)) {
             this.templateEnabled = !this.templateEnabled
+            res = true
+        }
+        return res
+    }
+
+    shouldBeEnabled(nextProps) {
+        if(nextProps.selection.hasFixture) {
             return true
         }
         return false
     }
 
-    shouldBeEnabled(props) {
-        return props.selection.hasFixture ? true : false
+    shouldEnableTemplate(props) {
+        if(props.selection.fixtures.length == 1) {
+            return true
+        } 
+        return false
+    }
+    
+    getTemplateRow(props) {
+        if(this.shouldEnableTemplate(props)) {
+            return (
+                <a 
+                className={"dropdown-item"} 
+                onClick={() => this.handleClick(ITEM_STORE_TEMPLATE)}
+                href="javascript:void(0)">Store template</a>
+            )
+        }
+        return("")
     }
 
-    shouldEnableTemplate(props) {
-        return props.selection.length == 1
-    }
 
     handleClick(item) {
         this.props.click.clicked = true
@@ -91,10 +112,7 @@ class EditFixtureButton extends Component {
                 <a className="dropdown-item" onClick={() => this.handleClick(ITEM_ADDRESS)}href="javascript:void(0)">Address</a>
                 <a className="dropdown-item" onClick={() => this.handleClick(ITEM_MODE)}href="javascript:void(0)">Mode</a>
                 <a className="dropdown-item" onClick={() => this.handleClick(ITEM_PATCH)}href="javascript:void(0)">Patch</a>
-                <a 
-                className={this.shouldEnableTemplate(this.props) ? "dropdown-item" : "dropdown-item disabled"} 
-                onClick={() => this.handleClick(ITEM_STORE_TEMPLATE)}
-                href="javascript:void(0)">Store template</a>
+                {this.getTemplateRow(this.props)}
             </div>
             </div>
             </div>

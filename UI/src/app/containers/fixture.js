@@ -22,7 +22,7 @@ class Fixture extends Component {
         super(props)
         this.selected = this.isSelected(this.props.fixture.Id, props)
         this.htmlId = this.props.fixture.Id + this.props.fixture.Name
-        this.dmxActive = false
+        this.dmxActive = this.isDmxActive(props)
         this.dmxReducerEventId = -1;
     }
 
@@ -111,11 +111,12 @@ class Fixture extends Component {
                     (this.selected ? "active" : "")
 
         const dmxStyle = {
-            backgroundColor: this.dmxActive ? 'rgba(0,200,0,0.5)' : 'rgba(0,0,0,0.0)'
+            backgroundColor: this.selected ? 'rgba(20,20,20,0.7)' : this.dmxActive ? 'rgba(0,200,0,0.3)' : 'rgba(200,0,0,0.1)'
         }
 
         return(          
             <div
+            style={dmxStyle}
             className={cln}
             id={this.htmlId}
             area-pressed={this.selected ? "true" : "false" }
@@ -126,7 +127,7 @@ class Fixture extends Component {
                 <div>
                     <ItemInfoRow name={'Mode'} value={this.mode} />
                     <ItemInfoRow name={'Patch'} value={this.patch} />
-                    <ItemInfoRow name={'Address'} value={this.port + "/" + this.address} style={dmxStyle} />
+                    <ItemInfoRow name={'Address'} value={this.port + "/" + this.address} />
                     <ItemInfoRow name={'Util address'} value={this.utilAddress}/>
                     <ItemInfoRow 
                     name={'Pixel count'} 

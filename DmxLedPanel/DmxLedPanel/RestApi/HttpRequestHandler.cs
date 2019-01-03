@@ -29,8 +29,6 @@ namespace DmxLedPanel.RestApi
             }
         }
 
-        
-
         public abstract void HandleRequest(HttpListenerContext context);
 
         protected void WriteResponse(

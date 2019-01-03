@@ -219,7 +219,7 @@ namespace DmxLedPanel.ArtNetIO
             }
 
             private bool HasEntry(List<Port> data, Port key) {
-                var p = data.Find(o => o.Equals(key));
+                var p = data.Find(o => key.Equals(o));
                 return p != null;
             }
 
