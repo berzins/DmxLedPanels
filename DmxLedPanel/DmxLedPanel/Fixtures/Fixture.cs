@@ -244,7 +244,7 @@ namespace DmxLedPanel
         }
 
         void IDmxPacketHandler.HandlePacket(ArtDmxPacket packet) {
-            Port packetPort = new Port(packet.PhysicalPort, packet.SubNet, packet.Universe);
+            Port packetPort = new Port(packet.PhysicalPort, packet.SubnetUniverse.SubNet, packet.SubnetUniverse.Universe);
             if (!Address.Port.Equals(packetPort)) return;
 
             // We are interested in this packet so process it

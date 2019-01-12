@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 
 namespace Talker
 {
@@ -13,20 +14,31 @@ namespace Talker
         private static readonly string RELATIVE_LOG_PATH = "log\\";
         private static string currentFileName = string.Empty;
 
+        private static object syncLock = new object();
+        private static volatile Queue<ActionMessage> messages = new Queue<ActionMessage>();
+
         public static bool LogToFile { get; set; }
 
         public static void Log(ActionMessage msg) {
-            printLevel(msg.Level);
-            PrintCurrentTime();
-            PrintCaller(msg);
-            PrintMessage(msg.Message);
-            if (LogToFile) {
-                if (currentFileName.Equals(string.Empty)) {
-                    currentFileName = RELATIVE_LOG_PATH + GetCurrentDateTimeFormated() + ".log";
-                }
+            new Thread(() =>
+            {
+                lock (syncLock)
+                {
+                    printLevel(msg.Level);
+                    PrintCurrentTime();
+                    PrintCaller(msg);
+                    PrintMessage(msg.Message);
+                    if (LogToFile)
+                    {
+                        if (currentFileName.Equals(string.Empty))
+                        {
+                            currentFileName = RELATIVE_LOG_PATH + GetCurrentDateTimeFormated() + ".log";
+                        }
 
-                WriteFile(currentFileName, true, GetLogString(msg) + Environment.NewLine);
-            }
+                        WriteFile(currentFileName, true, GetLogString(msg) + Environment.NewLine);
+                    }
+                }
+            }).Start();
         }
 
         public static string GetLogString(ActionMessage msg) {
@@ -48,7 +60,7 @@ namespace Talker
         }
 
         private static string GetSourceString(ActionMessage msg) {
-            return msg.Source + " =>";
+            return msg.Source + " => ";
         }
 
         private static void PrintCurrentTime() {
@@ -164,5 +176,9 @@ namespace Talker
         public const int WARNING = 0;
 
         public const int ERROR = -1;
+    }
+
+    internal interface ILogPrinter {
+        void OnLogRecieved(ref List<ActionMessage> logs);
     }
 }

@@ -29,6 +29,14 @@ namespace DmxLedPanel
 
         public override bool Equals(Object o)
         {
+            if (o == null) {
+                Talker.Talker.Log(new Talker.ActionMessage() {
+                    Message = "On Port.Equals() the expected port object is NULL",
+                    Level = Talker.LogLevel.WARNING,
+                    Source = Talker.Talker.GetSource()
+                });
+                return false;
+            }
             if (o.GetType() != typeof(Port)) return false;
             Port p = (Port)o;
             if (Net != p.Net) return false;

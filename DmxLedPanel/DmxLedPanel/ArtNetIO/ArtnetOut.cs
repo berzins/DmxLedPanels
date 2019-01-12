@@ -19,8 +19,8 @@ namespace DmxLedPanel.ArtNetIO
         private ArtDispatcher InitDispatcher()
         {
             ArtDispatcher d = new ArtDispatcher();
-            WhoTheFuckAreYou = new WhosInNetwork();
-            d.AddArtPollReplyListener(WhoTheFuckAreYou);
+            ////WhoTheFuckAreYou = new WhosInNetwork();
+            ////d.AddArtPollReplyListener(WhoTheFuckAreYou);
             return d;
         }
         
@@ -31,12 +31,12 @@ namespace DmxLedPanel.ArtNetIO
                     )
                 );
             dispatcher = InitDispatcher();
-            reader6454 = new ArtNetReader(dispatcher,
-                System.Net.IPAddress.Parse(Util.SettingManager.Instance.Settings.ArtNetPollReplyBindIp));
-            reader6454.Start();
+            //reader6454 = new ArtNetReader(dispatcher,
+            //    System.Net.IPAddress.Parse(Util.SettingManager.Instance.Settings.ArtNetPollReplyBindIp));
+            //reader6454.Start();
         }
 
-        public WhosInNetwork WhoTheFuckAreYou { get; private set; }
+        //public WhosInNetwork WhoTheFuckAreYou { get; private set; }
 
 
         public static void Init() {

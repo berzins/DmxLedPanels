@@ -96,7 +96,7 @@ namespace DmxLedPanel
             ArtnetOut.Init();
             new AutoSave().RunIfEnabled();
 
-            var whosInNetwork = new WhosInNetwork();
+            //var whosInNetwork = new WhosInNetwork();
 
 
                 //new Thread(() => {

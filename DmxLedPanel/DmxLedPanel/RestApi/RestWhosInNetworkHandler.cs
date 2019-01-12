@@ -26,7 +26,7 @@ namespace DmxLedPanel.RestApi
                     RemoveHandler();
                 };
 
-                ArtnetOut.Instance.WhoTheFuckAreYou.DevicesChanged += handler;
+                //ArtnetOut.Instance.WhoTheFuckAreYou.DevicesChanged += handler;
                 //TODO: is this finished?
 
             }
@@ -46,7 +46,7 @@ namespace DmxLedPanel.RestApi
         }
 
         private void RemoveHandler() {
-            ArtnetOut.Instance.WhoTheFuckAreYou.DevicesChanged -= handler;
+            //ArtnetOut.Instance.WhoTheFuckAreYou.DevicesChanged -= handler;
             handler = null;
         }
     }

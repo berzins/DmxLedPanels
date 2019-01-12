@@ -128,7 +128,7 @@ namespace DmxLedPanel.ArtNetIO
 
         private class ArtDmxListener : ArtnetListener
         {
-            private static readonly int DMX_INPUT_TIMEOUT = 500;
+            private static readonly int DMX_INPUT_TIMEOUT = 1000;
 
             private object synclock = new object();
             private static bool recieved = false;
@@ -140,12 +140,20 @@ namespace DmxLedPanel.ArtNetIO
             public ArtDmxListener(ArtnetIn artin) : base(artin){
                 recievedUniverses = new List<Port>();
                 dmxDetectedUniverses = new List<Port>();
-                WatchDmxInput();
-                WatchPortDmxInput();
+                //WatchDmxInput();
+                //WatchPortDmxInput();
             }   
 
             private void WatchDmxInput() {
                 new Thread(() => {
+                    // log 
+                    Talker.Talker.Log(new Talker.ActionMessage()
+                    {
+                        Message = "DMX tracking thread started.",
+                        Level = Talker.LogLevel.INFO,
+                        Source = Talker.Talker.GetSource()
+                    });
+                    // logic
                     while (true) {
                         if (recieved)
                         {
@@ -179,7 +187,7 @@ namespace DmxLedPanel.ArtNetIO
                         return true;
                     }
                 }
-                // check if input has lost for ports
+                // check if input has lost T ports
                 foreach (var port in dmxDetectedUniverses)
                 {
                     if (recievedUniverses.Find(p => p.Equals(port)) == null)
@@ -192,6 +200,15 @@ namespace DmxLedPanel.ArtNetIO
 
             private void WatchPortDmxInput() {
                 new Thread(() => {
+                    // log 
+                    Talker.Talker.Log(new Talker.ActionMessage()
+                    {
+                        Message = "Port DMX tracking thread started.",
+                        Level = Talker.LogLevel.INFO,
+                        Source = Talker.Talker.GetSource()
+                    });
+
+                    //logic
                     while (true) {
                         var isChanged = IsDmxForPortsChanged();
                         if (isChanged)
@@ -232,18 +249,18 @@ namespace DmxLedPanel.ArtNetIO
                 }
 
                 recieved = true;
-                new Thread(() =>
-                {
-                    var port = new Port(packet.PhysicalPort, packet.SubNet, packet.Universe);
-                    if (!HasEntry(recievedUniverses, port))
-                    {
-                        lock (synclock) {
-                            var l = recievedUniverses;
-                            l.Add(port);
-                            recievedUniverses = l;
-                        }
-                    }
-                }).Start();
+                //new Thread(() =>
+                //{
+                //    var port = new Port(packet.PhysicalPort, packet.SubNet, packet.Universe);
+                //    if (!HasEntry(recievedUniverses, port))
+                //    {
+                //        lock (synclock) {
+                //            var l = recievedUniverses;
+                //            l.Add(port);
+                //            recievedUniverses = l;
+                //        }
+                //    }
+                //}).Start();
             }
         }
 

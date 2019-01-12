@@ -63,12 +63,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9C3D9FAB1E80483092D5C6D85A87E34A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_9D859E0899E84AE2BC453F6C6E896AC1"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -87,8 +81,26 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_CB2BD33309E49DF1565553E72DDDFC18"
+        "OwnerKey" = "8:_5632C8CABDC743F8B424E5A50627DB2A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CB2BD33309E49DF1565553E72DDDFC18"
+        "OwnerKey" = "8:_EC323FDC3186B82E7CA2A13B54018568"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_EC323FDC3186B82E7CA2A13B54018568"
         "OwnerKey" = "8:_5632C8CABDC743F8B424E5A50627DB2A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F0BE5F6B32EE491BBAA9307B646F2E6F"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -125,6 +137,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_EC323FDC3186B82E7CA2A13B54018568"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_CB2BD33309E49DF1565553E72DDDFC18"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -196,6 +214,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
             }
         }
     }
@@ -399,26 +425,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9C3D9FAB1E80483092D5C6D85A87E34A"
-            {
-            "SourcePath" = "8:..\\DmxLedPanel\\bin\\Debug\\projects\\default.json"
-            "TargetName" = "8:default.json"
-            "Tag" = "8:"
-            "Folder" = "8:_E994C1F06CB0421D89173F10115C34F6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9D859E0899E84AE2BC453F6C6E896AC1"
             {
             "SourcePath" = "8:..\\..\\UI\\dist\\style.css"
@@ -479,6 +485,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CB2BD33309E49DF1565553E72DDDFC18"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Talker, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_CB2BD33309E49DF1565553E72DDDFC18"
+                    {
+                    "Name" = "8:Talker.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Talker.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_1083B31F9BCB4802915C634392A3CF42"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_EC323FDC3186B82E7CA2A13B54018568"
             {
             "AssemblyRegister" = "3:1"
@@ -508,6 +545,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F0BE5F6B32EE491BBAA9307B646F2E6F"
+            {
+            "SourcePath" = "8:..\\DmxLedPanel\\resources\\ico_LFU_3.ico"
+            "TargetName" = "8:ico_LFU_3.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_1083B31F9BCB4802915C634392A3CF42"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F2D837108E344299ADF02B03B091785E"
@@ -652,12 +709,23 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_21409A6BBDC8401D96D079FD14880D6D"
+                    {
+                    "Name" = "8:DmxLedPanels"
+                    "AlwaysCreate" = "11:TRUE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_26B7817248BE4679AC006B9DAD884B2A"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_8DA9EAA5EAA447E89E6DF2FC9C7AC43C"
             {
             "Name" = "8:#1916"
-            "AlwaysCreate" = "11:FALSE"
+            "AlwaysCreate" = "11:TRUE"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Property" = "8:DesktopFolder"
@@ -802,6 +870,48 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_37BC93FF26B240D2937EDE88E798FA16"
+            {
+            "Name" = "8:DmxLedPanels"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_8DA9EAA5EAA447E89E6DF2FC9C7AC43C"
+            "Folder" = "8:_8DA9EAA5EAA447E89E6DF2FC9C7AC43C"
+            "WorkingFolder" = "8:_8DA9EAA5EAA447E89E6DF2FC9C7AC43C"
+            "Icon" = "8:_F0BE5F6B32EE491BBAA9307B646F2E6F"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_6B95E27B6D41459B8047961DCE00B1A4"
+            {
+            "Name" = "8:DmxLedPanels"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_5632C8CABDC743F8B424E5A50627DB2A"
+            "Folder" = "8:_21409A6BBDC8401D96D079FD14880D6D"
+            "WorkingFolder" = "8:_1083B31F9BCB4802915C634392A3CF42"
+            "Icon" = "8:_F0BE5F6B32EE491BBAA9307B646F2E6F"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_DB45228EEB254AD3A0BF8C6717B50810"
+            {
+            "Name" = "8:Shortcut to DmxLedPanels"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_21409A6BBDC8401D96D079FD14880D6D"
+            "Folder" = "8:_59686604AC1146A0AF97502AC723439D"
+            "WorkingFolder" = "8:_59686604AC1146A0AF97502AC723439D"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
         }
         "UserInterface"
         {

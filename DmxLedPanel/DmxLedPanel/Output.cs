@@ -184,7 +184,14 @@ namespace DmxLedPanel
             List<ArtDmxPacket> packets = new List<ArtDmxPacket>();
 
             foreach (Port p in Ports) {
-                packets.Add(new ArtDmxPacket() { PhysicalPort = p.Net, SubNet = p.SubNet, Universe = p.Universe });
+
+                packets.Add(new ArtDmxPacket() {
+                    PhysicalPort = p.Net,
+                    SubnetUniverse = new ArtDmxPacket.SubNetUniverse() {
+                        SubNet = (byte)p.SubNet,
+                        Universe = (byte)p.Universe
+                    }
+                });
             }
             
             // copy data to packets
