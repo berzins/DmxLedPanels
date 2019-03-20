@@ -195,6 +195,12 @@ namespace DmxLedPanel
                 return true;
             }
             catch (IndexOutOfRangeException e) {
+                Talker.Talker.Log(new Talker.ActionMessage
+                {
+                    Level = Talker.LogLevel.WARNING,
+                    Source = Talker.Talker.GetSource(),
+                    Message = "Failed to swtich mode. Mode index is not in range of the fixture modes. " + e.Message
+                });
                 return false;
             }
         }

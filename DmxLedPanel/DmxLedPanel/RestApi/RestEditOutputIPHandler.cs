@@ -31,7 +31,6 @@ namespace DmxLedPanel.RestApi
 
                 var outputs = StateManager.Instance.State.GetOutputs(ids);
 
-                var i = 0;
                 foreach (var o in outputs)
                 {
                     o.IP = ip;

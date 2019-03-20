@@ -19,23 +19,23 @@ namespace DmxLedPanel.RestApi
 
 
         private static RestServerSentEventHandler instance;
-        private List<HttpListenerContext> remoteListeners;
+        private Dictionary<String, HttpListenerContext> remoteListeners;
 
         private RestServerSentEventHandler() {
-            remoteListeners = new List<HttpListenerContext>();
+            remoteListeners = new Dictionary<String, HttpListenerContext>();
             // dmx signal event handling. 
             ArtnetIn.Instance.DmxSignalChanged += hasSignal =>
             {
-                remoteListeners.ForEach(context =>
-                {
-                    SendDmxSignalEvent(context, hasSignal);
-                });
+                foreach (KeyValuePair<String, HttpListenerContext> item in remoteListeners) {
+                    SendDmxSignalEvent(item.Value, hasSignal);
+                }
             };
 
             ArtnetIn.Instance.PortDmxSignalChanged += activeProts => {
-                remoteListeners.ForEach(context => {
-                    SendPortDmxSignalEvent(context, activeProts);
-                });
+                foreach (KeyValuePair<String, HttpListenerContext> item in remoteListeners)
+                {
+                    SendPortDmxSignalEvent(item.Value, activeProts);
+                }
             };
             
         }
@@ -56,12 +56,19 @@ namespace DmxLedPanel.RestApi
             WriteServerSentEvent(context, 200, "none", null);
             SendDmxSignalEvent(context, ArtnetIn.Instance.HasSignal);
             SendPortDmxSignalEvent(context, ArtnetIn.Instance.PortsWithDmxSignal);
-            remoteListeners.Add(context);           
+            string clientIp = context.Request.RemoteEndPoint.Address.ToString();
+            if (remoteListeners.TryGetValue(clientIp, out HttpListenerContext c)) {
+                CloseConnection(c);
+            }
+            remoteListeners.Add(clientIp, context);           
         }
 
         public void OnEvent(string type, Dictionary<string, string> data)
         {
-            remoteListeners.ForEach(l => WriteServerSentEvent(l, RestConst.RESPONSE_OK, type, data));
+            foreach (KeyValuePair<String, HttpListenerContext> item in remoteListeners)
+            {
+                WriteServerSentEvent(item.Value, RestConst.RESPONSE_OK, type, data);
+            }
         }
 
         protected void WriteServerSentEvent(
@@ -116,13 +123,16 @@ namespace DmxLedPanel.RestApi
         }
 
         public void ClearConnectons() {
-            remoteListeners.ForEach(l => CloseConnection(l));
+            foreach (KeyValuePair<String, HttpListenerContext> item in remoteListeners)
+            {
+                CloseConnection(item.Value);
+            }
             remoteListeners.Clear();
         }
 
         private void CloseConnection(HttpListenerContext context) {
             context.Response.OutputStream.Close();
-            remoteListeners.Remove(context);
+            remoteListeners.Remove(context.Request.RemoteEndPoint.Address.ToString());
             context = null;
         }
 
