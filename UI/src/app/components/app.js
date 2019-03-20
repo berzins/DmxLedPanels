@@ -33,6 +33,9 @@ import EditOutputButton from '../containers/editOutputButton'
 import AddOutputButton from '../containers/addOutputButton'
 import DeleteOutputButton from '../containers/deleteOutputButton'
 
+//controllers
+import Highlighter from '../workers/highlighter'
+
 import { loggIn } from '../actions/stateActions'
 import { sessionReducer } from '../reducers/stateReducer'
 import { 
@@ -163,6 +166,9 @@ class App extends Component {
                 <OutputEditIpForm click={this.click}/>
                 <ModeManagerForm click={this.click}/>
                 <ErrorForm click={this.click}/>
+
+                /*Controlers*/
+                <Highlighter/>
                 
             </div>
         )

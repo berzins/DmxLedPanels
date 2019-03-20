@@ -95,11 +95,6 @@ class Fixture extends Component {
 
 
     render() {
-
-        if(store.getState().hilightStateReducer.on) {
-            this.props.highlight();
-        }
-
         const i = this.props.fixture.CurrentModeIndex
         this.mode = getShortNameFixtureMode(this.props.fixture.Modes[i])
         this.patch = getShortNameFixturePatch(this.props.fixture.PixelPatch)

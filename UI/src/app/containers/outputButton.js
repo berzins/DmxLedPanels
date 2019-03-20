@@ -89,9 +89,6 @@ class OutputButton extends Component {
     }
 
     render() {
-        if(store.getState().hilightStateReducer.on) {
-            this.props.highlight();
-        }
         return(
             <div
             id={this.htmlId}
