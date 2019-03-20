@@ -105,8 +105,8 @@ class FixtureEditAddressForm extends Component {
                 ]),
                 rowItem([
                     selectItem('Net', FORM_ID_PORT_NET, portVals),
-                    selectItem('Net', FORM_ID_PORT_SUB, portVals),
-                    selectItem('Net', FORM_ID_PORT_UNI, portVals)
+                    selectItem('SubNet', FORM_ID_PORT_SUB, portVals),
+                    selectItem('Universe', FORM_ID_PORT_UNI, portVals)
                 ]),
                 rowItem([
                     textInputItem('Address', FORM_ID_PORT_ADR, 1),
