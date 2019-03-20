@@ -149,7 +149,7 @@ namespace DmxLedPanel.RestApi
                         GetDmxSingalData(hasSignal));
         }
 
-        private void SendPortDmxSignalEvent(HttpListenerContext context, List<Port> activePorts) {
+        private void SendPortDmxSignalEvent(HttpListenerContext context, HashSet<Port> activePorts) {
             WriteServerSentEvent(
                 context,
                 RestConst.RESPONSE_OK,

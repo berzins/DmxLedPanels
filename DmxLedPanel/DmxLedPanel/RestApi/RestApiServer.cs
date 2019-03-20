@@ -52,7 +52,7 @@ namespace DmxLedPanel.RestApi
             addRequestHandler("/getHighlightState/", new GetHighlightStateHandler());
             addRequestHandler("/undoState/", new RestUndoStateHandler());
             addRequestHandler("/redoState/", new RestRedoStateHandler());
-            //addRequestHandler("/dmxSignal/", new RestDmxSignalHandler());
+            addRequestHandler("/dmxSignal/", new RestDmxSignalHandler());
             addRequestHandler("/currentProject/", new RestGetCurrentProject());
             addRequestHandler("/session/", new RestSessionHandler());
             addRequestHandler("/getTemplates/", new RestGetFixtureTemplatesHandler());

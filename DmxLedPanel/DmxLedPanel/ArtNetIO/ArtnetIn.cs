@@ -18,7 +18,7 @@ namespace DmxLedPanel.ArtNetIO
         private volatile List<IDmxPacketHandler> dmxPacketHandlers;
         public delegate void DmxSignalDeleage(bool hasSingal);
         public event DmxSignalDeleage DmxSignalChanged;
-        public delegate void PortDmxSignalDelegate(List<Port> activeProts);
+        public delegate void PortDmxSignalDelegate(HashSet<Port> activeProts);
         public event PortDmxSignalDelegate PortDmxSignalChanged;
         private object lockref = new object();
         private static readonly object padlock = new object();
@@ -107,9 +107,9 @@ namespace DmxLedPanel.ArtNetIO
             DmxSignalChanged?.Invoke(HasSignal);
         }
 
-        public List<Port> PortsWithDmxSignal { get; private set; } = new List<Port>();
+        public HashSet<Port> PortsWithDmxSignal { get; private set; } = new HashSet<Port>();
 
-        public void OnPortSignalChange(List<Port> activePorts) {
+        public void OnPortSignalChange(HashSet<Port> activePorts) {
             PortsWithDmxSignal = activePorts;
             PortDmxSignalChanged?.Invoke(PortsWithDmxSignal);    
         } 
@@ -134,15 +134,16 @@ namespace DmxLedPanel.ArtNetIO
             private static bool recieved = false;
             private bool hasSignal = false;
 
-            private volatile List<Port> recievedUniverses;
-            private volatile List<Port> dmxDetectedUniverses;
+            private volatile HashSet<Port> recievedUniverses;
+            private volatile HashSet<Port> dmxDetectedUniverses;
 
             public ArtDmxListener(ArtnetIn artin) : base(artin){
-                recievedUniverses = new List<Port>();
-                dmxDetectedUniverses = new List<Port>();
-                //WatchDmxInput();
-                //WatchPortDmxInput();
-            }   
+                recievedUniverses = new HashSet<Port>(Port.GetEqualityComparer());
+                dmxDetectedUniverses = new HashSet<Port>(Port.GetEqualityComparer());
+                WatchDmxInput();
+                WatchPortDmxInput();
+            }
+          
 
             private void WatchDmxInput() {
                 new Thread(() => {
@@ -175,31 +176,18 @@ namespace DmxLedPanel.ArtNetIO
             }
 
             private bool IsDmxForPortsChanged() {
-                if (dmxDetectedUniverses.Count != recievedUniverses.Count)
-                { // something has changed definetly
+                if (!dmxDetectedUniverses.IsSupersetOf(recievedUniverses)) {
                     return true;
                 }
-                // check if new input ports has apeard
-                foreach (var port in recievedUniverses)
+                if (!recievedUniverses.IsSupersetOf(dmxDetectedUniverses))
                 {
-                    if (dmxDetectedUniverses.Find(p => p.Equals(port)) == null)
-                    {
-                        return true;
-                    }
-                }
-                // check if input has lost T ports
-                foreach (var port in dmxDetectedUniverses)
-                {
-                    if (recievedUniverses.Find(p => p.Equals(port)) == null)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
                 return false;
             }
 
             private void WatchPortDmxInput() {
-                new Thread(() => {
+                ThreadPool.QueueUserWorkItem((i) => {
                     // log 
                     Talker.Talker.Log(new Talker.ActionMessage()
                     {
@@ -209,35 +197,38 @@ namespace DmxLedPanel.ArtNetIO
                     });
 
                     //logic
-                    while (true) {
+                    while (true)
+                    {
                         var isChanged = IsDmxForPortsChanged();
                         if (isChanged)
                         {
-                            artin.OnPortSignalChange(Port.CopyList(recievedUniverses));
+                            artin.OnPortSignalChange(Port.CopyHashSet(recievedUniverses));
 
                             lock (synclock)
                             {
                                 var l = dmxDetectedUniverses;
-                                l = new List<Port>();
-                                l.AddRange(recievedUniverses);
+                                l = new HashSet<Port>();
+                                l.UnionWith(recievedUniverses);
                                 dmxDetectedUniverses = l;
                             }
                         }
 
-                        lock (synclock) {
+                        lock (synclock)
+                        {
                             var l = recievedUniverses;
                             l.Clear();
                             recievedUniverses = l;
                         }
-                        
+
                         Thread.Sleep(DMX_INPUT_TIMEOUT);
                     }
-                }).Start();
+                });
             }
 
-            private bool HasEntry(List<Port> data, Port key) {
-                var p = data.Find(o => key.Equals(o));
-                return p != null;
+            private bool HasEntry(HashSet<Port> data, Port key) {
+         
+                bool b = data.Contains(key);
+                return b;
             }
 
             public override void Action(Packet p, IPAddress source)
@@ -249,12 +240,26 @@ namespace DmxLedPanel.ArtNetIO
                 }
 
                 recieved = true;
+                ThreadPool.QueueUserWorkItem((i) =>
+                {
+                    var port = new Port(packet.PhysicalPort, packet.SubnetUniverse.SubNet, packet.SubnetUniverse.Universe);
+                    if (!HasEntry(recievedUniverses, port))
+                    {
+                        lock (synclock)
+                        {
+                            var l = recievedUniverses;
+                            l.Add(port);
+                            recievedUniverses = l;
+                        }
+                    }
+                });
                 //new Thread(() =>
                 //{
-                //    var port = new Port(packet.PhysicalPort, packet.SubNet, packet.Universe);
+                //    var port = new Port(packet.PhysicalPort, packet.SubnetUniverse.SubNet, packet.SubnetUniverse.Universe);
                 //    if (!HasEntry(recievedUniverses, port))
                 //    {
-                //        lock (synclock) {
+                //        lock (synclock)
+                //        {
                 //            var l = recievedUniverses;
                 //            l.Add(port);
                 //            recievedUniverses = l;

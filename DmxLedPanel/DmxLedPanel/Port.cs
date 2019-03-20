@@ -20,12 +20,14 @@ namespace DmxLedPanel
         public Port(int net, int subNet, int universe) {
             Net = net;
             SubNet = subNet;
-            Universe = universe;           
+            Universe = universe;
+            hash = GetHashCode();
         }
 
         public int Net { get; set; }
         public int SubNet { get; set; }
         public int Universe { get; set; }
+        private int hash;
 
         public override bool Equals(Object o)
         {
@@ -50,7 +52,11 @@ namespace DmxLedPanel
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            int hash = 23;
+            hash = hash * 31 + Net.GetHashCode();
+            hash = hash * 31 + SubNet.GetHashCode();
+            hash = hash * 31 + Universe.GetHashCode();
+            return hash.GetHashCode();
         }
 
         public Port Clone() {
@@ -61,7 +67,6 @@ namespace DmxLedPanel
                 Universe = this.Universe
             };
         }
-
 
         public static Port operator ++(Port p) {
             var next = p.GetNextPort();
@@ -106,6 +111,31 @@ namespace DmxLedPanel
                 l.Add(p.Clone());
                 return l;
             });
+        }
+
+        public static HashSet<Port> CopyHashSet(HashSet<Port> set) {
+            return set.Aggregate(new HashSet<Port>(), (s, p) =>
+            {
+                s.Add(p.Clone());
+                return s;
+            });
+        }
+
+        public static IEqualityComparer<Port> GetEqualityComparer() {
+            return new EqualityComparer();
+        }
+
+        private class EqualityComparer : IEqualityComparer<Port>
+        {
+            public bool Equals(Port x, Port y)
+            {
+                return x.Equals(y);
+            }
+
+            public int GetHashCode(Port p)
+            {
+                return p.GetHashCode();
+            }
         }
     }
 }
