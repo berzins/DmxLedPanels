@@ -59,7 +59,6 @@ namespace DmxLedPanel.RestApi
                 ValidateModeValues(modes, getPixelPatch(pp));
 
                 // create fixtures
-                int previousAddressCount = 0;
                 for (int i = 0; i < int.Parse(q.Get(KEY_COUNT)); i++)
                 {
 
@@ -67,15 +66,21 @@ namespace DmxLedPanel.RestApi
                     fix.Name = name + " " + i;  
 
                     fix.UtilAddress = utilAddress.Clone();
-                    fix.Address =  address.Clone();
+                    
                     if (increment)
                     {
-                        address.DmxAddress += fix.InputAddressCount + previousAddressCount;
-                        if (address.DmxAddress > 512) {
+                        if (address.DmxAddress + fix.InputAddressCount > 512)
+                        {
                             address.DmxAddress = 1;
                             address.Port++;
                         }
-                        previousAddressCount = fix.InputAddressCount;
+                        fix.Address = address.Clone();
+                        //increment address
+                        address.DmxAddress += fix.InputAddressCount;
+                    }
+                    else
+                    {
+                        fix.Address = address.Clone();
                     }
                     fix.IsDmxUtilsEnabled = dmxUtilsEnabled;
 
