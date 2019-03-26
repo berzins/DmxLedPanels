@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArtNet.ArtPacket;
 
 namespace DmxLedPanel
 {
@@ -52,11 +53,11 @@ namespace DmxLedPanel
 
         public override int GetHashCode()
         {
-            int hash = 23;
-            hash = hash * 31 + Net.GetHashCode();
-            hash = hash * 31 + SubNet.GetHashCode();
-            hash = hash * 31 + Universe.GetHashCode();
-            return hash.GetHashCode();
+            int hash = 0;
+            hash += Net * 70000;
+            hash += SubNet * 256;
+            hash += Universe;
+            return hash;
         }
 
         public Port Clone() {
@@ -136,6 +137,14 @@ namespace DmxLedPanel
             {
                 return p.GetHashCode();
             }
+        }
+
+        internal static Port From(ArtDmxPacket packet)
+        {
+            if (packet == null) {
+                return null;
+            }
+            return new Port(packet.PhysicalPort, packet.SubnetUniverse.SubNet, packet.SubnetUniverse.Universe);
         }
     }
 }

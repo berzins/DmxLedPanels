@@ -1,4 +1,5 @@
-﻿using DmxLedPanel.Modes;
+﻿using DmxLedPanel.Fixtures;
+using DmxLedPanel.Modes;
 using DmxLedPanel.PixelPatching;
 using DmxLedPanel.State;
 using DmxLedPanel.Util;
@@ -61,31 +62,14 @@ namespace DmxLedPanel.RestApi
                 // create fixtures
                 for (int i = 0; i < int.Parse(q.Get(KEY_COUNT)); i++)
                 {
-
                     var fix = new Fixture(modes, getPixelPatch(pp));
                     fix.Name = name + " " + i;  
-
                     fix.UtilAddress = utilAddress.Clone();
-                    
-                    if (increment)
-                    {
-                        if (address.DmxAddress + fix.InputAddressCount > 512)
-                        {
-                            address.DmxAddress = 1;
-                            address.Port++;
-                        }
-                        fix.Address = address.Clone();
-                        //increment address
-                        address.DmxAddress += fix.InputAddressCount;
-                    }
-                    else
-                    {
-                        fix.Address = address.Clone();
-                    }
                     fix.IsDmxUtilsEnabled = dmxUtilsEnabled;
-
                     fixtures.Add(fix);
                 }
+                FixtureAddressSetter.SetDmxAddressFor(fixtures, address, increment);
+
                 var dmxUtils = fixtures[0].DmxUtils;
                 StateManager.Instance.State.FixturePool.AddRange(fixtures);
 

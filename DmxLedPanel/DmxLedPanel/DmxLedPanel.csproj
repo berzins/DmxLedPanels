@@ -38,6 +38,10 @@
     <ApplicationIcon>ico_LFU_5.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ArtNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libraries\ArtNet\ArtNet\ArtNet\bin\Debug\ArtNet.dll</HintPath>
+    </Reference>
     <Reference Include="DmxPatch">
       <HintPath>..\..\..\..\..\take with me\Documents\Visual Studio 2015\Projects\ClassLibrary3\ClassLibrary3\bin\Debug\DmxPatch.dll</HintPath>
     </Reference>
@@ -65,6 +69,7 @@
     <Compile Include="FileIO.cs" />
     <Compile Include="FixtureFactory.cs" />
     <Compile Include="Fixtures\DmxModeSwitcher.cs" />
+    <Compile Include="Fixtures\FixtureAddressSetter.cs" />
     <Compile Include="Fixtures\FixtureDmxUtil.cs" />
     <Compile Include="Fixtures\IDmxUtlHandler.cs" />
     <Compile Include="GetHighlihgtStateHandler.cs" />
@@ -160,7 +165,6 @@
     <Compile Include="Util\FixtureTemplateUtils.cs" />
     <Compile Include="Util\InitSystemManager.cs" />
     <Compile Include="Util\ISerializable.cs" />
-    <Compile Include="Util\ListWithLock.cs" />
     <Compile Include="Util\NetworkUtils.cs" />
     <Compile Include="Util\Settings.cs" />
     <Compile Include="State\State.cs" />
@@ -190,10 +194,6 @@
     <Folder Include="IntallNotes\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Libraries\ArtNet\ArtNet\ArtNet\ArtNet.csproj">
-      <Project>{188c5ef2-1406-4ed3-80f8-32f9921721ba}</Project>
-      <Name>ArtNet</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Talker\Talker.csproj">
       <Project>{5EF19DF5-D38C-4F94-9BE1-41777ED561A2}</Project>
       <Name>Talker</Name>

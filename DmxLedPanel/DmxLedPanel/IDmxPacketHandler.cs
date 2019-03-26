@@ -10,5 +10,7 @@ namespace DmxLedPanel
     public interface IDmxPacketHandler
     {
         void HandlePacket(ArtDmxPacket packet);
+
+        int GetPortHash();
     }
 }

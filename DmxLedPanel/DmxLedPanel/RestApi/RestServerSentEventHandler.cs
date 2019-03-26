@@ -99,11 +99,12 @@ namespace DmxLedPanel.RestApi
                 var eventData = Encoding.UTF8.GetBytes("event:" + eventType + "\n");
                 var dataData = Encoding.UTF8.GetBytes("data:" + GetSSEDataString(data));
                 var endData = Encoding.UTF8.GetBytes("\n\n");
+                var msg = StringUtil.MapToString(data);
                 response.OutputStream.Write(eventData, 0, eventData.Length);
                 response.OutputStream.Write(dataData, 0, dataData.Length);
                 response.OutputStream.Write(endData, 0, endData.Length);
                 LogInfo("Sending event (type: " + eventType 
-                    + ", content: " + StringUtil.MapToString(data) 
+                    + ", content: " + (msg.Length > 100 ? msg.Substring(0, 100) : msg) + "..."
                     + ") to: " + context.Request.RemoteEndPoint.Address);
             }
             else

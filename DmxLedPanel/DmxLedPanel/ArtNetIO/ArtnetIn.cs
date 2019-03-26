@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Threading;
 using DmxLedPanel.Util;
 using System.Threading.Tasks;
+using DmxLedPanel.State;
 
 namespace DmxLedPanel.ArtNetIO
 {
@@ -15,7 +16,7 @@ namespace DmxLedPanel.ArtNetIO
         private static ArtnetIn instance;
         private ArtNetReader reader;
         private readonly ArtDispatcher dispatcher;
-        private volatile List<IDmxPacketHandler> dmxPacketHandlers;
+        private volatile SortedDictionary<int, List<IDmxPacketHandler>> dmxPacketHandlers;
         public delegate void DmxSignalDeleage(bool hasSingal);
         public event DmxSignalDeleage DmxSignalChanged;
         public delegate void PortDmxSignalDelegate(HashSet<Port> activeProts);
@@ -23,19 +24,28 @@ namespace DmxLedPanel.ArtNetIO
         private object lockref = new object();
         private static readonly object padlock = new object();
 
-        private ArtnetIn() {
+        private static readonly string TAG = Talker.Talker.GetSource();
+
+        private ArtnetIn()
+        {
             dispatcher = InitDispatcher();
             reader = new ArtNetReader(dispatcher, IPAddress.Parse(
                 SettingManager.Instance.Settings.ArtNetBindIp
                 ));
-            dmxPacketHandlers = new List<IDmxPacketHandler>();
+            dmxPacketHandlers = new SortedDictionary<int, List<IDmxPacketHandler>>();
+            var maxThreads = System.Environment.ProcessorCount / 2;
+            maxThreads = maxThreads == 0 ? 1 : maxThreads;
+            ThreadPool.SetMaxThreads(maxThreads, maxThreads);
         }
 
         public static ArtnetIn Instance {
             get {
-                if (instance == null) {
-                    lock (padlock) {
-                        if (instance == null) {
+                if (instance == null)
+                {
+                    lock (padlock)
+                    {
+                        if (instance == null)
+                        {
                             instance = new ArtnetIn();
                         }
                     }
@@ -44,40 +54,60 @@ namespace DmxLedPanel.ArtNetIO
             }
         }
 
-        public void Start() {
+        public ArtNetReader Reader {
+            get {
+                return reader;
+            }
+        }
+
+        public void Start()
+        {
             reader.Start();
         }
 
-        public void Stop() {
+        public void Stop()
+        {
             reader.Stop();
         }
-        
-        public void AddDmxPacketListener(IDmxPacketHandler handler) {
-            lock (lockref) {
-                var c = new List<IDmxPacketHandler>(dmxPacketHandlers);
-                c.Add(handler);
+
+        public void AddDmxPacketListener(IDmxPacketHandler handler)
+        {
+            lock (lockref)
+            {
+                var c = new SortedDictionary<int, List<IDmxPacketHandler>>(dmxPacketHandlers);
+                var handlerHash = handler.GetPortHash();
+
+                if (c.TryGetValue(handlerHash, out List<IDmxPacketHandler> dph))
+                {
+                    dph.Add(handler);
+                }
+                else
+                {
+                    dph = new List<IDmxPacketHandler>();
+                    dph.Add(handler);
+                    c.Add(handlerHash, dph);
+                }
+
                 dmxPacketHandlers = c;
             }
         }
 
-        public void AddDmxPacketListeners(List<IDmxPacketHandler> handlers) {
-            foreach (IDmxPacketHandler h in handlers) {
+        public void AddDmxPacketListeners(List<IDmxPacketHandler> handlers)
+        {
+            foreach (IDmxPacketHandler h in handlers)
+            {
                 AddDmxPacketListener(h);
             }
         }
 
-        public List<IDmxPacketHandler> ClearDmxPacketListeners() {
-            var r = new List<IDmxPacketHandler>();
-            foreach (IDmxPacketHandler h in dmxPacketHandlers) {
-                r.Add(h);
-            }
+        public void ClearDmxPacketListeners()
+        {
             lock (lockref)
             {
-                var c = new List<IDmxPacketHandler>(dmxPacketHandlers);
+                var c = new SortedDictionary<int, List<IDmxPacketHandler>>(dmxPacketHandlers);
                 c.Clear();
                 dmxPacketHandlers = c;
             }
-            return r;
         }
 
         public void ClearDmxSignalListeners()
@@ -85,13 +115,15 @@ namespace DmxLedPanel.ArtNetIO
             DmxSignalChanged = null;
         }
 
-        public void UpdateDmxPacketListeners(List<IDmxPacketHandler> handlers) {
+        public void UpdateDmxPacketListeners(List<IDmxPacketHandler> handlers)
+        {
             ClearDmxPacketListeners();
             AddDmxPacketListeners(handlers);
         }
 
 
-        private ArtDispatcher InitDispatcher() {
+        private ArtDispatcher InitDispatcher()
+        {
             ArtDispatcher d = new ArtDispatcher();
             d.AddArtDmxListener(new ArtDmxListener(this));
             d.AddArtPollListener(new ArtPollListener());
@@ -109,13 +141,15 @@ namespace DmxLedPanel.ArtNetIO
 
         public HashSet<Port> PortsWithDmxSignal { get; private set; } = new HashSet<Port>();
 
-        public void OnPortSignalChange(HashSet<Port> activePorts) {
+        public void OnPortSignalChange(HashSet<Port> activePorts)
+        {
             PortsWithDmxSignal = activePorts;
-            PortDmxSignalChanged?.Invoke(PortsWithDmxSignal);    
-        } 
-        
+            PortDmxSignalChanged?.Invoke(PortsWithDmxSignal);
+        }
+
         // Art Net packet handlers down there
-        public abstract class ArtnetListener : ArtListener{
+        public abstract class ArtnetListener : ArtListener
+        {
             protected ArtnetIn artin;
 
             public ArtnetListener(ArtnetIn artin)
@@ -137,16 +171,20 @@ namespace DmxLedPanel.ArtNetIO
             private volatile HashSet<Port> recievedUniverses;
             private volatile HashSet<Port> dmxDetectedUniverses;
 
-            public ArtDmxListener(ArtnetIn artin) : base(artin){
+            public ArtDmxListener(ArtnetIn artin) : base(artin)
+            {
                 recievedUniverses = new HashSet<Port>(Port.GetEqualityComparer());
                 dmxDetectedUniverses = new HashSet<Port>(Port.GetEqualityComparer());
                 WatchDmxInput();
                 WatchPortDmxInput();
+                Output.CalculateUniversesPerFrameSent();
             }
-          
 
-            private void WatchDmxInput() {
-                new Thread(() => {
+
+            private void WatchDmxInput()
+            {
+                new Thread(() =>
+                {
                     // log 
                     Talker.Talker.Log(new Talker.ActionMessage()
                     {
@@ -155,17 +193,21 @@ namespace DmxLedPanel.ArtNetIO
                         Source = Talker.Talker.GetSource()
                     });
                     // logic
-                    while (true) {
+                    while (true)
+                    {
                         if (recieved)
                         {
-                            if (!hasSignal) {
+                            if (!hasSignal)
+                            {
                                 hasSignal = true;
                                 artin.OnSignalChange(hasSignal);
                             }
                             recieved = false;
                         }
-                        else {
-                            if (hasSignal) {
+                        else
+                        {
+                            if (hasSignal)
+                            {
                                 hasSignal = false;
                                 artin.OnSignalChange(hasSignal);
                             }
@@ -175,8 +217,10 @@ namespace DmxLedPanel.ArtNetIO
                 }).Start();
             }
 
-            private bool IsDmxForPortsChanged() {
-                if (!dmxDetectedUniverses.IsSupersetOf(recievedUniverses)) {
+            private bool IsDmxForPortsChanged()
+            {
+                if (!dmxDetectedUniverses.IsSupersetOf(recievedUniverses))
+                {
                     return true;
                 }
                 if (!recievedUniverses.IsSupersetOf(dmxDetectedUniverses))
@@ -186,8 +230,10 @@ namespace DmxLedPanel.ArtNetIO
                 return false;
             }
 
-            private void WatchPortDmxInput() {
-                ThreadPool.QueueUserWorkItem((i) => {
+            private void WatchPortDmxInput()
+            {
+                ThreadPool.QueueUserWorkItem((i) =>
+                {
                     // log 
                     Talker.Talker.Log(new Talker.ActionMessage()
                     {
@@ -225,47 +271,123 @@ namespace DmxLedPanel.ArtNetIO
                 });
             }
 
-            private bool HasEntry(HashSet<Port> data, Port key) {
-         
+            private bool HasEntry(HashSet<Port> data, Port key)
+            {
+
                 bool b = data.Contains(key);
                 return b;
+            }
+private void CalculateUniversesPerFrameReceived()
+            {
+                Task.Factory.StartNew(() => Thread.Sleep(1000))
+                    .ContinueWith((t) =>
+                    {
+                        Console.WriteLine(counter / 30);
+                        counter = 0;
+                        CalculateUniversesPerFrameReceived();
+                    });
+            }
+            
+
+            long counter = 0;
+            object somelock = new object();
+            Queue<ArtDmxPacket> packetQueue = new Queue<ArtDmxPacket>();
+            bool processing = false;
+
+            private void StartDmxPacketProcessing()
+            {
+                var t = new Thread(new ThreadStart(() =>
+                {
+
+                    while (true)
+                    {
+                        List<ArtDmxPacket> packetsToProcess =  new List<ArtDmxPacket>();
+                        lock (somelock)
+                        {
+                            if (packetQueue.Count == 0) continue;
+                            var q = packetQueue;
+                            var detected = dmxDetectedUniverses.Count;
+
+                            while (q.Count > 0 && packetsToProcess.Count < detected) {
+                                packetsToProcess.Add(q.Dequeue());
+                            }
+                            int packetsDroped = 0;
+                            while (q.Count > detected)
+                            {
+                                q.Dequeue();
+                                packetsDroped++;
+                            }
+                            if (packetsDroped > 0)
+                            {
+                                Console.WriteLine(packetsDroped + " Packets droped");
+                            }
+                            packetQueue = q;
+                        }
+
+
+                        if (packetsToProcess == null || packetsToProcess.Count == 0) continue;
+                        foreach (var packet in packetsToProcess) {
+                            ThreadPool.QueueUserWorkItem(i =>
+                            {
+                                var packetPort = Port.From(packet);
+                                if (packetPort == null) {
+                                    lock (synclock) {
+                                        var q = packetQueue;
+                                        q.Clear();
+                                        packetQueue = q;
+                                    }
+                                    return;
+                                }
+                                if (artin.dmxPacketHandlers.TryGetValue(packetPort.GetHashCode(), out List<IDmxPacketHandler> dph))
+                                {
+                                    dph.ForEach(h => h.HandlePacket(packet));
+                                }
+                            });
+                        }
+                    }
+                }))
+                { Name = "Process packets" };
+                t.Start();
             }
 
             public override void Action(Packet p, IPAddress source)
             {
+                counter++;
                 var packet = ((ArtDmxPacket)p);
-                foreach (IDmxPacketHandler h in artin.dmxPacketHandlers)
-                {
-                    h.HandlePacket(packet);
+                if (packetQueue.Count < 30) {
+                    packetQueue.Enqueue(packet);
                 }
+                
+
+                var packetPort = Port.From(packet);
+                //if (artin.dmxPacketHandlers.TryGetValue(packetPort.GetHashCode(), out List<IDmxPacketHandler> dph))
+                //{
+
+                //    dph.ForEach(h => h.HandlePacket(packet));
+
+                //}
 
                 recieved = true;
-                ThreadPool.QueueUserWorkItem((i) =>
-                {
-                    var port = new Port(packet.PhysicalPort, packet.SubnetUniverse.SubNet, packet.SubnetUniverse.Universe);
-                    if (!HasEntry(recievedUniverses, port))
-                    {
-                        lock (synclock)
-                        {
-                            var l = recievedUniverses;
-                            l.Add(port);
-                            recievedUniverses = l;
-                        }
-                    }
-                });
-                //new Thread(() =>
+                //ThreadPool.QueueUserWorkItem((i) =>
                 //{
-                //    var port = new Port(packet.PhysicalPort, packet.SubnetUniverse.SubNet, packet.SubnetUniverse.Universe);
-                //    if (!HasEntry(recievedUniverses, port))
-                //    {
-                //        lock (synclock)
-                //        {
-                //            var l = recievedUniverses;
-                //            l.Add(port);
-                //            recievedUniverses = l;
-                //        }
-                //    }
-                //}).Start();
+                var port = packetPort;
+                if (!HasEntry(recievedUniverses, port))
+                {
+                    lock (synclock)
+                    {
+                        var l = recievedUniverses;
+                        l.Add(port);
+                        recievedUniverses = l;
+                    }
+                }
+                //});
+
+                if (!processing)
+                {
+                    processing = true;
+                    StartDmxPacketProcessing();
+
+                }
             }
         }
 
@@ -274,16 +396,22 @@ namespace DmxLedPanel.ArtNetIO
 
             public void Action(Packet p, IPAddress source)
             {
-                var reply = new ArtPollReplyPacket()
+
+                ThreadPool.QueueUserWorkItem((i) =>
                 {
-                    ShortName = "a-sound led ctrl",
-                    LongName = "Dievs sveti Latviju!"
-                };
-                
-                IPAddress ip;
-                if (NetworkUtils.TryGetBroadcastAddress(source, out ip)) {
-                    new ArtNetWritter(ip).Write(reply);
-                }
+                    var reply = new ArtPollReplyPacket()
+                    {
+                        ShortName = "a-sound led ctrl",
+                        LongName = "Dievs sveti Latviju!"
+                    };
+
+                    IPAddress ip;
+                    if (NetworkUtils.TryGetBroadcastAddress(source, out ip))
+                    {
+                        new ArtNetWritter(ip).Write(reply);
+                    }
+                });
+
             }
         }
     }

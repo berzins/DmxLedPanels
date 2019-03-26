@@ -1,4 +1,5 @@
-﻿using DmxLedPanel.State;
+﻿using DmxLedPanel.Fixtures;
+using DmxLedPanel.State;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,19 +57,7 @@ namespace DmxLedPanel.RestApi
                 };
 
                 var fixtures = StateManager.Instance.State.GetFixtures(fids);
-    
-                foreach (var f in fixtures)
-                {
-                    if (increment)
-                    {
-                        setAddresses(f, address, utilAddress, utilEnabled);
-                        address += f.InputAddressCount;
-                    }
-                    else
-                    {
-                        setAddresses(f, address, utilAddress, utilEnabled);
-                    }
-                }
+                FixtureAddressSetter.SetDmxAddressFor(fixtures, address, increment);
 
                 SetInfoMessage(
                     "Address for fixtures: " + Fixture.GetFixtureListNameString(fixtures)

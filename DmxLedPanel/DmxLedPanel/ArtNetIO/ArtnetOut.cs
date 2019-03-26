@@ -12,8 +12,8 @@ namespace DmxLedPanel.ArtNetIO
         private static ArtnetOut instance;
         private ArtNetWritter artWriter;
 
-        //for polling device in network
-        private ArtNetReader reader6454;
+        ////for polling device in network
+        //private ArtNetReader reader6454;
         private ArtDispatcher dispatcher;
 
         private ArtDispatcher InitDispatcher()

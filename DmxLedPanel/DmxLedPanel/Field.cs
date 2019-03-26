@@ -8,23 +8,24 @@ namespace DmxLedPanel
 {
     public class Field
     {
+        private byte[] dmxValues;
 
         public Field() {
-            this.Pixels = new List<Pixel>();
+            Pixels = new List<Pixel>();
             AddressCount = 3;
+            dmxValues = new byte[AddressCount];
         }
 
         public int Index { get; set; }
-        public List<Pixel> Pixels {
-            get; set;
-        }
+        public List<Pixel> Pixels { get; set; }
         public int AddressCount { get; set; }
 
 
-        public void SetDmxValues(int [] dmxValues) {
+        public void SetDmxValues(byte [] dmxValues) {
             Utils.checkDmxValueRange(dmxValues);
-            foreach (Pixel p in Pixels) {
-                p.DmxValues = Utils.GetSubArray(dmxValues, 0, dmxValues.Length);
+            foreach (Pixel p in Pixels)
+            {
+                p.DmxValues = dmxValues;
             }
         }
     }

@@ -7,11 +7,15 @@ using ArtNet.ArtPacket;
 using DmxLedPanel.Modes;
 using DmxLedPanel.State;
 using DmxLedPanel.Fixtures;
+using System.Diagnostics;
+using System.Collections.Concurrent;
 
 namespace DmxLedPanel
 {
     public class Fixture : IDmxPacketHandler
     {
+        private static readonly string TAG = Talker.Talker.GetSource();
+
         private static int idCounter = 0;
 
         private List<IFixtureUpdateHandler> updateHandlers;
@@ -249,30 +253,49 @@ namespace DmxLedPanel
             updateHandlers.Remove(handler);
         }
 
+        int IDmxPacketHandler.GetPortHash() {
+            return Address.Port.GetHashCode();
+        }
+
         void IDmxPacketHandler.HandlePacket(ArtDmxPacket packet) {
             Port packetPort = new Port(packet.PhysicalPort, packet.SubnetUniverse.SubNet, packet.SubnetUniverse.Universe);
             if (!Address.Port.Equals(packetPort)) return;
 
             // We are interested in this packet so process it
-
-
             if (IsDmxUtilsEnabled) {
                 handleDmxUtil(packet);
             }
             handlePixelDmx(packet);
         }
 
+        private Stopwatch dmxProcessTimer;
+        private static int counter = 0;
+        private static long sum = 0;
         private void handlePixelDmx(ArtDmxPacket packet) {
+            dmxProcessTimer = Stopwatch.StartNew();
+
             int offset = this.Address.DmxAddress - 1; // "-1" convert to 0 based index
 
-           foreach (Field f in Fields) {
+            foreach (Field f in Fields)
+            {
                 int relOffset = f.AddressCount * f.Index;
-                int [] 
-                    dmx = Utils.GetSubArray(packet.DmxData, offset + relOffset, f.AddressCount)
-                    .Select(x => (int)x).ToArray();
+                byte[] dmx = Utils.GetSubArray(packet.DmxData, offset + relOffset, f.AddressCount);
                 f.SetDmxValues(dmx);
             }
-            Update();            
+            dmxProcessTimer.Stop();
+            sum += dmxProcessTimer.ElapsedTicks;
+            if (counter % 30000 == 0 && counter != 0) {
+                if (counter % 200 * 48 == 0)
+                {
+                    Talker.Talker.Log(new Talker.ActionMessage()
+                    {
+                        Source = TAG,
+                        Message = "Avarage = " + (sum / counter)
+                    });
+                }
+            }
+            counter++;
+            Update();
         }
 
         private void handleDmxUtil(ArtDmxPacket packet) {
@@ -287,10 +310,27 @@ namespace DmxLedPanel
         }
 
         public void Update() {
-            foreach (IFixtureUpdateHandler fuh in updateHandlers)
+
+            try
             {
-                fuh.OnUpdate(this);
+                foreach (IFixtureUpdateHandler fuh in updateHandlers)
+                {
+                    fuh.OnUpdate(this);
+                }
             }
+            catch (InvalidOperationException e)
+            {
+                Talker.Talker.Log(new Talker.ActionMessage()
+                {
+                    Level = Talker.LogLevel.ERROR,
+                    Source = Talker.Talker.GetSource(),
+                    Message = "Fixture faild to update -> most likely on removal from the output: " + e.ToString()
+                });
+            }
+        }
+
+        public List<IFixtureUpdateHandler> GetOnUpdateHandlers() {
+            return updateHandlers;
         }
 
         
@@ -304,7 +344,7 @@ namespace DmxLedPanel
             }
         }
 
-        private void updateAllValuesTo(int inteisty) {
+        private void updateAllValuesTo(byte inteisty) {
             foreach (Field f in Fields)
             {
                 f.SetDmxValues(Enumerable.Repeat(inteisty, f.AddressCount).ToArray());

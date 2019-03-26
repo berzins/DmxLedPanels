@@ -7,11 +7,22 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using DmxLedPanel.Containers;
+using System.Diagnostics;
+using System.Threading;
+using ArtNet;
+using DmxLedPanel.ArtNetIO;
 
 namespace DmxLedPanel
 {
     public class Output : IFixtureUpdateHandler
     {
+
+        public static readonly int DMX_PACKET_POOL_SIZE = 128;
+
+        // dmx lag debug stuff
+        private string talkerSource = Talker.Talker.GetSource();
+        private Stopwatch frameTimer = Stopwatch.StartNew();
+        // END
 
         public static readonly IPAddress DEFAULT_IP = IPAddress.Parse("255.255.255.255");
 
@@ -21,25 +32,44 @@ namespace DmxLedPanel
         private static int idCounter = 0;
 
 
-        private List<Fixture> fixtures, updatePending;
+        private List<Fixture> fixtures;
+        private int updatePending;
 
         private List<Port> ports;
         private int addressCount;
         private int patchedAdresses = 0;
         private IPAddress ipAddress;
         private ArtNet.ArtNetWritter writer;
-        
+
+        private readonly ArtNet.PacketPool.ArtDmxPacketPool dmxPacketPool;
+        private static readonly string TAG = Talker.Talker.GetSource();
+        public static long DMX_PACKET_COUNTER = 0;
+
+        private object synclock = new object();
+
+        private static int universeCounter = 0;
+
+        private static readonly int THREAD_ACCESS_BUUFER_SIZE = 256;
+        //int[] dmxValues = new int[1020];
+        int[][] dmxValuesArray;
+        int[] copyIndecies = new int[THREAD_ACCESS_BUUFER_SIZE];
+        List<ArtDmxPacket> packets = new List<ArtDmxPacket>();
+        int threaddAccessIndex = 0;
+
+
+
 
         //static Output() {
-        //    idCounter = StateManager.Instance.State.GetLastOutputId() + 1;
+        //    idCounterr = StateManager.Instance.State.GetLastOutputId() + 1;
         //}
 
         public static void ResetIdCounter() { idCounter = 0; }
 
-        public Output() {
+        public Output()
+        {
             addressCount = PORT_COUNT * PORT_ADDRESS_COUNT;
             fixtures = new List<Fixture>();
-            updatePending = new List<Fixture>();
+            updatePending = 0;
             Ports = new List<Port>(PORT_COUNT);
             ID = idCounter++;
             Name = "Output " + ID;
@@ -47,6 +77,13 @@ namespace DmxLedPanel
             var ip = Util.SettingManager.Instance.Settings.ArtNetBroadcastIp;
             ipAddress = IPAddress.Parse(ip);
             writer = new ArtNet.ArtNetWritter(ipAddress);
+            dmxPacketPool = new ArtNet.PacketPool.ArtDmxPacketPool(DMX_PACKET_POOL_SIZE);
+
+
+            dmxValuesArray = new int[THREAD_ACCESS_BUUFER_SIZE][];
+            for (int i = 0; i < dmxValuesArray.Length; i++) {
+                dmxValuesArray[i] = new int[1020];
+            }
         }
 
         public int ID { get; private set; }
@@ -56,7 +93,8 @@ namespace DmxLedPanel
         public List<Port> Ports {
             get { return ports; }
             set {
-                if (value.Count > 2) {
+                if (value.Count > 2)
+                {
                     throw new ArgumentOutOfRangeException("Port count should not be larger than 2");
                 }
                 ports = new List<Port>();
@@ -69,20 +107,22 @@ namespace DmxLedPanel
                 return ipAddress.ToString();
             }
             set {
-                    bool valid = IPAddress.TryParse(value, out ipAddress);
-                    if (valid)
-                    {
-                        writer = new ArtNet.ArtNetWritter(ipAddress);
-                    }
-                    else {
-                        Console.WriteLine("not valid ip address - outpt address set to " + DEFAULT_IP);
-                        ipAddress = DEFAULT_IP;
-                        writer = new ArtNet.ArtNetWritter(ipAddress);
-                    }
+                bool valid = IPAddress.TryParse(value, out ipAddress);
+                if (valid)
+                {
+                    writer = new ArtNet.ArtNetWritter(ipAddress);
+                }
+                else
+                {
+                    Console.WriteLine("not valid ip address - outpt address set to " + DEFAULT_IP);
+                    ipAddress = DEFAULT_IP;
+                    writer = new ArtNet.ArtNetWritter(ipAddress);
+                }
             }
         }
-        
-        public bool TryPatchFixture(Fixture f) {
+
+        public bool TryPatchFixture(Fixture f)
+        {
             if (!fixtures.Contains(f) && (patchedAdresses + f.OutputAddressCount) < addressCount)
             {
                 f.PatchedTo = this.ID;
@@ -95,41 +135,50 @@ namespace DmxLedPanel
             return false;
         }
 
-        public bool TryPatchFixtures(List<Fixture> fixtures) {
+        public bool TryPatchFixtures(List<Fixture> fixtures)
+        {
             int pa = patchedAdresses;
-            foreach (Fixture f in fixtures) {
+            foreach (Fixture f in fixtures)
+            {
                 pa += f.OutputAddressCount;
                 if (pa > addressCount) return false;
             }
-            foreach (Fixture f in fixtures) {
+            foreach (Fixture f in fixtures)
+            {
                 TryPatchFixture(f);
             }
             return true;
         }
 
 
-        public void OnUpdate(Fixture f) {
-
-            updatePending.Remove(f);
-            if (updatePending.Count == 0)
+        public void OnUpdate(Fixture f)
+        {
+            updatePending--;
+            if (updatePending == 0)
             {
+
+                //ThreadPool.QueueUserWorkItem(i => WriteOutput());
                 WriteOutput();
                 ResetUpdatePending();
             }
         }
 
-        public List<Fixture> GetFixtures() {
+        public List<Fixture> GetFixtures()
+        {
             return this.fixtures;
         }
 
-        public bool ContainFixture(int id) {
-            foreach (Fixture f in fixtures) {
+        public bool ContainFixture(int id)
+        {
+            foreach (Fixture f in fixtures)
+            {
                 if (f.ID == id) return true;
             }
             return false;
         }
 
-        public Fixture GetFixture(int id) {
+        public Fixture GetFixture(int id)
+        {
             foreach (Fixture f in fixtures)
             {
                 if (f.ID == id) return f;
@@ -137,12 +186,15 @@ namespace DmxLedPanel
             return null;
         }
 
-        public Fixture UnpatchFixture(int id) {
+        public Fixture UnpatchFixture(int id)
+        {
             Fixture rmFix = null;
-            foreach (Fixture f in fixtures) {
+            foreach (Fixture f in fixtures)
+            {
                 if (f.ID == id) rmFix = f;
             }
-            if (rmFix != null) {
+            if (rmFix != null)
+            {
                 // Remove and repatch fixtures
                 rmFix.PatchedTo = FIXTURE_UNPATCH;
                 fixtures.Remove(rmFix);
@@ -151,7 +203,8 @@ namespace DmxLedPanel
                 fixtures = new List<Fixture>();
                 //rest to 0 because we are repatching all remaining fixtures
                 patchedAdresses = 0;
-                foreach (Fixture f in tmpFix) {
+                foreach (Fixture f in tmpFix)
+                {
                     TryPatchFixture(f);
                 }
                 return rmFix;
@@ -159,9 +212,11 @@ namespace DmxLedPanel
             return null;
         }
 
-        public List<Fixture> UnpatchAll() {
+        public List<Fixture> UnpatchAll()
+        {
             var fix = new List<Fixture>();
-            foreach (var f in fixtures) {
+            foreach (var f in fixtures)
+            {
                 f.PatchedTo = FIXTURE_UNPATCH;
                 f.RemoveUpdateHandler(this);
                 fix.Add(f);
@@ -171,51 +226,73 @@ namespace DmxLedPanel
             return fix;
         }
 
-        private void WriteOutput() {
+        
 
-            int[] dmxValues = new int[1020];
-            int copyIndex = 0;
 
-            foreach (Fixture f in fixtures) {
-                Array.Copy(f.DmxValues, 0, dmxValues, copyIndex, f.DmxValues.Length);
-                copyIndex += f.DmxValues.Length;
+        static ArtNet.DebugTimer timer1 = new ArtNet.DebugTimer(60 * 48, TAG);
+
+        private void WriteOutput()
+        {
+            //manage acces index index;
+            int accessIndex;
+            lock (synclock) {
+                 accessIndex = threaddAccessIndex++;
+                if (threaddAccessIndex >= THREAD_ACCESS_BUUFER_SIZE)
+                {
+                    threaddAccessIndex = 0;
+                }
             }
 
-            List<ArtDmxPacket> packets = new List<ArtDmxPacket>();
-
-            foreach (Port p in Ports) {
-
-                packets.Add(new ArtDmxPacket() {
-                    PhysicalPort = p.Net,
-                    SubnetUniverse = new ArtDmxPacket.SubNetUniverse() {
-                        SubNet = (byte)p.SubNet,
-                        Universe = (byte)p.Universe
-                    }
-                });
+            copyIndecies[accessIndex] = 0;
+            foreach (Fixture f in fixtures)
+            {
+                int[] dmxVals = f.DmxValues;
+                Array.Copy(dmxVals, 0, dmxValuesArray[accessIndex], copyIndecies[accessIndex], dmxVals.Length);
+                copyIndecies[accessIndex] += dmxVals.Length;
             }
-            
+
+
+            packets.Clear();
+            timer1.Start();
+            foreach (Port p in Ports)
+            {
+
+                var packet = dmxPacketPool.Get();
+                packet.PhysicalPort = p.Net;
+                packet.SubnetUniverse = new ArtDmxPacket.SubNetUniverse()
+                {
+                    SubNet = (byte)p.SubNet,
+                    Universe = (byte)p.Universe
+                };
+                packets.Add(packet);
+            }
+            timer1.LogAvarage();
+
             // copy data to packets
-            copyIndex = 0;
-            foreach (ArtDmxPacket pack in packets) {
-                pack.DmxData = Utils.GetSubArray(dmxValues, copyIndex, 510).Select(x => (byte)x).ToArray();
-                copyIndex += 510;
+            copyIndecies[accessIndex] = 0;
+            foreach (ArtDmxPacket pack in packets)
+            {
+                pack.DmxData = Utils.GetSubArray(dmxValuesArray[accessIndex], copyIndecies[accessIndex], 510).Select(x => (byte)x).ToArray();
+                copyIndecies[accessIndex] += 510;
                 writer.Write(pack);
+                universeCounter++;
             }
-            //ArtNet.Utils.ArtPacketStopwatch.Stop();
-            //Console.WriteLine("packet took " + ArtNet.Utils.ArtPacketStopwatch.ElapsedMilliseconds + " mils to process");
+
+
         }
 
-        private void ResetUpdatePending() {
-            updatePending = new List<Fixture>();
-            foreach (Fixture f in fixtures) {
-                updatePending.Add(f);
-            }
+        private void ResetUpdatePending()
+        {
+            updatePending = fixtures.Count;
         }
 
-        public static List<FixtureOutputMap> GetPatchedFixtureOutputMap(List<Fixture> fixtures) {
+        public static List<FixtureOutputMap> GetPatchedFixtureOutputMap(List<Fixture> fixtures)
+        {
             var state = StateManager.Instance.State;
-            return fixtures.Aggregate(new List<FixtureOutputMap>(), (fom, f) => {
-                if (f.PatchedTo >= 0) {
+            return fixtures.Aggregate(new List<FixtureOutputMap>(), (fom, f) =>
+            {
+                if (f.PatchedTo >= 0)
+                {
                     fom.Add(new FixtureOutputMap(f.ID, state.GetOutputByFixture(f.ID), f));
                 }
                 return fom;
@@ -237,9 +314,21 @@ namespace DmxLedPanel
             return f.Name;
         }
 
-        public static string GetOutputListNameString(List<Output> list) {
+        public static string GetOutputListNameString(List<Output> list)
+        {
             string str = list.Aggregate("", (s, o) => s + o.Name + ", ");
             return str.Substring(0, str.Length - 2);
+        }
+
+        public static void CalculateUniversesPerFrameSent()
+        {
+            Task.Factory.StartNew(() => Thread.Sleep(1000))
+                .ContinueWith((t) =>
+                {
+                    Console.WriteLine("Universes sent in a 1 frame" + universeCounter / 30);
+                    universeCounter = 0;
+                    CalculateUniversesPerFrameSent();
+                });
         }
     }
 }
