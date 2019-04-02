@@ -269,10 +269,8 @@ namespace DmxLedPanel
         }
 
         private Stopwatch dmxProcessTimer;
-        private static int counter = 0;
         private static long sum = 0;
         private void handlePixelDmx(ArtDmxPacket packet) {
-            dmxProcessTimer = Stopwatch.StartNew();
 
             int offset = this.Address.DmxAddress - 1; // "-1" convert to 0 based index
 
@@ -282,19 +280,6 @@ namespace DmxLedPanel
                 byte[] dmx = Utils.GetSubArray(packet.DmxData, offset + relOffset, f.AddressCount);
                 f.SetDmxValues(dmx);
             }
-            dmxProcessTimer.Stop();
-            sum += dmxProcessTimer.ElapsedTicks;
-            if (counter % 30000 == 0 && counter != 0) {
-                if (counter % 200 * 48 == 0)
-                {
-                    Talker.Talker.Log(new Talker.ActionMessage()
-                    {
-                        Source = TAG,
-                        Message = "Avarage = " + (sum / counter)
-                    });
-                }
-            }
-            counter++;
             Update();
         }
 

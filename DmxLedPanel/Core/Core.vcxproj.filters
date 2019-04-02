@@ -13,11 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="lib">
-      <UniqueIdentifier>{8e16e784-0e8d-4b60-a171-aefa6485185a}</UniqueIdentifier>
+    <Filter Include="Source Files\artnet">
+      <UniqueIdentifier>{7647db8b-a03d-4c27-ae86-2e1030f3446c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include">
-      <UniqueIdentifier>{9b0b2702-46e0-4958-bd06-68cbe524832d}</UniqueIdentifier>
+    <Filter Include="Header Files\artnet">
+      <UniqueIdentifier>{07d35d39-cba7-4466-a71e-82270f355b2d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -27,23 +27,8 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Libranet\libartnet\artnet\misc.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libranet\libartnet\artnet\packets.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libranet\libartnet\artnet\private.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libranet\libartnet\artnet\tod.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libranet\libartnet\artnet\artnet.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libranet\libartnet\artnet\common.h">
-      <Filter>include</Filter>
+    <ClInclude Include="reader.h">
+      <Filter>Header Files\artnet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -53,15 +38,13 @@
     <ClCompile Include="Core.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="reader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Core.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="..\..\..\..\Libranet\libartnet\msvc\libartnet\x64\Debug\libartnet.lib">
-      <Filter>lib</Filter>
-    </Library>
   </ItemGroup>
 </Project>

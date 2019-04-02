@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Talker", "Talker\Talker.csp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Core\Core.vcxproj", "{D8AB24D5-6170-4132-8A17-2EFE5883EE1E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libartnet", "libartnet\msvc\libartnet\libartnet.vcxproj", "{DD027993-DEB3-4224-AB3A-3F86585A8913}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,16 @@ Global
 		{D8AB24D5-6170-4132-8A17-2EFE5883EE1E}.Release|x64.Build.0 = Release|x64
 		{D8AB24D5-6170-4132-8A17-2EFE5883EE1E}.Release|x86.ActiveCfg = Release|Win32
 		{D8AB24D5-6170-4132-8A17-2EFE5883EE1E}.Release|x86.Build.0 = Release|Win32
+		{DD027993-DEB3-4224-AB3A-3F86585A8913}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{DD027993-DEB3-4224-AB3A-3F86585A8913}.Debug|x64.ActiveCfg = Debug|x64
+		{DD027993-DEB3-4224-AB3A-3F86585A8913}.Debug|x64.Build.0 = Debug|x64
+		{DD027993-DEB3-4224-AB3A-3F86585A8913}.Debug|x86.ActiveCfg = Debug|Win32
+		{DD027993-DEB3-4224-AB3A-3F86585A8913}.Debug|x86.Build.0 = Debug|Win32
+		{DD027993-DEB3-4224-AB3A-3F86585A8913}.Release|Any CPU.ActiveCfg = Release|Win32
+		{DD027993-DEB3-4224-AB3A-3F86585A8913}.Release|x64.ActiveCfg = Release|x64
+		{DD027993-DEB3-4224-AB3A-3F86585A8913}.Release|x64.Build.0 = Release|x64
+		{DD027993-DEB3-4224-AB3A-3F86585A8913}.Release|x86.ActiveCfg = Release|Win32
+		{DD027993-DEB3-4224-AB3A-3F86585A8913}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

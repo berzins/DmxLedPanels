@@ -352,6 +352,10 @@ private void CalculateUniversesPerFrameReceived()
 
             public override void Action(Packet p, IPAddress source)
             {
+                if (true )
+                {
+                    return;
+                }
                 counter++;
                 var packet = ((ArtDmxPacket)p);
                 if (packetQueue.Count < 30) {
