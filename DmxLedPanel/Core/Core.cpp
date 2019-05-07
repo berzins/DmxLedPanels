@@ -3,7 +3,7 @@
 
 #include "pch.h"
 #include <iostream>
-#include <artnet/artnet.h>
+#include "artnet/artnet.h"
 #include "reader.h"
 
 using namespace std;

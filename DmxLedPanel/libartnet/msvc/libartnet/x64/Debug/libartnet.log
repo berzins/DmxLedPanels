@@ -1,0 +1,19 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  artnet.c
+  libartnet.vcxproj -> D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\libartnet\msvc\libartnet\..\..\..\Core\Deps\libartnet\lib\libartnet.dll
+  D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\Core\Deps\libartnet\lib\libartnet.dll
+  1 File(s) copied
+  D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\libartnet\artnet\artnet.c
+  D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\libartnet\artnet\artnet.h
+  D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\libartnet\artnet\common.h
+  D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\libartnet\artnet\Makefile.am
+  D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\libartnet\artnet\misc.c
+  D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\libartnet\artnet\misc.h
+  D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\libartnet\artnet\network.c
+  D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\libartnet\artnet\packets.h
+  D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\libartnet\artnet\private.h
+  D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\libartnet\artnet\receive.c
+  D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\libartnet\artnet\tod.c
+  D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\libartnet\artnet\tod.h
+  D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\libartnet\artnet\transmit.c
+  13 File(s) copied

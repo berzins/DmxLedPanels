@@ -38,7 +38,7 @@ enum {
  * The maximum ports per node built into the ArtNet protocol.
  * This is always 4. Don't change it unless you really know what your doing
  */
-enum { ARTNET_MAX_PORTS = 4 };
+enum { ARTNET_MAX_PORTS = 256 };
 
 /**
  * The length of the short name field. Always 18

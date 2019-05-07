@@ -1,0 +1,5 @@
+D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\DmxLedPanel\obj\Debug\DmxLedPanel.csprojAssemblyReference.cache
+D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\DmxLedPanel\obj\Debug\DmxLedPanel.Properties.Resources.resources
+D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\DmxLedPanel\obj\Debug\DmxLedPanel.resource.resources
+D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\DmxLedPanel\obj\Debug\DmxLedPanel.csproj.GenerateResource.cache
+D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\DmxLedPanel\obj\Debug\DmxLedPanel.csproj.CoreCompileInputs.cache

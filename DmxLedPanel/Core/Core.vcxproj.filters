@@ -19,6 +19,9 @@
     <Filter Include="Header Files\artnet">
       <UniqueIdentifier>{07d35d39-cba7-4466-a71e-82270f355b2d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\util">
+      <UniqueIdentifier>{b33d0b2c-d848-4d50-b3f9-25e3b23115b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

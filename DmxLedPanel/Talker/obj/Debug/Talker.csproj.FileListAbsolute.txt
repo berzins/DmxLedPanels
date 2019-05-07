@@ -1,0 +1,6 @@
+D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\Talker\bin\Debug\Talker.dll
+D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\Talker\bin\Debug\Talker.pdb
+D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\Talker\obj\Debug\Talker.csprojAssemblyReference.cache
+D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\Talker\obj\Debug\Talker.csproj.CoreCompileInputs.cache
+D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\Talker\obj\Debug\Talker.dll
+D:\ProgrammingProjects\Asound\DmxLedPanels\DmxLedPanel\Talker\obj\Debug\Talker.pdb

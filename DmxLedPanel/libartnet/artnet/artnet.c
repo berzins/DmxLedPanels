@@ -452,7 +452,6 @@ int artnet_set_dmx_handler(artnet_node vn,
                            void *data) {
   node n = (node) vn;
   check_nullnode(vn);
-
   n->callbacks.dmx_c.fh = fh;
   n->callbacks.dmx_c.data = data;
   return ARTNET_EOK;
