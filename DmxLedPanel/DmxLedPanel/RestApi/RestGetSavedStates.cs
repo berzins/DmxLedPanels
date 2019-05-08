@@ -20,13 +20,14 @@ namespace DmxLedPanel.RestApi
                 fileNames.Sort();
                 var msg = new ResponseMessage(ResponseMessage.TYPE_SAVED_STATES, fileNames);
 
-                SetInfoMessage(
-                    "Saved projects are: "
-                    + StringUtil.RemoveLastChars(
-                        fileNames.Aggregate("", (s, f) => s + f + ", "), 2),
-                    IS_NOT_PART_OF_STATE,
-                    Talker.Talker.GetSource()
-                    );
+                string logMsg = "No project files found.";
+
+                if (fileNames.Count > 0) {
+                    logMsg = "Saved projects are: "
+                    + StringUtil.RemoveLastChars(fileNames.Aggregate("", (s, f) => s + f + ", "), 2);
+                }
+                
+                SetInfoMessage(logMsg, IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
 
                 var data = Util.StaticSerializer.Serialize(msg);
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, data);

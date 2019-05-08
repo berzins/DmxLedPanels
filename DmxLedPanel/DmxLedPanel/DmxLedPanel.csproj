@@ -93,6 +93,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="RestApi\Log\MessageLogger.cs" />
     <Compile Include="RestApi\RestAddModeHandler.cs" />
     <Compile Include="RestApi\RestDmxSignalHandler.cs" />
     <Compile Include="RestApi\RestEditFixtureAddressHandler.cs" />
@@ -137,7 +138,6 @@
     <Compile Include="RestApi\RestUndoStateHandler.cs" />
     <Compile Include="RestApi\RestWhosInNetworkHandler.cs" />
     <Compile Include="RestApi\UIConfig.cs" />
-    <Compile Include="RestApi\Log\MessageLogger.cs" />
     <Compile Include="State\AutoSave.cs" />
     <Compile Include="State\HighlightState.cs" />
     <Compile Include="State\StateManager.cs" />

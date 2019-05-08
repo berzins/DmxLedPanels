@@ -47,17 +47,31 @@ namespace DmxLedPanel.Util
             {
                 var json = FileIO.ReadFile(REALTIVE_SETTINGS_PATH, true)
                     .Replace("/", "\\");
+                    //.Replace("\r\n", "");
+                    //.Replace("\\\"", "\""); 
                 Settings set = StaticSerializer.Deserialize<Settings>(json);
                 return set; 
             }
             catch (Exception e)
             {
                 Console.WriteLine("Loading " + REALTIVE_SETTINGS_PATH + " failed! Default settings has been loaded. >> " + e.StackTrace);
-                return new Settings()
+                settings = new Settings()
                 {
                     RestApiPort = DEFAULT_UI_REST_PORT,
-                    UIHomePath = DEFAULT_UI_INDEX_PATH
+                    UIHomePath = DEFAULT_UI_INDEX_PATH.Replace("/", "\\"),
+                    UIRelJavascriptPath = "ui/resource/app".Replace("/", "\\"),
+                    DefaultOutputIp = "0.0.0.0",
+                    ArtNetBindIp = "0.0.0.0",
+                    ArtNetBroadcastIp = "255.255.255.255",
+                    ArtNetPollReplyBindIp = "0.0.0.0",
+                    CurrentProject = "default",
+                    CloseHash = "-2342-",
+                    Password = "p",
+                    AutoSave = 0
+
                 };
+                Save();
+                return settings;
             }
         }
     }

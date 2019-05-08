@@ -49,12 +49,35 @@ namespace DmxLedPanel
         }
 
         public static string[] GetFiles(string path, bool relative, bool fullPath, string filter) {
+            return GetFiles(path, relative, fullPath, filter, true);
+        }
+
+        public static string[] GetFiles(string path, bool relative, bool fullPath, string filter, bool createDir) {
             var p = relative ? GetRelativePath() + path : path;
+
+            if (!Directory.Exists(p) && createDir) {
+                CreateDir(p);
+
+                Talker.Talker.Log(new Talker.ActionMessage() {
+                    Message = "Direcotry '" + p + "' didn't existed -> created successfully.",
+                    Source = Talker.Talker.GetSource(),
+                    Level = Talker.LogLevel.WARNING
+                });
+            }
+
             var files = Directory.GetFiles(p, "*.json");
-            if (!fullPath) {
+
+            if (!fullPath)
+            {
                 files = files.Select(Path.GetFileName).ToArray();
             }
             return files;
+        }
+
+        public static void CreateDir(string dir) {
+            if (!Directory.Exists(dir)) {
+                Directory.CreateDirectory(dir);
+            }
         }
         
     }

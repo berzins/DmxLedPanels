@@ -177,7 +177,7 @@ namespace DmxLedPanel.ArtNetIO
                 dmxDetectedUniverses = new HashSet<Port>(Port.GetEqualityComparer());
                 WatchDmxInput();
                 WatchPortDmxInput();
-                Output.CalculateUniversesPerFrameSent();
+                //Output.CalculateUniversesPerFrameSent();
             }
 
 
