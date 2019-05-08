@@ -51,7 +51,7 @@ namespace DmxLedPanel
 
         private static readonly int THREAD_ACCESS_BUUFER_SIZE = 256;
         //int[] dmxValues = new int[1020];
-        int[][] dmxValuesArray;
+        int[] dmxValuesArray;
         int[] copyIndecies = new int[THREAD_ACCESS_BUUFER_SIZE];
         List<ArtDmxPacket> packets = new List<ArtDmxPacket>();
         int threaddAccessIndex = 0;
@@ -80,10 +80,8 @@ namespace DmxLedPanel
             dmxPacketPool = new ArtNet.PacketPool.ArtDmxPacketPool(DMX_PACKET_POOL_SIZE);
 
 
-            dmxValuesArray = new int[THREAD_ACCESS_BUUFER_SIZE][];
-            for (int i = 0; i < dmxValuesArray.Length; i++) {
-                dmxValuesArray[i] = new int[1020];
-            }
+            dmxValuesArray = new int[1020];
+            
         }
 
         public int ID { get; private set; }
@@ -226,34 +224,18 @@ namespace DmxLedPanel
             return fix;
         }
 
-        
-
-
-        static ArtNet.DebugTimer timer1 = new ArtNet.DebugTimer(60 * 48, TAG);
 
         private void WriteOutput()
         {
-            //manage acces index index;
-            int accessIndex;
-            lock (synclock) {
-                 accessIndex = threaddAccessIndex++;
-                if (threaddAccessIndex >= THREAD_ACCESS_BUUFER_SIZE)
-                {
-                    threaddAccessIndex = 0;
-                }
-            }
 
-            copyIndecies[accessIndex] = 0;
+            var copyIndex = 0;
             foreach (Fixture f in fixtures)
             {
-                int[] dmxVals = f.DmxValues;
-                Array.Copy(dmxVals, 0, dmxValuesArray[accessIndex], copyIndecies[accessIndex], dmxVals.Length);
-                copyIndecies[accessIndex] += dmxVals.Length;
+                Array.Copy(f.DmxValues, 0, dmxValuesArray, copyIndex, f.DmxValues.Length);
+                copyIndex += f.DmxValues.Length;
             }
 
-
             packets.Clear();
-            timer1.Start();
             foreach (Port p in Ports)
             {
 
@@ -266,14 +248,13 @@ namespace DmxLedPanel
                 };
                 packets.Add(packet);
             }
-            timer1.LogAvarage();
 
             // copy data to packets
-            copyIndecies[accessIndex] = 0;
+            copyIndex = 0;
             foreach (ArtDmxPacket pack in packets)
             {
-                pack.DmxData = Utils.GetSubArray(dmxValuesArray[accessIndex], copyIndecies[accessIndex], 510).Select(x => (byte)x).ToArray();
-                copyIndecies[accessIndex] += 510;
+                pack.DmxData = Utils.GetSubArray(dmxValuesArray, copyIndex, 510).Select(x => (byte)x).ToArray();
+                copyIndex += 510;
                 writer.Write(pack);
                 universeCounter++;
             }
