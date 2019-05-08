@@ -60,7 +60,7 @@ const FORM_ID_COUNT = "FORM_ID_COUNT"
 const FORM_ID_TEMPLATE = "FORM_ID_TEMPLATE"
 const APPLY_TEMPLATE_BUTTON = "APPLY_TEMPLATE_BUTTON"
 
-const DEFAULT_TEMPLATE = "Fixture"
+const DEFAULT_TEMPLATE = "Generic 1pix"
 
 
 class FixtureForm extends Component {
@@ -143,6 +143,8 @@ class FixtureForm extends Component {
 
     getCurrentTemplate() {
         const prop = {...this.props}
+        console.log("template props: ")
+        console.log(prop);
         return prop.templates.data.find(t => {
             return t.Name == this.props.templates.current
         })

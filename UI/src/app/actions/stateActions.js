@@ -16,6 +16,8 @@ export const requestServer = (url, dispatch, events = null) => {
     .then((response) => {
         if(response.status == 200) {
             if(events !== null) {
+                console.log(url + ", response: ");
+                console.log(response);
                 events.forEach(e => {
                     dispatch({type: e, payload: response.data})
                 });
