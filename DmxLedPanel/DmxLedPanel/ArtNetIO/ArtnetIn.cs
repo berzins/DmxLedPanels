@@ -1,21 +1,25 @@
-﻿using ArtNet;
+﻿
 using System;
 using System.Collections.Generic;
-using ArtNet.ArtPacket;
 using System.Net;
 using System.Diagnostics;
 using System.Threading;
 using DmxLedPanel.Util;
 using System.Threading.Tasks;
 using DmxLedPanel.State;
+using Haukcode.ArtNet.Sockets;
+using Haukcode.Sockets;
+using Haukcode.ArtNet.Packets;
+using Haukcode.ArtNet;
 
 namespace DmxLedPanel.ArtNetIO
 {
     public class ArtnetIn : IDmxSignalListener
     {
         private static ArtnetIn instance;
-        private ArtNetReader reader;
-        private readonly ArtDispatcher dispatcher;
+        private ArtNetSocket socket;
+        private List<ArtDmxListener> dmxListeners;
+        private List<ArtPollListener> pollListeners;
         private volatile SortedDictionary<int, List<IDmxPacketHandler>> dmxPacketHandlers;
         public delegate void DmxSignalDeleage(bool hasSingal);
         public event DmxSignalDeleage DmxSignalChanged;
@@ -28,10 +32,10 @@ namespace DmxLedPanel.ArtNetIO
 
         private ArtnetIn()
         {
-            dispatcher = InitDispatcher();
-            reader = new ArtNetReader(dispatcher, IPAddress.Parse(
-                SettingManager.Instance.Settings.ArtNetBindIp
-                ));
+
+            socket = new ArtNetSocket();
+            socket.NewPacket += NewPacketHandler;
+            InitPacketListeners();
             dmxPacketHandlers = new SortedDictionary<int, List<IDmxPacketHandler>>();
             var maxThreads = System.Environment.ProcessorCount / 2;
             maxThreads = maxThreads == 0 ? 1 : maxThreads;
@@ -54,20 +58,22 @@ namespace DmxLedPanel.ArtNetIO
             }
         }
 
-        public ArtNetReader Reader {
+        public ArtNetSocket Sotcket {
             get {
-                return reader;
+                return socket;
             }
         }
 
         public void Start()
         {
-            reader.Start();
+            socket.Open(
+                IPAddress.Parse(SettingManager.Instance.Settings.ArtNetBindIp),
+                IPAddress.Parse("255.255.255.0"));
         }
 
         public void Stop()
         {
-            reader.Stop();
+            socket.Close();
         }
 
         public void AddDmxPacketListener(IDmxPacketHandler handler)
@@ -121,13 +127,45 @@ namespace DmxLedPanel.ArtNetIO
             AddDmxPacketListeners(handlers);
         }
 
-
-        private ArtDispatcher InitDispatcher()
+        // packet dispatch workhorse.
+        private void NewPacketHandler(object source, NewPacketEventArgs<ArtNetPacket> args)
         {
-            ArtDispatcher d = new ArtDispatcher();
-            d.AddArtDmxListener(new ArtDmxListener(this));
-            d.AddArtPollListener(new ArtPollListener());
-            return d;
+            ArtNetPacket packet = args.Packet;
+            if (packet == null)
+            {
+                Talker.Talker.Log(new Talker.ActionMessage()
+                {
+                    Message = "Packet is null on receive.",
+                    Source = TAG,
+                    Level = Talker.LogLevel.WARNING
+                });
+                return;
+            }
+            switch (packet.OpCode)
+            {
+                case ArtNetOpCodes.Dmx:
+                    {
+                        dmxListeners.ForEach(l => l.Action(packet, args.Source.Address));
+                        break;
+                    }
+                case ArtNetOpCodes.Poll:
+                    {
+                        pollListeners.ForEach(l => l.Action(packet, args.Source.Address));
+                        break;
+                    }
+
+            }
+
+        }
+
+
+        private void InitPacketListeners()
+        {
+            dmxListeners = new List<ArtDmxListener>();
+            dmxListeners.Add(new ArtDmxListener(this));
+
+            pollListeners = new List<ArtPollListener>();
+            pollListeners.Add(new ArtPollListener(this));
         }
 
 
@@ -148,7 +186,7 @@ namespace DmxLedPanel.ArtNetIO
         }
 
         // Art Net packet handlers down there
-        public abstract class ArtnetListener : ArtListener
+        public abstract class ArtnetListener
         {
             protected ArtnetIn artin;
 
@@ -157,7 +195,7 @@ namespace DmxLedPanel.ArtNetIO
                 this.artin = artin;
             }
 
-            public abstract void Action(Packet p, IPAddress source);
+            public abstract void Action(ArtNetPacket p, IPAddress source);
         }
 
         private class ArtDmxListener : ArtnetListener
@@ -177,7 +215,6 @@ namespace DmxLedPanel.ArtNetIO
                 dmxDetectedUniverses = new HashSet<Port>(Port.GetEqualityComparer());
                 WatchDmxInput();
                 WatchPortDmxInput();
-                //Output.CalculateUniversesPerFrameSent();
             }
 
 
@@ -276,13 +313,13 @@ namespace DmxLedPanel.ArtNetIO
                 bool b = data.Contains(key);
                 return b;
             }
-           
 
-            public override void Action(Packet p, IPAddress source)
+
+            public override void Action(ArtNetPacket p, IPAddress source)
             {
 
-                var packet = ((ArtDmxPacket)p);
-                
+                var packet = ((ArtNetDmxPacket)p);
+
                 var packetPort = Port.From(packet);
                 if (artin.dmxPacketHandlers.TryGetValue(packetPort.GetHashCode(), out List<IDmxPacketHandler> dph))
                 {
@@ -295,23 +332,26 @@ namespace DmxLedPanel.ArtNetIO
                 //ThreadPool.QueueUserWorkItem((i) =>
                 //{
                 //    var port = packetPort;
-                //if (!HasEntry(recievedUniverses, port))
-                //{
-                //    lock (synclock)
+                //    if (!HasEntry(recievedUniverses, port))
                 //    {
-                //        var l = recievedUniverses;
-                //        l.Add(port);
-                //        recievedUniverses = l;
+                //        lock (synclock)
+                //        {
+                //            var l = recievedUniverses;
+                //            l.Add(port);
+                //            recievedUniverses = l;
+                //        }
                 //    }
-                //}
                 //});
             }
         }
 
-        private class ArtPollListener : ArtListener
+        private class ArtPollListener : ArtnetListener
         {
+            public ArtPollListener(ArtnetIn artin) : base(artin)
+            {
+            }
 
-            public void Action(Packet p, IPAddress source)
+            public override void Action(ArtNetPacket p, IPAddress source)
             {
 
                 ThreadPool.QueueUserWorkItem((i) =>
@@ -322,11 +362,8 @@ namespace DmxLedPanel.ArtNetIO
                         LongName = "Dievs sveti Latviju!"
                     };
 
-                    IPAddress ip;
-                    if (NetworkUtils.TryGetBroadcastAddress(source, out ip))
-                    {
-                        new ArtNetWritter(ip).Write(reply);
-                    }
+                    artin.Sotcket.Send(reply);
+                    
                 });
 
             }

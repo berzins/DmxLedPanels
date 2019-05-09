@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ArtNet.ArtPacket;
+using Haukcode.ArtNet.Packets;
 
 namespace DmxLedPanel
 {
@@ -139,12 +139,11 @@ namespace DmxLedPanel
             }
         }
 
-        internal static Port From(ArtDmxPacket packet)
-        {
+        internal static Port From(ArtNetDmxPacket packet) {
             if (packet == null) {
                 return null;
             }
-            return new Port(packet.PhysicalPort, packet.SubnetUniverse.SubNet, packet.SubnetUniverse.Universe);
+            return new Port(packet.Physical, packet.Universe / 16, packet.Universe % 16);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using ArtNet;
+﻿
 using DmxLedPanel.Util;
 using System;
 using System.Collections.Generic;
@@ -40,10 +40,6 @@ namespace DmxLedPanel
                 copy[i] = source[i];
             }
             return copy;
-        }
-
-        public static void LogException(Exception e) {
-            Logger.Log("Message: " + e.Message + ", StackTrace: " + e.StackTrace, LogLevel.ERROR);
         }
         
         public static void ThrowArgumetExceptionIfEmpty(String arg, String errorMsg) {

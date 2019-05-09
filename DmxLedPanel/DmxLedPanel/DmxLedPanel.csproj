@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>DmxLedPanel</RootNamespace>
     <AssemblyName>DmxLedPanel</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -40,13 +40,17 @@
   <ItemGroup>
     <Reference Include="ArtNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Libraries\ArtNet\ArtNet\ArtNet\bin\Debug\ArtNet.dll</HintPath>
+      <HintPath>..\..\..\..\Libraries\Haukcode.ArtNet\ArtNet\bin\Debug\netstandard2.0\ArtNet.dll</HintPath>
     </Reference>
     <Reference Include="DmxPatch">
       <HintPath>..\..\..\..\..\take with me\Documents\Visual Studio 2015\Projects\ClassLibrary3\ClassLibrary3\bin\Debug\DmxPatch.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Rdm, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libraries\Haukcode.ArtNet\ArtNet\bin\Debug\netstandard2.0\Rdm.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -63,7 +67,6 @@
     <Compile Include="ArtNetIO\ArtnetIn.cs" />
     <Compile Include="ArtNetIO\ArtnetOut.cs" />
     <Compile Include="ArtNetIO\IDmxSignalListener.cs" />
-    <Compile Include="ArtNetIO\WhosInNetwork.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="Containers\FixtureOutputMap.cs" />
     <Compile Include="FileIO.cs" />
@@ -136,7 +139,6 @@
     <Compile Include="RestApi\RestStoreFixtureTemplate.cs" />
     <Compile Include="RestApi\RestSwitchModeHandler.cs" />
     <Compile Include="RestApi\RestUndoStateHandler.cs" />
-    <Compile Include="RestApi\RestWhosInNetworkHandler.cs" />
     <Compile Include="RestApi\UIConfig.cs" />
     <Compile Include="State\AutoSave.cs" />
     <Compile Include="State\HighlightState.cs" />

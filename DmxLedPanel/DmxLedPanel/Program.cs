@@ -1,6 +1,4 @@
-﻿using ArtNet;
-using ArtNet.ArtPacket;
-using DmxLedPanel.Modes;
+﻿using DmxLedPanel.Modes;
 using DmxLedPanel.RestApi;
 using DmxLedPanel.Util;
 using System;
@@ -13,6 +11,9 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using DmxLedPanel.ArtNetIO;
+using Haukcode.ArtNet.Sockets;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 
 namespace DmxLedPanel
 {
@@ -43,7 +44,8 @@ namespace DmxLedPanel
             string closeHash = SettingsHash.GetHash();
             SettingManager.Instance.Settings.CloseHash = closeHash;
             SettingManager.Instance.Save();
-            if (!Cmd.RestartAdmin) {
+            if (!Cmd.RestartAdmin)
+            {
                 Thread.Sleep(200);
                 Console.WriteLine("Cleanup complete");
                 Thread.Sleep(150);
@@ -57,16 +59,17 @@ namespace DmxLedPanel
         static void Main(string[] args)
         {
             Talker.Talker.LogToFile = true;
-            ArtNetReader.GetAvailableBindAddresses();
+            GetAvailableInterfaces();
             _handler += new EventHandler(Handler);
             SetConsoleCtrlHandler(_handler, true);
 
             var program = new Program();
             program.Run(args);
-         
+
         }
 
-        private void Run(string[] args) {
+        private void Run(string[] args)
+        {
 
             RestApiServer restApi = new RestApiServer();
 
@@ -79,7 +82,8 @@ namespace DmxLedPanel
                 // init whatever necessary
                 InitSystemManager.Instance.InitSystem();
             }
-            else {
+            else
+            {
                 // check if we do not have to reinit system (reboot necessary)
                 string openHash = SettingsHash.GetHash();
                 string closeHash = SettingManager.Instance.Settings.CloseHash;
@@ -93,21 +97,21 @@ namespace DmxLedPanel
 
             StateManager.Instance.LoadStateFromFile(SettingManager.Instance.Settings.CurrentProject);
             ArtnetIn.Instance.Start();
-            ArtnetOut.Init();
             new AutoSave().RunIfEnabled();
 
             //var whosInNetwork = new WhosInNetwork();
 
 
-                //new Thread(() => {
-                //    while (true) {
-                //        ArtnetIn.ArtDmxListener.recieved = true;
-                //        Thread.Sleep(1000);
-                //    }
-                //}).Start();
+            //new Thread(() => {
+            //    while (true) {
+            //        ArtnetIn.ArtDmxListener.recieved = true;
+            //        Thread.Sleep(1000);
+            //    }
+            //}).Start();
         }
 
-        private bool shouldInit(string[] args) {
+        private bool shouldInit(string[] args)
+        {
             foreach (var a in args)
             {
                 if (a.Equals("init"))
@@ -116,6 +120,27 @@ namespace DmxLedPanel
                 }
             }
             return false;
+        }
+
+        private static void GetAvailableInterfaces()
+        {
+            var interfaces = NetworkInterface.GetAllNetworkInterfaces();
+            foreach (NetworkInterface ni in interfaces)
+            {
+                foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+                {
+                    if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        Talker.Talker.Log(new Talker.ActionMessage()
+                        {
+                            Message = "Network interface found: " + ni.Name + " : " + ip.Address,
+                            Source = Talker.Talker.GetSource(),
+                            Level = Talker.LogLevel.ERROR
+                        });
+
+                    }
+                }
+            }
         }
     }
 }

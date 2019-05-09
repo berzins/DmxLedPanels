@@ -1,4 +1,4 @@
-﻿using ArtNet;
+﻿
 using DmxLedPanel.Modes;
 using DmxLedPanel.State;
 using System;
@@ -55,7 +55,6 @@ namespace DmxLedPanel.RestApi
             }
             catch (Exception e) {
                 SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
-                Utils.LogException(e);
                 WriteErrorMessage(context, e);
             }
         }

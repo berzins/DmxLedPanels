@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using ArtNet.ArtPacket;
 using DmxLedPanel.Modes;
 using DmxLedPanel.State;
 using DmxLedPanel.Fixtures;
 using System.Diagnostics;
 using System.Collections.Concurrent;
+using Haukcode.ArtNet.Packets;
 
 namespace DmxLedPanel
 {
@@ -257,8 +256,9 @@ namespace DmxLedPanel
             return Address.Port.GetHashCode();
         }
 
-        void IDmxPacketHandler.HandlePacket(ArtDmxPacket packet) {
-            Port packetPort = new Port(packet.PhysicalPort, packet.SubnetUniverse.SubNet, packet.SubnetUniverse.Universe);
+        void IDmxPacketHandler.HandlePacket(ArtNetDmxPacket packet) {
+            Port packetPort = Port.From(packet);
+
             if (!Address.Port.Equals(packetPort)) return;
 
             // We are interested in this packet so process it
@@ -268,7 +268,7 @@ namespace DmxLedPanel
             handlePixelDmx(packet);
         }
 
-        private void handlePixelDmx(ArtDmxPacket packet) {
+        private void handlePixelDmx(ArtNetDmxPacket packet) {
 
             int offset = this.Address.DmxAddress - 1; // "-1" convert to 0 based index
 
@@ -281,7 +281,7 @@ namespace DmxLedPanel
             Update();
         }
 
-        private void handleDmxUtil(ArtDmxPacket packet) {
+        private void handleDmxUtil(ArtNetDmxPacket packet) {
             int offset = this.UtilAddress.DmxAddress;
 
             foreach (var du in dmxUtils) {

@@ -35,7 +35,7 @@ namespace DmxLedPanel.RestApi
             }
             catch (Exception e)
             {
-                Utils.LogException(e);
+                SetErrorMessage(e.Message, IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

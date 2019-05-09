@@ -1,4 +1,4 @@
-﻿using ArtNet.ArtPacket;
+﻿
 using DmxLedPanel.State;
 using System;
 using System.Collections.Generic;
@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 using DmxLedPanel.Containers;
 using System.Diagnostics;
 using System.Threading;
-using ArtNet;
-using DmxLedPanel.ArtNetIO;
+using Haukcode.ArtNet.Sockets;
+using Haukcode.ArtNet.Packets;
 
 namespace DmxLedPanel
 {
-    public class Output : IFixtureUpdateHandler
+    public class Output : IFixtureUpdateHandler, IDisposable
     {
 
         public static readonly int DMX_PACKET_POOL_SIZE = 128;
@@ -39,9 +39,8 @@ namespace DmxLedPanel
         private int addressCount;
         private int patchedAdresses = 0;
         private IPAddress ipAddress;
-        private ArtNet.ArtNetWritter writer;
-
-        private readonly ArtNet.PacketPool.ArtDmxPacketPool dmxPacketPool;
+        private ArtNetSocket socket;
+  
         private static readonly string TAG = Talker.Talker.GetSource();
         public static long DMX_PACKET_COUNTER = 0;
 
@@ -52,9 +51,7 @@ namespace DmxLedPanel
         private static readonly int THREAD_ACCESS_BUUFER_SIZE = 256;
         //int[] dmxValues = new int[1020];
         int[] dmxValuesArray;
-        int[] copyIndecies = new int[THREAD_ACCESS_BUUFER_SIZE];
-        List<ArtDmxPacket> packets = new List<ArtDmxPacket>();
-        int threaddAccessIndex = 0;
+        List<ArtNetDmxPacket> packets = new List<ArtNetDmxPacket>();
 
 
 
@@ -76,10 +73,7 @@ namespace DmxLedPanel
 
             var ip = Util.SettingManager.Instance.Settings.ArtNetBroadcastIp;
             ipAddress = IPAddress.Parse(ip);
-            writer = new ArtNet.ArtNetWritter(ipAddress);
-            dmxPacketPool = new ArtNet.PacketPool.ArtDmxPacketPool(DMX_PACKET_POOL_SIZE);
-
-
+            socket = new ArtNetSocket { EnableBroadcast = true };
             dmxValuesArray = new int[1020];
             
         }
@@ -106,15 +100,10 @@ namespace DmxLedPanel
             }
             set {
                 bool valid = IPAddress.TryParse(value, out ipAddress);
-                if (valid)
-                {
-                    writer = new ArtNet.ArtNetWritter(ipAddress);
-                }
-                else
+                if (!valid)
                 {
                     Console.WriteLine("not valid ip address - outpt address set to " + DEFAULT_IP);
                     ipAddress = DEFAULT_IP;
-                    writer = new ArtNet.ArtNetWritter(ipAddress);
                 }
             }
         }
@@ -152,7 +141,7 @@ namespace DmxLedPanel
         public void OnUpdate(Fixture f)
         {
             updatePending--;
-            if (updatePending == 0)
+            if (updatePending <= 0)
             {
 
                 //ThreadPool.QueueUserWorkItem(i => WriteOutput());
@@ -239,23 +228,19 @@ namespace DmxLedPanel
             foreach (Port p in Ports)
             {
 
-                var packet = dmxPacketPool.Get();
-                packet.PhysicalPort = p.Net;
-                packet.SubnetUniverse = new ArtDmxPacket.SubNetUniverse()
-                {
-                    SubNet = (byte)p.SubNet,
-                    Universe = (byte)p.Universe
-                };
+                var packet = new ArtNetDmxPacket();
+                packet.Physical = (byte)p.Net;
+                packet.Universe = (byte)((p.SubNet * 16) + p.Universe);
                 packets.Add(packet);
             }
 
             // copy data to packets
             copyIndex = 0;
-            foreach (ArtDmxPacket pack in packets)
+            foreach (ArtNetDmxPacket pack in packets)
             {
                 pack.DmxData = Utils.GetSubArray(dmxValuesArray, copyIndex, 510).Select(x => (byte)x).ToArray();
                 copyIndex += 510;
-                writer.Write(pack);
+                socket.SendTo(new ArtNetDmxPacket().ToArray(), new IPEndPoint(ipAddress, ArtNetSocket.Port));
                 universeCounter++;
             }
 
@@ -310,6 +295,11 @@ namespace DmxLedPanel
                     universeCounter = 0;
                     CalculateUniversesPerFrameSent();
                 });
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }

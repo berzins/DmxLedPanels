@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ArtNet.ArtPacket;
+using Haukcode.ArtNet.Packets;
 
 namespace DmxLedPanel
 {
     public interface IDmxPacketHandler
     {
-        void HandlePacket(ArtDmxPacket packet);
+        void HandlePacket(ArtNetDmxPacket packet);
 
         int GetPortHash();
     }

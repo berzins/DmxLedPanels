@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ArtNet;
 
 namespace DmxLedPanel.Fixtures
 {
@@ -50,7 +49,12 @@ namespace DmxLedPanel.Fixtures
                     values = Utils.cloneArray(value);
                 }
                 catch (ArgumentException e) {
-                    Logger.Log(e.Message + ". " + e.StackTrace, LogLevel.ERROR);
+                    Talker.Talker.Log(new Talker.ActionMessage()
+                    {
+                        Message = e.Message + ". " + e.StackTrace,
+                        Source = Talker.Talker.GetSource(),
+                        Level = Talker.LogLevel.ERROR
+                    });
                 }
             }
         }
