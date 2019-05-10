@@ -33,7 +33,8 @@ namespace DmxLedPanel
         /// </summary>
         public static void ResetIdCounter() { idCounter = 0; }
 
-        public Fixture(List<IMode> modes, IPixelPatch pixelPatch) {
+        public Fixture(List<IMode> modes, IPixelPatch pixelPatch)
+        {
             dmxUtils = new List<FixtureDmxUtil>();
 
             this.modes = modes;
@@ -73,19 +74,21 @@ namespace DmxLedPanel
         public List<FixtureDmxUtil> DmxUtils {
             get {
                 var fdus = new List<FixtureDmxUtil>();
-                foreach (var fdu in dmxUtils) {
+                foreach (var fdu in dmxUtils)
+                {
                     fdus.Add(fdu.Clone());
                 }
                 return fdus;
             }
         }
 
-        protected void AddDmxUtil(FixtureDmxUtil dmxUtil) {
+        protected void AddDmxUtil(FixtureDmxUtil dmxUtil)
+        {
             dmxUtils.Add(dmxUtil);
         }
 
         public bool IsDmxUtilsEnabled { get; set; } = false;
-        
+
         /// <summary>
         /// returns -1 if upatched otherwise value indicates output id
         /// </summary>
@@ -96,7 +99,7 @@ namespace DmxLedPanel
                 return 3; // TODO: this is really dumb .. rewrite this for another pixel width support
             }
         }
-         
+
         public List<Field> Fields { get; private set; }
 
         public int InputAddressCount {
@@ -131,48 +134,60 @@ namespace DmxLedPanel
             }
         }
 
-        public void SetMode(IMode m) {
+        public void SetMode(IMode m)
+        {
 
-            lock (lockref) {
+            lock (lockref)
+            {
                 this.mode = m;
                 List<Field> f = new List<Field>(Fields);
                 f = this.mode.GetFields(pixelPatch.GetPixelPatch());
                 Fields = f;
             }
             addressCount = 0;
-            foreach (Field  f in Fields) {
-                addressCount += f.Pixels.Count * f.Pixels[0].AddressCount;     
+            foreach (Field f in Fields)
+            {
+                addressCount += f.Pixels.Count * f.Pixels[0].AddressCount;
             }
         }
 
-        public void SetModes(List<IMode> modes) {
-            lock (lockref) {
+        public void SetModes(List<IMode> modes)
+        {
+            lock (lockref)
+            {
                 this.modes = modes;
                 TrySwitchMode(CurrentModeIndex < this.modes.Count ? CurrentModeIndex : 0);
             }
         }
 
-        public void AddMode(IMode m) {
+        public void AddMode(IMode m)
+        {
             modes.Add(m);
         }
 
-        public void RemoveMode(IMode m) {
+        public void RemoveMode(IMode m)
+        {
             modes.Remove(m);
         }
 
-        public void RemoveMode(int index) {
+        public void RemoveMode(int index)
+        {
             modes.RemoveAt(index);
         }
 
         /// <summary>
         /// On success returns removed mode, else reurn null
         /// </summary>
-        public IMode TryRemoveMode(int index) {
-            try {
+        public IMode TryRemoveMode(int index)
+        {
+            try
+            {
                 var mode = modes.ElementAt(index);
                 modes.RemoveAt(index);
                 return mode;
-            } catch (IndexOutOfRangeException) {
+            }
+            catch (IndexOutOfRangeException)
+            {
                 return null;
             }
         }
@@ -183,13 +198,15 @@ namespace DmxLedPanel
             }
         }
 
-        public void SwitchMode(int index) {
+        public void SwitchMode(int index)
+        {
             SetMode(modes[index]);
             currentModeIndex = index;
         }
 
 
-        public bool TrySwitchMode(int index) {
+        public bool TrySwitchMode(int index)
+        {
             try
             {
                 var mode = modes.ElementAt(index);
@@ -197,7 +214,8 @@ namespace DmxLedPanel
                 currentModeIndex = index;
                 return true;
             }
-            catch (IndexOutOfRangeException e) {
+            catch (IndexOutOfRangeException e)
+            {
                 Talker.Talker.Log(new Talker.ActionMessage
                 {
                     Level = Talker.LogLevel.WARNING,
@@ -208,13 +226,17 @@ namespace DmxLedPanel
             }
         }
 
-        public void SwitchMode(IMode mode) {
+        public void SwitchMode(IMode mode)
+        {
             SetMode(mode);
         }
 
-        public bool TryGetModeById(int id, out IMode mode) {
-            foreach (var m in modes) {
-                if (m.Id == id) {
+        public bool TryGetModeById(int id, out IMode mode)
+        {
+            foreach (var m in modes)
+            {
+                if (m.Id == id)
+                {
                     mode = m;
                     return true;
                 }
@@ -229,8 +251,10 @@ namespace DmxLedPanel
         /// </summary>
         /// <param name="patch"></param>
         /// <returns>Return true if patch was successful / false if not</returns>
-        public bool TrySetPatch(IPixelPatch patch) {
-            if (PatchedTo == Output.FIXTURE_UNPATCH) {
+        public bool TrySetPatch(IPixelPatch patch)
+        {
+            if (PatchedTo == Output.FIXTURE_UNPATCH)
+            {
                 this.pixelPatch = patch;
                 SetMode(this.mode);
                 return true;
@@ -238,37 +262,45 @@ namespace DmxLedPanel
             return false;
         }
 
-        public IMode getMode() {
+        public IMode getMode()
+        {
             return this.mode;
-        }        
+        }
 
-        public void AddUpdateHandler(IFixtureUpdateHandler handler) {
-            if (!updateHandlers.Contains(handler)) {
+        public void AddUpdateHandler(IFixtureUpdateHandler handler)
+        {
+            if (!updateHandlers.Contains(handler))
+            {
                 updateHandlers.Add(handler);
             }
         }
 
-        public void RemoveUpdateHandler(IFixtureUpdateHandler handler) {
+        public void RemoveUpdateHandler(IFixtureUpdateHandler handler)
+        {
             updateHandlers.Remove(handler);
         }
 
-        int IDmxPacketHandler.GetPortHash() {
+        int IDmxPacketHandler.GetPortHash()
+        {
             return Address.Port.GetHashCode();
         }
 
-        void IDmxPacketHandler.HandlePacket(ArtNetDmxPacket packet) {
+        void IDmxPacketHandler.HandlePacket(ArtNetDmxPacket packet)
+        {
             Port packetPort = Port.From(packet);
 
             if (!Address.Port.Equals(packetPort)) return;
 
             // We are interested in this packet so process it
-            if (IsDmxUtilsEnabled) {
-                handleDmxUtil(packet);
+            if (IsDmxUtilsEnabled)
+            {
+                HandleUtilDmx(packet);
             }
-            handlePixelDmx(packet);
+            HandleDmx(packet);
         }
 
-        private void handlePixelDmx(ArtNetDmxPacket packet) {
+        private void HandleDmx(ArtNetDmxPacket packet)
+        {
 
             int offset = this.Address.DmxAddress - 1; // "-1" convert to 0 based index
 
@@ -281,19 +313,21 @@ namespace DmxLedPanel
             Update();
         }
 
-        private void handleDmxUtil(ArtNetDmxPacket packet) {
+        private void HandleUtilDmx(ArtNetDmxPacket packet)
+        {
             int offset = this.UtilAddress.DmxAddress;
 
-            foreach (var du in dmxUtils) {
+            foreach (var du in dmxUtils)
+            {
                 du.HandleDmx(
-                    this, 
-                    Utils.GetSubArray(packet.DmxData, offset + du.Index -1, 1)
+                    this,
+                    Utils.GetSubArray(packet.DmxData, offset + du.Index - 1, 1)
                     .Select(x => (int)x).ToArray());
             }
         }
 
-        public void Update() {
-
+        public void Update()
+        {
             try
             {
                 foreach (IFixtureUpdateHandler fuh in updateHandlers)
@@ -312,41 +346,49 @@ namespace DmxLedPanel
             }
         }
 
-        public List<IFixtureUpdateHandler> GetOnUpdateHandlers() {
+        public List<IFixtureUpdateHandler> GetOnUpdateHandlers()
+        {
             return updateHandlers;
         }
 
-        
-        public void SetHighlight(bool on) {
+
+        public void SetHighlight(bool on)
+        {
             if (on)
             {
                 updateAllValuesTo(255);
             }
-            else {
+            else
+            {
                 updateAllValuesTo(0);
             }
         }
 
-        private void updateAllValuesTo(byte inteisty) {
+        private void updateAllValuesTo(byte inteisty)
+        {
             foreach (Field f in Fields)
             {
                 f.SetDmxValues(Enumerable.Repeat(inteisty, f.AddressCount).ToArray());
             }
         }
 
-        public static string GetFixtureInfoStr(List<Fixture> fixtures) {
+        public static string GetFixtureInfoStr(List<Fixture> fixtures)
+        {
             StringBuilder sb = new StringBuilder();
-            foreach (var f in fixtures) {
+            foreach (var f in fixtures)
+            {
                 sb.Append(f.Name + " ");
             }
             return sb.ToString().Trim();
         }
 
-        public static string getFixtureInfoStr(Fixture f) {
+        public static string getFixtureInfoStr(Fixture f)
+        {
             return f.Name;
         }
 
-        public static string GetFixtureListNameString(List<Fixture> list) {
+        public static string GetFixtureListNameString(List<Fixture> list)
+        {
             if (list.Count > 0)
             {
                 string str = list.Aggregate("", (s, f) => s + f.Name + ", ");
@@ -354,7 +396,5 @@ namespace DmxLedPanel
             }
             return "";
         }
-
-
     }
 }

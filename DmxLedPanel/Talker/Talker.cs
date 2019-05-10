@@ -28,7 +28,7 @@ namespace Talker
                     PrintCurrentTime();
                     PrintCaller(msg);
                     PrintMessage(msg.Message);
-                    if (false)
+                    if (LogToFile)
                     {
                         if (currentFileName.Equals(string.Empty))
                         {

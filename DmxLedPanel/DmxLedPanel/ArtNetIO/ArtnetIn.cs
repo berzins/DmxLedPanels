@@ -33,7 +33,7 @@ namespace DmxLedPanel.ArtNetIO
         private ArtnetIn()
         {
 
-            socket = new ArtNetSocket();
+            socket = new ArtNetSocket() { EnableBroadcast = true};
             socket.NewPacket += NewPacketHandler;
             InitPacketListeners();
             dmxPacketHandlers = new SortedDictionary<int, List<IDmxPacketHandler>>();

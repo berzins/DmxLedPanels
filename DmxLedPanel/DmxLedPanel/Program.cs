@@ -58,7 +58,7 @@ namespace DmxLedPanel
 
         static void Main(string[] args)
         {
-            Talker.Talker.LogToFile = true;
+            Talker.Talker.LogToFile = false;
             GetAvailableInterfaces();
             _handler += new EventHandler(Handler);
             SetConsoleCtrlHandler(_handler, true);
@@ -131,9 +131,14 @@ namespace DmxLedPanel
                 {
                     if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
                     {
+                        if (ni.Name.Contains('*'))
+                        {
+                            continue;
+                        }
+
                         Talker.Talker.Log(new Talker.ActionMessage()
                         {
-                            Message = "Network interface found: " + ni.Name + " : " + ip.Address,
+                            Message = "NI found: " + ni.Name + " : " + ip.Address,
                             Source = Talker.Talker.GetSource(),
                             Level = Talker.LogLevel.ERROR
                         });

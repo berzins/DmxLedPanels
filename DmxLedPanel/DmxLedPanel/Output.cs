@@ -11,6 +11,8 @@ using System.Diagnostics;
 using System.Threading;
 using Haukcode.ArtNet.Sockets;
 using Haukcode.ArtNet.Packets;
+using DmxLedPanel.ArtNetIO;
+using System.Net.Sockets;
 
 namespace DmxLedPanel
 {
@@ -33,13 +35,14 @@ namespace DmxLedPanel
 
 
         private List<Fixture> fixtures;
+        private List<Fixture> updatePendingFixtures;
         private int updatePending;
 
         private List<Port> ports;
         private int addressCount;
         private int patchedAdresses = 0;
         private IPAddress ipAddress;
-        private ArtNetSocket socket;
+        private Socket socket;
   
         private static readonly string TAG = Talker.Talker.GetSource();
         public static long DMX_PACKET_COUNTER = 0;
@@ -66,14 +69,18 @@ namespace DmxLedPanel
         {
             addressCount = PORT_COUNT * PORT_ADDRESS_COUNT;
             fixtures = new List<Fixture>();
+            updatePendingFixtures = new List<Fixture>();
             updatePending = 0;
             Ports = new List<Port>(PORT_COUNT);
             ID = idCounter++;
             Name = "Output " + ID;
-
+            socket = new Socket(
+                    AddressFamily.InterNetwork,
+                    SocketType.Dgram,
+                    ProtocolType.Udp
+                );
             var ip = Util.SettingManager.Instance.Settings.ArtNetBroadcastIp;
             ipAddress = IPAddress.Parse(ip);
-            socket = new ArtNetSocket { EnableBroadcast = true };
             dmxValuesArray = new int[1020];
             
         }
@@ -141,7 +148,8 @@ namespace DmxLedPanel
         public void OnUpdate(Fixture f)
         {
             updatePending--;
-            if (updatePending <= 0)
+            updatePendingFixtures.Remove(f);
+            if (updatePendingFixtures.Count <= 0)
             {
 
                 //ThreadPool.QueueUserWorkItem(i => WriteOutput());
@@ -238,9 +246,10 @@ namespace DmxLedPanel
             copyIndex = 0;
             foreach (ArtNetDmxPacket pack in packets)
             {
-                pack.DmxData = Utils.GetSubArray(dmxValuesArray, copyIndex, 510).Select(x => (byte)x).ToArray();
+                pack.DmxData = Utils.GetSubArray(dmxValuesArray, copyIndex, 510, 512).Select(x => (byte)x).ToArray();
                 copyIndex += 510;
-                socket.SendTo(new ArtNetDmxPacket().ToArray(), new IPEndPoint(ipAddress, ArtNetSocket.Port));
+                socket = ArtnetOut.Instance.Socket;
+                socket.SendTo(pack.ToArray(), new IPEndPoint(ipAddress, ArtNetSocket.Port));
                 universeCounter++;
             }
 
@@ -249,7 +258,8 @@ namespace DmxLedPanel
 
         private void ResetUpdatePending()
         {
-            updatePending = fixtures.Count;
+            updatePendingFixtures.Clear();
+            updatePendingFixtures.AddRange(fixtures);
         }
 
         public static List<FixtureOutputMap> GetPatchedFixtureOutputMap(List<Fixture> fixtures)

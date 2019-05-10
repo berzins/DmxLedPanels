@@ -24,10 +24,17 @@ namespace DmxLedPanel
                 checkDmxValueRange(val);
             }
         }
-        
+
         public static T[] GetSubArray<T>(T[] data, int index, int length) {
-            T[] result = new T[length];
-            Array.Copy(data, index, result, 0, length);
+            return GetSubArray(data, index, length, length);
+        }
+
+        public static T[] GetSubArray<T>(T[] data, int index, int copyLength, int resultLength) {
+            if (resultLength < copyLength) {
+                throw new ArgumentOutOfRangeException("Reuslt array size value cant be less than coppy length.");
+            }
+            T[] result = new T[resultLength];
+            Array.Copy(data, index, result, 0, copyLength);
             return result;
         }
 

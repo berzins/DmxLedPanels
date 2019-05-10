@@ -1,63 +1,68 @@
-﻿using System;
+﻿using DmxLedPanel.Util;
+using Haukcode.ArtNet.Sockets;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DmxLedPanel.ArtNetIO
 {
-    public class ArtnetOut
+    public class ArtnetOut : IDisposable
     {
-        //private static ArtnetOut instance;
-        //private ArtNetWritter artWriter;
+        ArtNetSocket socket;
+        static ArtnetOut instance;
+        static bool socketClosed = true;
+        private static readonly object padlock = new object();
 
-        //////for polling device in network
-        ////private ArtNetReader reader6454;
-        //private ArtDispatcher dispatcher;
+        private ArtnetOut() {
+            InitSocket();
+        }
 
-        //private ArtDispatcher InitDispatcher()
-        //{
-        //    ArtDispatcher d = new ArtDispatcher();
-        //    ////WhoTheFuckAreYou = new WhosInNetwork();
-        //    ////d.AddArtPollReplyListener(WhoTheFuckAreYou);
-        //    return d;
-        //}
+        private void InitSocket() {
+            socket = new ArtNetSocket { EnableBroadcast = true };
+            socket.Open(
+                IPAddress.Parse("192.168.0.104"),
+                IPAddress.Parse("255.255.255.0"));
+            socketClosed = false;
+        }
+
+        public static ArtnetOut Instance {
+            get {
+                if (instance == null)
+                {
+                    lock (padlock)
+                    {
+                        if (instance == null)
+                        {
+                            instance = new ArtnetOut();
+                        }
+                    }
+                }
+                return instance;
+            }
+        } 
+
+        public ArtNetSocket Socket {
+            get {
+                if (socketClosed) {
+                    InitSocket();
+                }
+                return socket;
+            }
+        }
+
+        public void CloseSocket() {
+            socket.Close();
+            socket.Dispose();
+            socketClosed = true;
+        }
         
-        //private ArtnetOut() {
-        //    artWriter = new ArtNetWritter(
-        //        System.Net.IPAddress.Parse(
-        //            Util.SettingManager.Instance.Settings.ArtNetBroadcastIp
-        //            )
-        //        );
-        //    dispatcher = InitDispatcher();
-        //    //reader6454 = new ArtNetReader(dispatcher,
-        //    //    System.Net.IPAddress.Parse(Util.SettingManager.Instance.Settings.ArtNetPollReplyBindIp));
-        //    //reader6454.Start();
-        //}
 
-        ////public WhosInNetwork WhoTheFuckAreYou { get; private set; }
-
-
-        //public static void Init() {
-        //    if (instance == null) {
-        //        instance = ArtnetOut.Instance;
-        //    }
-        //}
-
-        //public static ArtnetOut Instance {
-        //    get {
-        //        if (instance == null)
-        //        {
-        //            instance = new ArtnetOut();
-        //        }
-        //        return instance;
-        //    }
-        //}
-
-        //public ArtNet.ArtNetWritter Writer {
-        //    get {
-        //        return this.artWriter;
-        //    }
-        //}
+        public void Dispose()
+        {
+            CloseSocket();
+        }
     }
 }
