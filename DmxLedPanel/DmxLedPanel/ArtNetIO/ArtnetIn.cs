@@ -32,9 +32,7 @@ namespace DmxLedPanel.ArtNetIO
 
         private ArtnetIn()
         {
-
-            socket = new ArtNetSocket() { EnableBroadcast = true};
-            socket.NewPacket += NewPacketHandler;
+            InitSocket();
             InitPacketListeners();
             dmxPacketHandlers = new SortedDictionary<int, List<IDmxPacketHandler>>();
             var maxThreads = System.Environment.ProcessorCount / 2;
@@ -64,8 +62,16 @@ namespace DmxLedPanel.ArtNetIO
             }
         }
 
+        private void InitSocket() {
+            socket = new ArtNetSocket() { EnableBroadcast = true };
+            socket.NewPacket += NewPacketHandler;
+        }
+
         public void Start()
         {
+            if (socket == null) {
+                InitSocket();
+            }
             socket.Open(
                 IPAddress.Parse(SettingManager.Instance.Settings.ArtNetBindIp),
                 IPAddress.Parse("255.255.255.0"));
@@ -74,7 +80,11 @@ namespace DmxLedPanel.ArtNetIO
         public void Stop()
         {
             socket.Close();
+            socket.Dispose();
+            socket = null;
         }
+
+       
 
         public void AddDmxPacketListener(IDmxPacketHandler handler)
         {

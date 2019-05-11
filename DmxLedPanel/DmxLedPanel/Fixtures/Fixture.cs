@@ -175,7 +175,7 @@ namespace DmxLedPanel
                 var p = new List<Port>();
                 p = GetRequiredPorts(mode);
                 portsRequired = p;
-                ResetPortsRequired();
+                ResetPortsPending();
             }
             addressCount = 0;
             foreach (Field f in Fields)
@@ -222,14 +222,18 @@ namespace DmxLedPanel
 
             var ports = new List<Port>();
             ports.Add(Address.Port);
-            if (portCount > 1)
-            {
-                ports.Add(Address.Clone().Port++);
+
+            var tmp = Address.Port.Clone();
+            for (int i = 0; i < (portCount - 1); i++)
+            { // add additional prots if necesasry. 
+                tmp++;
+                ports.Add(tmp.Clone());
+
             }
             return ports;
         }
 
-        private void ResetPortsRequired()
+        private void ResetPortsPending()
         {
             portsPending.Clear();
             int offset = 0;
@@ -396,7 +400,7 @@ namespace DmxLedPanel
             foreach (Field f in Fields)
             {
                 int relOffset = f.PixelChannelCount * f.Index;
-                byte[] dmx = Utils.GetSubArray(packet.DmxData, offset + relOffset, f.PixelChannelCount);
+                byte[] dmx = Utils.GetSubArray(dmxBuffer, offset + relOffset, f.PixelChannelCount);
                 f.SetDmxValues(dmx);
             }
             Update();

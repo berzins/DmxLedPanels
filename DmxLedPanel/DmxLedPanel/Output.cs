@@ -248,8 +248,19 @@ namespace DmxLedPanel
             {
                 pack.DmxData = Utils.GetSubArray(dmxValuesArray, copyIndex, 510, 512).Select(x => (byte)x).ToArray();
                 copyIndex += 510;
-                socket = ArtnetOut.Instance.Socket;
-                socket.SendTo(pack.ToArray(), new IPEndPoint(ipAddress, ArtNetSocket.Port));
+                
+                try
+                {
+                    socket.SendTo(pack.ToArray(), new IPEndPoint(ipAddress, ArtNetSocket.Port));
+                }
+                catch (Exception e) {
+                    Talker.Talker.Log(new Talker.ActionMessage
+                    {
+                        Message = e.ToString(),
+                        Source = Talker.Talker.GetSource(),
+                        Level = Talker.LogLevel.ERROR
+                    });
+                }
                 universeCounter++;
             }
 
