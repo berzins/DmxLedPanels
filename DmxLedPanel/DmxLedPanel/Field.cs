@@ -12,13 +12,13 @@ namespace DmxLedPanel
 
         public Field() {
             Pixels = new List<Pixel>();
-            AddressCount = 3;
-            dmxValues = new byte[AddressCount];
+            PixelChannelCount = 3;
+            dmxValues = new byte[PixelChannelCount];
         }
 
         public int Index { get; set; }
         public List<Pixel> Pixels { get; set; }
-        public int AddressCount { get; set; }
+        public int PixelChannelCount { get; set; }
 
 
         public void SetDmxValues(byte [] dmxValues) {

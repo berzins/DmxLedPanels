@@ -9,17 +9,20 @@ namespace DmxLedPanel.Fixtures
     class FixtureAddressSetter
     {
         public static void SetDmxAddressFor(List<Fixture> fixtures, Address startAddress, bool increment) {
+
+            Address nextAddress = startAddress.Clone();
             foreach (Fixture fix in fixtures) {
                 if (increment)
                 {
-                    if (startAddress.DmxAddress + fix.InputAddressCount > 512)
+                    if (nextAddress.DmxAddress + (fix.MaxInputAddressCount - (fix.PortsRequired.Count - 1) * 512) > 512)
                     {
-                        startAddress.DmxAddress = 1;
-                        startAddress.Port++;
+                        nextAddress.Port++;
+                        nextAddress.DmxAddress = 1;
                     }
-                    fix.Address = startAddress.Clone();
-                    //increment address
-                    startAddress.DmxAddress += fix.InputAddressCount;
+                    
+
+                    fix.Address = nextAddress.Clone();
+                    nextAddress = fix.GetAddressAfterThis().Clone();
                 }
                 else
                 {

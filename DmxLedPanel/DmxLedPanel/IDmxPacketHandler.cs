@@ -11,6 +11,6 @@ namespace DmxLedPanel
     {
         void HandlePacket(ArtNetDmxPacket packet);
 
-        int GetPortHash();
+        List<int> GetPortHash();
     }
 }

@@ -81,17 +81,19 @@ namespace DmxLedPanel.ArtNetIO
             lock (lockref)
             {
                 var c = new SortedDictionary<int, List<IDmxPacketHandler>>(dmxPacketHandlers);
-                var handlerHash = handler.GetPortHash();
 
-                if (c.TryGetValue(handlerHash, out List<IDmxPacketHandler> dph))
+                foreach (var handlerHash in handler.GetPortHash())
                 {
-                    dph.Add(handler);
-                }
-                else
-                {
-                    dph = new List<IDmxPacketHandler>();
-                    dph.Add(handler);
-                    c.Add(handlerHash, dph);
+                    if (c.TryGetValue(handlerHash, out List<IDmxPacketHandler> dph))
+                    {
+                        dph.Add(handler);
+                    }
+                    else
+                    {
+                        dph = new List<IDmxPacketHandler>();
+                        dph.Add(handler);
+                        c.Add(handlerHash, dph);
+                    }
                 }
 
                 dmxPacketHandlers = c;

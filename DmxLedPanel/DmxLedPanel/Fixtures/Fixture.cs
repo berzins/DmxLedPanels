@@ -21,11 +21,15 @@ namespace DmxLedPanel
         private int addressCount;
         private IPixelPatch pixelPatch;
         private IMode mode;
+        private Address address;
         private List<FixtureDmxUtil> dmxUtils;
 
         private volatile List<IMode> modes;
         private int currentModeIndex = 0;
         private object lockref = new object();
+        private List<Port> portsRequired;
+        private List<PendingPort> portsPending;
+        private byte[] dmxBuffer = new byte[1024]; // there is no fixures lagrer than 2 universes. 
 
         /// <summary>
         /// Use this with caution.. 
@@ -39,11 +43,12 @@ namespace DmxLedPanel
 
             this.modes = modes;
             Fields = new List<Field>();
-
+            portsRequired = new List<Port>();
+            portsPending = new List<PendingPort>();
+            address = new Address();
             AddDmxUtil(new DmxModeSwitcher(0) { Values = new int[] { 256 } });
             this.pixelPatch = pixelPatch;
             SetMode(modes[currentModeIndex]);
-            Address = new Address();
             updateHandlers = new List<IFixtureUpdateHandler>();
             ID = idCounter++;
             Name = "Fixture " + ID;
@@ -58,10 +63,27 @@ namespace DmxLedPanel
         public int ID {
             get; private set;
         }
-
+        
         public string Name { get; set; }
 
-        public Address Address { get; set; }
+        public Address Address {
+            get {
+                return address;
+            }
+            set {
+                address = value;
+                if (modes != null)
+                {
+                    SetMode(modes.ElementAt(CurrentModeIndex));
+                }
+            }
+        }
+
+        public List<Port> PortsRequired {
+            get {
+                return portsRequired;
+            }
+        }
 
 
         /// <summary>
@@ -94,7 +116,7 @@ namespace DmxLedPanel
         /// </summary>
         public int PatchedTo { get; set; } = Output.FIXTURE_UNPATCH;
 
-        public int PixelAddressCount {
+        public int PixelChannelCount {
             get {
                 return 3; // TODO: this is really dumb .. rewrite this for another pixel width support
             }
@@ -102,9 +124,15 @@ namespace DmxLedPanel
 
         public List<Field> Fields { get; private set; }
 
-        public int InputAddressCount {
+        public int CurrentInputAddressCount {
             get {
-                return Fields.Count * PixelAddressCount;
+                return Fields.Count * PixelChannelCount;
+            }
+        }
+
+        public int MaxInputAddressCount {
+            get {
+                return GetMaxFieldCount() * PixelChannelCount;
             }
         }
 
@@ -143,6 +171,11 @@ namespace DmxLedPanel
                 List<Field> f = new List<Field>(Fields);
                 f = this.mode.GetFields(pixelPatch.GetPixelPatch());
                 Fields = f;
+
+                var p = new List<Port>();
+                p = GetRequiredPorts(mode);
+                portsRequired = p;
+                ResetPortsRequired();
             }
             addressCount = 0;
             foreach (Field f in Fields)
@@ -155,14 +188,56 @@ namespace DmxLedPanel
         {
             lock (lockref)
             {
-                this.modes = modes;
                 TrySwitchMode(CurrentModeIndex < this.modes.Count ? CurrentModeIndex : 0);
             }
         }
 
         public void AddMode(IMode m)
         {
+            lock (lockref)
+            {
+                var tmp = this.modes;
+                if (tmp == null)
+                {
+                    tmp = new List<IMode>();
+                }
+
+                tmp.Add(m);
+                this.modes = tmp;
+            }
+
             modes.Add(m);
+        }
+
+        private List<Port> GetRequiredPorts(IMode mode)
+        {
+            if (pixelPatch == null)
+            {
+                // do some log..
+                throw new NullReferenceException("PixelPatch cant be null @Fixture.GetRequiredPorts(IMode)");
+            }
+
+            var modePixCount = Fields.Count;
+            var portCount = modePixCount / (512 / PixelChannelCount) + 1;
+
+            var ports = new List<Port>();
+            ports.Add(Address.Port);
+            if (portCount > 1)
+            {
+                ports.Add(Address.Clone().Port++);
+            }
+            return ports;
+        }
+
+        private void ResetPortsRequired()
+        {
+            portsPending.Clear();
+            int offset = 0;
+            foreach (var p in portsRequired)
+            {
+                portsPending.Add(new PendingPort { Port = p, PixelOffset = offset });
+                offset += (512 / PixelChannelCount);
+            }
         }
 
         public void RemoveMode(IMode m)
@@ -280,18 +355,33 @@ namespace DmxLedPanel
             updateHandlers.Remove(handler);
         }
 
-        int IDmxPacketHandler.GetPortHash()
+        List<int> IDmxPacketHandler.GetPortHash()
         {
-            return Address.Port.GetHashCode();
+            var hashes = new List<int>();
+            foreach (var p in portsRequired) {
+                hashes.Add(p.GetHashCode());
+            }
+            return hashes;
         }
 
         void IDmxPacketHandler.HandlePacket(ArtNetDmxPacket packet)
         {
-            Port packetPort = Port.From(packet);
+            var incomingPort = Port.From(packet);
+            var result = portsPending.Find(pp => pp.Port.Equals(incomingPort));
+            if (result == null)
+                return;
 
-            if (!Address.Port.Equals(packetPort)) return;
+            // ok, intereseted in this packet -> copy data to dmx data buffer
+            portsPending.Remove(result);
+            Array.Copy(
+                packet.DmxData, 0,
+                dmxBuffer, result.PixelOffset * PixelChannelCount,
+                512 / PixelChannelCount * PixelChannelCount); // yes.. getting rid of fracions -> if there are some.
 
-            // We are interested in this packet so process it
+            if (portsPending.Count > 0)
+                return; // still waiting for second packet to arrive.
+
+            // dmx has arrived -> go on. 
             if (IsDmxUtilsEnabled)
             {
                 HandleUtilDmx(packet);
@@ -301,13 +391,12 @@ namespace DmxLedPanel
 
         private void HandleDmx(ArtNetDmxPacket packet)
         {
-
             int offset = this.Address.DmxAddress - 1; // "-1" convert to 0 based index
 
             foreach (Field f in Fields)
             {
-                int relOffset = f.AddressCount * f.Index;
-                byte[] dmx = Utils.GetSubArray(packet.DmxData, offset + relOffset, f.AddressCount);
+                int relOffset = f.PixelChannelCount * f.Index;
+                byte[] dmx = Utils.GetSubArray(packet.DmxData, offset + relOffset, f.PixelChannelCount);
                 f.SetDmxValues(dmx);
             }
             Update();
@@ -364,11 +453,44 @@ namespace DmxLedPanel
             }
         }
 
+        private int GetMaxFieldCount() {
+            var fc = 0;
+            foreach (var m in modes)
+            {
+                var c = m.GetFields(pixelPatch.GetPixelPatch()).Count;
+                if (c > fc)
+                {
+                    fc = c;
+                }
+            }
+            return fc;
+        }
+        
+        public Address GetAddressAfterThis()
+        {
+            var pixCount = GetMaxFieldCount();
+            var startAddress = Address.Clone();
+            while (pixCount > 0) {
+                var pixLeft = (512 - startAddress.DmxAddress + 1) / PixelChannelCount;
+                if (pixCount > pixLeft)
+                {
+                    startAddress.Port++;
+                    startAddress.DmxAddress = 1;
+                }
+                else
+                {
+                    startAddress.DmxAddress += pixCount * PixelChannelCount;
+                }
+                pixCount -= pixLeft;
+            }
+            return startAddress;
+        }
+
         private void updateAllValuesTo(byte inteisty)
         {
             foreach (Field f in Fields)
             {
-                f.SetDmxValues(Enumerable.Repeat(inteisty, f.AddressCount).ToArray());
+                f.SetDmxValues(Enumerable.Repeat(inteisty, f.PixelChannelCount).ToArray());
             }
         }
 
@@ -395,6 +517,14 @@ namespace DmxLedPanel
                 return str.Substring(0, str.Length - 2);
             }
             return "";
+        }
+
+        private class PendingPort
+        {
+
+            public Port Port { get; set; }
+
+            public int PixelOffset { get; set; }
         }
     }
 }

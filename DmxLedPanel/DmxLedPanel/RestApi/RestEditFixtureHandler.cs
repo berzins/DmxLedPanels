@@ -64,7 +64,7 @@ namespace DmxLedPanel.RestApi
                     if (increment)
                     {
                         f.Address = address.Clone();
-                        f.Address.DmxAddress += f.InputAddressCount * i;
+                        f.Address.DmxAddress += f.CurrentInputAddressCount * i;
                     }
                     else
                     {
