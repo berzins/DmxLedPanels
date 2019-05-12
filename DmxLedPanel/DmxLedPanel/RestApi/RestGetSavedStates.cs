@@ -27,13 +27,13 @@ namespace DmxLedPanel.RestApi
                     + StringUtil.RemoveLastChars(fileNames.Aggregate("", (s, f) => s + f + ", "), 2);
                 }
                 
-                SetInfoMessage(logMsg, IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetInfoMessage(logMsg, IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
 
                 var data = Util.StaticSerializer.Serialize(msg);
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, data);
                 
             } catch (Exception e) {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

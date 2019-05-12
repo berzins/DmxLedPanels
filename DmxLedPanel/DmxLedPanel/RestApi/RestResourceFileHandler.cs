@@ -33,7 +33,7 @@ namespace DmxLedPanel.RestApi
 
             byte[] buf = File.ReadAllBytes(file);
             SetInfoMessage("'" + file + "' -> read ok.", IS_NOT_PART_OF_STATE,
-                Talker.Talker.GetSource());
+                Talker.Talk.GetSource());
             WriteResponse(context, RestConst.RESPONSE_OK, mime, buf);
         }
     }

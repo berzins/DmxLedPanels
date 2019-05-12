@@ -41,7 +41,7 @@ namespace DmxLedPanel.RestApi
                 SetInfoMessage(
                         "Fixture template: '" + template.Name + "' successfully stored.",
                         IS_NOT_PART_OF_STATE,
-                        Talker.Talker.GetSource()
+                        Talker.Talk.GetSource()
                         );
 
                 //get all templates and send back as a new template state
@@ -51,7 +51,7 @@ namespace DmxLedPanel.RestApi
 
             }
             catch (Exception e) {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

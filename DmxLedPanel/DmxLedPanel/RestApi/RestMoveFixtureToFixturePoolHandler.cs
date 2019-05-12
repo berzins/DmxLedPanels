@@ -49,14 +49,14 @@ namespace DmxLedPanel.RestApi
                         "Fixtures: " + Fixture.GetFixtureInfoStr(FixtureOutputMap.GetFixtures(fixOutMap))
                         + " unpatched from Otuputs: " + Output.GetOutputInfoStr(FixtureOutputMap.GetOutputs(fixOutMap)),
                         IS_PART_OF_STATE,
-                        Talker.Talker.GetSource()
+                        Talker.Talk.GetSource()
                         );
 
                 var data = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, data);   
             }
             catch (Exception e) {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

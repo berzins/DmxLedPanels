@@ -33,10 +33,10 @@ namespace DmxLedPanel
         public override bool Equals(Object o)
         {
             if (o == null) {
-                Talker.Talker.Log(new Talker.ActionMessage() {
+                Talker.Talk.Log(new Talker.ActionMessage() {
                     Message = "On Port.Equals() the expected port object is NULL",
                     Level = Talker.LogLevel.WARNING,
-                    Source = Talker.Talker.GetSource()
+                    Source = Talker.Talk.GetSource()
                 });
                 return false;
             }

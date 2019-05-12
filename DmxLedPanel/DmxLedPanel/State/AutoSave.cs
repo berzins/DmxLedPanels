@@ -33,17 +33,17 @@ namespace DmxLedPanel.State
             {
                 var filename = SettingManager.Instance.Settings.CurrentProject.Replace(".json", string.Empty).ToLower();
                 StateManager.Instance.SaveStateBackup(filename, getNextFileIndex());
-                Talker.Talker.Log(new Talker.ActionMessage() {
+                Talker.Talk.Log(new Talker.ActionMessage() {
                     Message = "'" + filename + "' backup saved",
                     Level = Talker.LogLevel.INFO,
-                    Source = Talker.Talker.GetSource()
+                    Source = Talker.Talk.GetSource()
                 });
             }
             catch (Exception e) {
-                Talker.Talker.Log(new Talker.ActionMessage() {
+                Talker.Talk.Log(new Talker.ActionMessage() {
                     Message = e.ToString(),
                     Level = Talker.LogLevel.ERROR,
-                    Source = Talker.Talker.GetSource()
+                    Source = Talker.Talk.GetSource()
                 });
             }
             

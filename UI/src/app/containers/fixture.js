@@ -43,6 +43,15 @@ class Fixture extends Component {
             return true
         }
 
+        if(this.isSignalChanged(nextProps)) {
+            return true;
+        }
+
+        
+        return false
+    }
+
+    isSignalChanged(nextProps) {
         const eid = nextProps.dmxActiveProts.eventId
         if(this.dmxReducerEventId != eid) {
             this.dmxReducerEventId = eid
@@ -52,8 +61,7 @@ class Fixture extends Component {
                 return true
             }
         }
-
-        return false
+        return false;
     }
 
     isDmxActive(props) {
@@ -108,6 +116,8 @@ class Fixture extends Component {
         const dmxStyle = {
             backgroundColor: this.selected ? 'rgba(20,20,20,0.7)' : this.dmxActive ? 'rgba(0,200,0,0.3)' : 'rgba(200,0,0,0.1)'
         }
+
+        console.log("Fixture render called.")
 
         return(          
             <div

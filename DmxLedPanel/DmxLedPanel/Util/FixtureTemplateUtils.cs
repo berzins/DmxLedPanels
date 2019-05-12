@@ -31,10 +31,10 @@ namespace DmxLedPanel.Util
             if (templateList.Count == 0) {
                 templateList = GenerateDefaultTemplates();
 
-                Talker.Talker.Log(new Talker.ActionMessage()
+                Talker.Talk.Log(new Talker.ActionMessage()
                 {
                     Message = "No fixture templates were found. Defaults generated successfully.",
-                    Source = Talker.Talker.GetSource(),
+                    Source = Talker.Talk.GetSource(),
                     Level = Talker.LogLevel.WARNING
                 });
             }

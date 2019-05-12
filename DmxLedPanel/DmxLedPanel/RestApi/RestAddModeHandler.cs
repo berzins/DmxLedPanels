@@ -43,11 +43,11 @@ namespace DmxLedPanel.RestApi
                     "The mode '" + name + " cols:" + cols + ", rows:" + rows +"' added to fixtures: "
                     + fixtures.Aggregate("", (s, f) => s + f.Name + " "),
                     IS_NOT_PART_OF_STATE,
-                    Talker.Talker.GetSource()
+                    Talker.Talk.GetSource()
                     );
             }
             catch (Exception e) {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

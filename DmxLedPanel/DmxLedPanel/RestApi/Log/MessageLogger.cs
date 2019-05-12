@@ -41,7 +41,7 @@ namespace DmxLedPanel.RestApi.Log
             State = state;
         }        
         public void Log() {
-                Talker.Talker.Log(Message);
+                Talker.Talk.Log(Message);
         }
 
         public void LogException(string msg, string source) {

@@ -49,10 +49,10 @@ namespace DmxLedPanel.Fixtures
                     values = Utils.cloneArray(value);
                 }
                 catch (ArgumentException e) {
-                    Talker.Talker.Log(new Talker.ActionMessage()
+                    Talker.Talk.Log(new Talker.ActionMessage()
                     {
                         Message = e.Message + ". " + e.StackTrace,
-                        Source = Talker.Talker.GetSource(),
+                        Source = Talker.Talk.GetSource(),
                         Level = Talker.LogLevel.ERROR
                     });
                 }

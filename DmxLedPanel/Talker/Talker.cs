@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Talker
 {
-    public class Talker
+    public class Talk
     {
         private static readonly string RELATIVE_LOG_PATH = "log\\";
         private static string currentFileName = string.Empty;

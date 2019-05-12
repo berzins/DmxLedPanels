@@ -136,10 +136,10 @@ namespace DmxLedPanel.RestApi
         }
 
         private void Log(string msg, int level) {
-            Talker.Talker.Log(new Talker.ActionMessage() {
+            Talker.Talk.Log(new Talker.ActionMessage() {
                 Message = msg,
                 Level = level,
-                Source = Talker.Talker.GetSource()
+                Source = Talker.Talk.GetSource()
             });
         }
 

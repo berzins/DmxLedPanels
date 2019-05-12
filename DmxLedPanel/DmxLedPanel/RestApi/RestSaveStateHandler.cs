@@ -25,7 +25,7 @@ namespace DmxLedPanel.RestApi
                 SetInfoMessage(
                         "State saved successfully.",
                         IS_NOT_PART_OF_STATE,
-                        Talker.Talker.GetSource()
+                        Talker.Talk.GetSource()
                         );
 
                 ResponseMessage msg = new ResponseMessage(ResponseMessage.TYPE_INFO, "File saved");
@@ -34,7 +34,7 @@ namespace DmxLedPanel.RestApi
             }
             catch (Exception e)
             {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

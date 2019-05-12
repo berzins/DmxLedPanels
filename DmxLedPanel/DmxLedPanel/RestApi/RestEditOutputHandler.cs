@@ -44,14 +44,14 @@ namespace DmxLedPanel.RestApi
                     "Outputs: " + Output.GetOutputListNameString(outputs)
                     + "edit successfull",
                     IS_PART_OF_STATE,
-                    Talker.Talker.GetSource()
+                    Talker.Talk.GetSource()
                     );
 
                 var state = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
             }
             catch (Exception e) {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

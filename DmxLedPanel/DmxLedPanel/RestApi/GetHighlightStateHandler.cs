@@ -19,7 +19,7 @@ namespace DmxLedPanel.RestApi
             SetInfoMessage(
                 "The highligh state is " + State.HighlightState.Instance.Enabled,
                 IS_NOT_PART_OF_STATE,
-                Talker.Talker.GetSource()
+                Talker.Talk.GetSource()
                 );
             
             WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON,

@@ -48,6 +48,28 @@ namespace DmxLedPanel
             }
             return copy;
         }
+
+        public static T[,] cloneArray<T>(T[,] source) {
+            T[,] copy = new T[source.GetLength(0),source.GetLength(1)];
+            for (int i = 0; i < copy.GetLength(0); i++) {
+                for (int e = 0; e < copy.GetLength(1); e++) {
+                    copy[i, e] = source[i, e];
+                }
+            }
+            return copy;
+        }
+
+        public static T[,] InitArray<T>(T[,] source, T value)
+        {
+            for (int i = 0; i < source.GetLength(0); i++)
+            {
+                for (int e = 0; e < source.GetLength(1); e++)
+                {
+                    source[i, e] = value;
+                }
+            }
+            return source;
+        }
         
         public static void ThrowArgumetExceptionIfEmpty(String arg, String errorMsg) {
             if (StringUtil.IsEmpty(arg)) {

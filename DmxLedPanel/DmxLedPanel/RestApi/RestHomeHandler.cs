@@ -19,14 +19,14 @@ namespace DmxLedPanel.RestApi
                 SetInfoMessage(
                         "index.html => read ok, confing.js => creation ok",
                         IS_NOT_PART_OF_STATE,
-                        Talker.Talker.GetSource()
+                        Talker.Talk.GetSource()
                         );
 
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_HTML, html);
             }
             catch (Exception e)
             {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

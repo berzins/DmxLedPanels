@@ -30,7 +30,7 @@ namespace DmxLedPanel.RestApi
                         context.Request.RemoteEndPoint.ToString() +
                         " login atempt status is: '" + body.Message + "'",
                         IS_NOT_PART_OF_STATE,
-                        Talker.Talker.GetSource()
+                        Talker.Talk.GetSource()
                         );
 
                 var msg = new ResponseMessage(ResponseMessage.TYPE_SESSION, body);
@@ -39,7 +39,7 @@ namespace DmxLedPanel.RestApi
                     );
             }
             catch (Exception e) {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

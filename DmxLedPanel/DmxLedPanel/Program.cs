@@ -58,7 +58,7 @@ namespace DmxLedPanel
 
         static void Main(string[] args)
         {
-            Talker.Talker.LogToFile = false;
+            Talker.Talk.LogToFile = false;
             GetAvailableInterfaces();
             _handler += new EventHandler(Handler);
             SetConsoleCtrlHandler(_handler, true);
@@ -136,10 +136,10 @@ namespace DmxLedPanel
                             continue;
                         }
 
-                        Talker.Talker.Log(new Talker.ActionMessage()
+                        Talker.Talk.Log(new Talker.ActionMessage()
                         {
                             Message = "NI found: " + ni.Name + " : " + ip.Address,
-                            Source = Talker.Talker.GetSource(),
+                            Source = Talker.Talk.GetSource(),
                             Level = Talker.LogLevel.ERROR
                         });
 

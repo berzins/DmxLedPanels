@@ -27,19 +27,19 @@ namespace DmxLedPanel
             try
             {
                 File.WriteAllText(path, data);
-                Talker.Talker.Log(new Talker.ActionMessage()
+                Talker.Talk.Log(new Talker.ActionMessage()
                 {
                     Message = path + " written successfully.",
                     Level = Talker.LogLevel.INFO,
-                    Source = Talker.Talker.GetSource()
+                    Source = Talker.Talk.GetSource()
                 });
             }
             catch (Exception e) {
-                Talker.Talker.Log(new Talker.ActionMessage()
+                Talker.Talk.Log(new Talker.ActionMessage()
                 {
                     Message = path + "write error => " + e.ToString(),
                     Level = Talker.LogLevel.ERROR,
-                    Source = Talker.Talker.GetSource()
+                    Source = Talker.Talk.GetSource()
                 });
             }
         }
@@ -58,9 +58,9 @@ namespace DmxLedPanel
             if (!Directory.Exists(p) && createDir) {
                 CreateDir(p);
 
-                Talker.Talker.Log(new Talker.ActionMessage() {
+                Talker.Talk.Log(new Talker.ActionMessage() {
                     Message = "Direcotry '" + p + "' didn't existed -> created successfully.",
-                    Source = Talker.Talker.GetSource(),
+                    Source = Talker.Talk.GetSource(),
                     Level = Talker.LogLevel.WARNING
                 });
             }

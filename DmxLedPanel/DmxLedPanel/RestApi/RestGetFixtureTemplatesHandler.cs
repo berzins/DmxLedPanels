@@ -20,12 +20,12 @@ namespace DmxLedPanel.RestApi
                 string logMsg = "The templates are: "
                     + StringUtil.RemoveLastChars(templates.Aggregate("", (s, t) => s + t.Name + ", "), 2);
 
-                SetInfoMessage(logMsg, IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetInfoMessage(logMsg, IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
 
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, StaticSerializer.Serialize(msg));
             }
             catch (Exception e) {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
 

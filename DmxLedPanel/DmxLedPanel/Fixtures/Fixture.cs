@@ -8,12 +8,16 @@ using DmxLedPanel.Fixtures;
 using System.Diagnostics;
 using System.Collections.Concurrent;
 using Haukcode.ArtNet.Packets;
+using DmxLedPanel.Util;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace DmxLedPanel
 {
     public class Fixture : IDmxPacketHandler
     {
-        private static readonly string TAG = Talker.Talker.GetSource();
+        private static readonly string TAG = Talker.Talk.GetSource();
+        private static readonly TimeSpan DMX_AWAIT_TIME = TimeSpan.FromMilliseconds(100);
 
         private static int idCounter = 0;
 
@@ -295,10 +299,10 @@ namespace DmxLedPanel
             }
             catch (IndexOutOfRangeException e)
             {
-                Talker.Talker.Log(new Talker.ActionMessage
+                Talker.Talk.Log(new Talker.ActionMessage
                 {
                     Level = Talker.LogLevel.WARNING,
-                    Source = Talker.Talker.GetSource(),
+                    Source = Talker.Talk.GetSource(),
                     Message = "Failed to swtich mode. Mode index is not in range of the fixture modes. " + e.Message
                 });
                 return false;
@@ -359,13 +363,13 @@ namespace DmxLedPanel
             updateHandlers.Remove(handler);
         }
 
-        List<int> IDmxPacketHandler.GetPortHash()
+        List<Port> IDmxPacketHandler.GetPortsRequired()
         {
-            var hashes = new List<int>();
+            var ports = new List<Port>();
             foreach (var p in portsRequired) {
-                hashes.Add(p.GetHashCode());
+                ports.Add(p.Clone());
             }
-            return hashes;
+            return ports;
         }
 
         void IDmxPacketHandler.HandlePacket(ArtNetDmxPacket packet)
@@ -386,6 +390,7 @@ namespace DmxLedPanel
                 return; // still waiting for second packet to arrive.
 
             // dmx has arrived -> go on. 
+            // process the frame. 
             if (IsDmxUtilsEnabled)
             {
                 HandleUtilDmx(packet);
@@ -430,10 +435,10 @@ namespace DmxLedPanel
             }
             catch (InvalidOperationException e)
             {
-                Talker.Talker.Log(new Talker.ActionMessage()
+                Talker.Talk.Log(new Talker.ActionMessage()
                 {
                     Level = Talker.LogLevel.ERROR,
-                    Source = Talker.Talker.GetSource(),
+                    Source = Talker.Talk.GetSource(),
                     Message = "Fixture faild to update -> most likely on removal from the output: " + e.ToString()
                 });
             }
@@ -442,8 +447,8 @@ namespace DmxLedPanel
         public List<IFixtureUpdateHandler> GetOnUpdateHandlers()
         {
             return updateHandlers;
-        }
 
+        }
 
         public void SetHighlight(bool on)
         {

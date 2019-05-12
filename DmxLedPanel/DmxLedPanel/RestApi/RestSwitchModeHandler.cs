@@ -39,7 +39,7 @@ namespace DmxLedPanel.RestApi
                         "The mode for fixture: " + Fixture.GetFixtureListNameString(fixtures)
                         + " is set to index: " + modeId,
                         IS_NOT_PART_OF_STATE,
-                        Talker.Talker.GetSource()
+                        Talker.Talk.GetSource()
                         );
                 Log();
 
@@ -48,14 +48,14 @@ namespace DmxLedPanel.RestApi
                     SetWarningMessage(
                         "Not all fixtures has switched mode.. probably not existing mode index",
                         IS_NOT_PART_OF_STATE,
-                        Talker.Talker.GetSource()
+                        Talker.Talk.GetSource()
                         );
                     Log();
                 }
             }
             catch (Exception e)
             {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

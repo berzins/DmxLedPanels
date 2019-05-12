@@ -94,7 +94,7 @@ namespace DmxLedPanel.RestApi
                 SetInfoMessage(
                         "Fixture: " + Fixture.GetFixtureListNameString(highlightf.ToList()) + " highilghted.",
                         IS_NOT_PART_OF_STATE,
-                        Talker.Talker.GetSource()
+                        Talker.Talk.GetSource()
                         );
 
                 var msg = Util.StaticSerializer.Serialize(new ResponseMessage(ResponseMessage.TYPE_INFO,
@@ -105,7 +105,7 @@ namespace DmxLedPanel.RestApi
             }
             catch (Exception e)
             {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

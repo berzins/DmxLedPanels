@@ -17,7 +17,7 @@ namespace DmxLedPanel.RestApi
             SetInfoMessage(
                         "What are you trying to do?",
                         IS_NOT_PART_OF_STATE,
-                        Talker.Talker.GetSource()
+                        Talker.Talk.GetSource()
                         );
             WriteResponse(context, RestConst.RESPONSE_NOT_FOUND, RestConst.CONTENT_TEXT_HTML, html);
         }

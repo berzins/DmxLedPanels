@@ -14,14 +14,14 @@ namespace DmxLedPanel.RestApi
                 SetInfoMessage(
                         "'Undo' successful. State message: " + StateManager.Instance.State.ActionMessage.Message,
                         IS_NOT_PART_OF_STATE,
-                        Talker.Talker.GetSource()
+                        Talker.Talk.GetSource()
                         );
                 WriteResponse(
                     context, RestConst.RESPONSE_OK, 
                     RestConst.CONTENT_TEXT_JSON, state);
             }
             catch (Exception e) {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

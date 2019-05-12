@@ -35,7 +35,7 @@ namespace DmxLedPanel.RestApi
             }
             catch (Exception e)
             {
-                SetErrorMessage(e.Message, IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.Message, IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
         }
@@ -48,7 +48,7 @@ namespace DmxLedPanel.RestApi
                 SetInfoMessage(
                     "Dmx signal " + (detected ? "detected" : "lost")
                     , IS_PART_OF_STATE,
-                    Talker.Talker.GetSource());
+                    Talker.Talk.GetSource());
                 context.Request.GetClientCertificate();
                 Respond(this.context, detected);
             }
@@ -57,7 +57,7 @@ namespace DmxLedPanel.RestApi
                 LogException(
                     "Dmx state response failed. Refresh UI to sync dmx state" + "\n\r"
                     + e.Message,
-                    Talker.Talker.GetSource());
+                    Talker.Talk.GetSource());
             }
 
             // our job is done.. wait for next ui call

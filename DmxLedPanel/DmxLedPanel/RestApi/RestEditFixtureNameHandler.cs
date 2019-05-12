@@ -43,7 +43,7 @@ namespace DmxLedPanel.RestApi
                     "The name for fixtures: " + fixNameList
                     + " is set to: " + name,
                     IS_PART_OF_STATE,
-                    Talker.Talker.GetSource());
+                    Talker.Talk.GetSource());
 
                 string state = StateManager.Instance.GetStateSerialized();
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON, state);
@@ -51,7 +51,7 @@ namespace DmxLedPanel.RestApi
             }
             catch (Exception e)
             {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
 

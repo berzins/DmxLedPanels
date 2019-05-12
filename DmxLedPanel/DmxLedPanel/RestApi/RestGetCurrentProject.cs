@@ -22,7 +22,7 @@ namespace DmxLedPanel.RestApi
                 SetInfoMessage(
                     "The current project is: " + cp,
                     IS_NOT_PART_OF_STATE,
-                    Talker.Talker.GetSource()
+                    Talker.Talk.GetSource()
                     );
 
                 WriteResponse(context, RestConst.RESPONSE_OK, RestConst.CONTENT_TEXT_JSON,
@@ -30,7 +30,7 @@ namespace DmxLedPanel.RestApi
                     );
             }
             catch (Exception e) {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

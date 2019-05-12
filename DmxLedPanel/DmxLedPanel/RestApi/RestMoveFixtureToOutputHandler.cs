@@ -67,7 +67,7 @@ namespace DmxLedPanel.RestApi
                         "Fixtures: " + Fixture.GetFixtureListNameString(fixtures)
                         + " is patched to output: " + output.Name,
                         IS_PART_OF_STATE,
-                        Talker.Talker.GetSource()
+                        Talker.Talk.GetSource()
                         );
 
                 var data = StateManager.Instance.GetStateSerialized();
@@ -75,7 +75,7 @@ namespace DmxLedPanel.RestApi
             }
             catch (Exception e)
             {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

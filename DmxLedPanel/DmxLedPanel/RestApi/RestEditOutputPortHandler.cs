@@ -43,7 +43,7 @@ namespace DmxLedPanel.RestApi
                     "The port for otputs: " + Output.GetOutputListNameString(outputs)
                     + " is set from: " + startProt + " to " + port.ToString(),
                     IS_PART_OF_STATE,
-                    Talker.Talker.GetSource()
+                    Talker.Talk.GetSource()
                     );
 
                 var state = StateManager.Instance.GetStateSerialized();
@@ -51,7 +51,7 @@ namespace DmxLedPanel.RestApi
             }
             catch (Exception e)
             {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
         }

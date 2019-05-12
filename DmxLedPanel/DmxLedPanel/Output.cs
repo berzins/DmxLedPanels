@@ -22,7 +22,7 @@ namespace DmxLedPanel
         public static readonly int DMX_PACKET_POOL_SIZE = 128;
 
         // dmx lag debug stuff
-        private string talkerSource = Talker.Talker.GetSource();
+        private string talkerSource = Talker.Talk.GetSource();
         private Stopwatch frameTimer = Stopwatch.StartNew();
         // END
 
@@ -44,7 +44,7 @@ namespace DmxLedPanel
         private IPAddress ipAddress;
         private Socket socket;
   
-        private static readonly string TAG = Talker.Talker.GetSource();
+        private static readonly string TAG = Talker.Talk.GetSource();
         public static long DMX_PACKET_COUNTER = 0;
 
         private object synclock = new object();
@@ -254,10 +254,10 @@ namespace DmxLedPanel
                     socket.SendTo(pack.ToArray(), new IPEndPoint(ipAddress, ArtNetSocket.Port));
                 }
                 catch (Exception e) {
-                    Talker.Talker.Log(new Talker.ActionMessage
+                    Talker.Talk.Log(new Talker.ActionMessage
                     {
                         Message = e.ToString(),
-                        Source = Talker.Talker.GetSource(),
+                        Source = Talker.Talk.GetSource(),
                         Level = Talker.LogLevel.ERROR
                     });
                 }

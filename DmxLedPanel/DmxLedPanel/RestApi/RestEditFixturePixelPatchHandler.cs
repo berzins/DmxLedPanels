@@ -41,7 +41,7 @@ namespace DmxLedPanel.RestApi
                     "Pixel patch for fixtures: " + Fixture.GetFixtureListNameString(fixtures)
                     + " is set to: " + pixelPatch.ToString(),
                     IS_PART_OF_STATE,
-                    Talker.Talker.GetSource()
+                    Talker.Talk.GetSource()
                     );
 
                 string state = StateManager.Instance.GetStateSerialized();
@@ -49,7 +49,7 @@ namespace DmxLedPanel.RestApi
             }
             catch (Exception e)
             {
-                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talker.GetSource());
+                SetErrorMessage(e.ToString(), IS_NOT_PART_OF_STATE, Talker.Talk.GetSource());
                 WriteErrorMessage(context, e);
             }
 

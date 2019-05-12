@@ -39,16 +39,29 @@ namespace DmxLedPanel.RestApi
             string contType,
             byte[] data)
         {
-            var response = context.Response;
-            response.AddHeader("Access-Control-Allow-Origin", "*");
-            response.StatusCode = status;
-            response.ContentType = contType;
-            response.ContentLength64 = data.Length;
-            response.OutputStream.Write(data, 0, data.Length);
-            response.OutputStream.Close();
-            response = null;
-            context = null;
-            Log();
+            try
+            {
+                var response = context.Response;
+                response.AddHeader("Access-Control-Allow-Origin", "*");
+                response.StatusCode = status;
+                response.ContentType = contType;
+                response.ContentLength64 = data.Length;
+                response.OutputStream.Write(data, 0, data.Length);
+                response.OutputStream.Close();
+                response = null;
+                context = null;
+                Log();
+            }
+            catch (HttpListenerException e) {
+                Talk.Log(new ActionMessage
+                {
+                    Message = "Some http connection died and response wasn't sent (most likely). " +
+                              "Try to refresh the browser. \n\r " + e.ToString(),
+                    Source = Talk.GetSource(),
+                    Level = LogLevel.WARNING
+                });
+            }
+            
         }
 
         protected void WriteResponse(
