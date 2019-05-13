@@ -378,7 +378,6 @@ namespace DmxLedPanel
             var result = portsPending.Find(pp => pp.Port.Equals(incomingPort));
             if (result == null)
                 return;
-
             // ok, intereseted in this packet -> copy data to dmx data buffer
             portsPending.Remove(result);
             Array.Copy(
@@ -401,7 +400,6 @@ namespace DmxLedPanel
         private void HandleDmx(ArtNetDmxPacket packet)
         {
             int offset = this.Address.DmxAddress - 1; // "-1" convert to 0 based index
-
             foreach (Field f in Fields)
             {
                 int relOffset = f.PixelChannelCount * f.Index;

@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Talker;
 
 namespace DmxLedPanel.RestApi
 {
@@ -70,11 +71,10 @@ namespace DmxLedPanel.RestApi
                 try
                 {
                     server.Start();
-                    LogInfo("Started on port " + port);
+                    Talk.Info("Started on port " + port);
                 }
                 catch (Exception e) {
-                    Log("Failed to start on port " + port + ". " + e.ToString(), 
-                        Talker.LogLevel.ERROR);
+                    Talk.Error("Failed to start on port " + port + ". " + e.ToString());
                     return;
                 }
 
@@ -85,7 +85,7 @@ namespace DmxLedPanel.RestApi
                         var context = server.GetContext();
                         IHttpRequestHandler handler = null;
 
-                        LogInfo("From: '" + context.Request.RemoteEndPoint.Address + ", Request => " + context.Request.Url);
+                        Talk.Info("From: '" + context.Request.RemoteEndPoint.Address + ", Request => " + context.Request.Url);
 
                         // get relative url cause handlers are sotred by relative keys
                         var url = GetRealtiveUrl(context.Request.Url.ToString());
@@ -102,7 +102,7 @@ namespace DmxLedPanel.RestApi
                 }).Start(); 
             }
             else {
-                Log("Not initialized. Server not started.", Talker.LogLevel.WARNING);
+                Talk.Warning("Not initialized. Server not started.");
             }
         }
 
@@ -133,18 +133,6 @@ namespace DmxLedPanel.RestApi
 
         protected string createPrefix(string pf) {
             return "http://*:" + port + pf;
-        }
-
-        private void Log(string msg, int level) {
-            Talker.Talk.Log(new Talker.ActionMessage() {
-                Message = msg,
-                Level = level,
-                Source = Talker.Talk.GetSource()
-            });
-        }
-
-        private void LogInfo(string msg) {
-            Log(msg, Talker.LogLevel.INFO);
         }
     }
 }

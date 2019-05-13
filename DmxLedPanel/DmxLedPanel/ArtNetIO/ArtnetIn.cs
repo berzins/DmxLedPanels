@@ -12,6 +12,8 @@ using Haukcode.Sockets;
 using Haukcode.ArtNet.Packets;
 using Haukcode.ArtNet;
 using System.Linq;
+using Talker;
+using System.Net.Sockets;
 
 namespace DmxLedPanel.ArtNetIO
 {
@@ -70,16 +72,50 @@ namespace DmxLedPanel.ArtNetIO
         private void InitSocket() {
             socket = new ArtNetSocket() { EnableBroadcast = true };
             socket.NewPacket += NewPacketHandler;
+            socket.UnhandledException += (object sender, UnhandledExceptionEventArgs args) =>
+            {
+                var e = (Exception)args.ExceptionObject;
+                if (e is SocketException)
+                {
+                    Talk.Warning("Socket exception occured. No idea what happend, error message: " +
+                        e.Message);
+                }
+                Program.HandleFatalException(e);
+            };
         }
 
         public void Start()
         {
-            if (socket == null) {
+            if (socket == null)
+            {
                 InitSocket();
             }
-            socket.Open(
-                IPAddress.Parse(SettingManager.Instance.Settings.ArtNetBindIp),
-                IPAddress.Parse("255.255.255.0"));
+
+            try
+            {
+                if (TryGetIp(out IPAddress ip) && TryGetSubnetmask(out IPAddress subnet))
+                {
+                    socket.Open(ip, subnet);
+                    Talk.Info("Socket sucessfully binded to " + ip + " / " + subnet);
+                }
+                else
+                {
+                    throw new ArgumentException("Ip or subnet mask is currupt");
+                }
+            }
+            catch (Exception e)
+            {
+                if (e is SocketException || e is ArgumentException)
+                {
+                    Talk.Error("Socket failed to open, error message: '" + e.Message + "'.");
+                    Talk.Warning(Const.FIX_SETTINGS_STRING);
+                    socket.Dispose();
+                    socket = null;
+                    Talk.Warning("The dmx input is disabled. Please check logs for hints.");
+                    return;
+                }
+                throw;
+            };
         }
 
         public void Stop()
@@ -88,6 +124,35 @@ namespace DmxLedPanel.ArtNetIO
             socket.Dispose();
             socket = null;
         }
+
+        private string getIpString() {
+            return SettingManager.Instance.Settings.ArtNetBindIp;
+        }
+
+        private bool TryGetIp(out IPAddress ip) {
+            string ipStr = getIpString();
+            if (IPAddress.TryParse(ipStr, out ip)) {
+                Talk.Info(ipStr + " is valid.");
+                return true;
+            }
+            Talk.Error(ipStr + " is not a valid ip address.");
+            return false;
+        } 
+
+        private string getSubnet() {
+            return "255.255.255.0";
+        }
+
+        private bool TryGetSubnetmask(out IPAddress subnet) {
+            string subnetStr = getSubnet(); 
+            if (IPAddress.TryParse(subnetStr, out subnet))
+            {
+                Talk.Info(subnetStr  + " is valid.");
+                return true;
+            }
+            Talk.Error(subnetStr + " is not a valid subnet mask.");
+            return false;
+        } 
 
        
 
@@ -154,12 +219,7 @@ namespace DmxLedPanel.ArtNetIO
             ArtNetPacket packet = args.Packet;
             if (packet == null)
             {
-                Talker.Talk.Log(new Talker.ActionMessage()
-                {
-                    Message = "Packet is null on receive.",
-                    Source = TAG,
-                    Level = Talker.LogLevel.WARNING
-                });
+                Talk.Warning("Packet is null on receive.");
                 return;
             }
             switch (packet.OpCode)
@@ -174,7 +234,6 @@ namespace DmxLedPanel.ArtNetIO
                         pollListeners.ForEach(l => l.Action(packet, args.Source.Address));
                         break;
                     }
-
             }
 
         }

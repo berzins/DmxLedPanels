@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Talker;
 
 namespace DmxLedPanel.RestApi
 {
@@ -82,7 +83,7 @@ namespace DmxLedPanel.RestApi
 
 
             if (!response.OutputStream.CanWrite) {
-                LogError("The '" + context.Request.RemoteEndPoint 
+                Talk.Error("The '" + context.Request.RemoteEndPoint 
                     + "' has died for some reason. Removing this client.");
                 CloseConnection(context);
                 return;
@@ -99,18 +100,18 @@ namespace DmxLedPanel.RestApi
                 var eventData = Encoding.UTF8.GetBytes("event:" + eventType + "\n");
                 var dataData = Encoding.UTF8.GetBytes("data:" + GetSSEDataString(data));
                 var endData = Encoding.UTF8.GetBytes("\n\n");
-                var msg = StringUtil.MapToString(data);
                 response.OutputStream.Write(eventData, 0, eventData.Length);
                 response.OutputStream.Write(dataData, 0, dataData.Length);
                 response.OutputStream.Write(endData, 0, endData.Length);
-                LogInfo("Sending event (type: " + eventType 
-                    + ", content: " + (msg.Length > 100 ? msg.Substring(0, 100) : msg) + "..."
-                    + ") to: " + context.Request.RemoteEndPoint.Address);
+                Talk.Info(String.Format("Sending event -> type: {0}, data: {1}",
+                    eventType,
+                    StringUtil.MapToString(data).Replace("\r", "").Replace("\n", "").Replace("\"", "").Replace("{", "\r\n{").Replace(",", ""))
+                    );
             }
             else
             {
                 response.OutputStream.Write(new byte[0], 0, 0);
-                LogInfo("Sending 'keep-alive' event stream to: " + context.Request.RemoteEndPoint.Address);
+                Talk.Info("Sending 'keep-alive' event stream to: " + context.Request.RemoteEndPoint.Address);
             }
         }
 
@@ -135,14 +136,6 @@ namespace DmxLedPanel.RestApi
             context.Response.OutputStream.Close();
             remoteListeners.Remove(context.Request.RemoteEndPoint.Address.ToString());
             context = null;
-        }
-
-        private void Log(string msg, int level) {
-            Talker.Talk.Log(new Talker.ActionMessage() {
-                Message = msg,
-                Level = level,
-                Source = Talker.Talk.GetSource()
-            });
         }
         
         private Dictionary<string, string> GetDmxSingalData(bool hasSignal) {
@@ -169,15 +162,6 @@ namespace DmxLedPanel.RestApi
                 {
                     { PORTS_WITH_DMX_SIGNAL, StaticSerializer.Serialize(activePorts) }
                 });
-        }
-
-
-        private void LogInfo(string msg) {
-            Log(msg, Talker.LogLevel.INFO);
-        }
-
-        private void LogError(string msg) {
-            Log(msg, Talker.LogLevel.ERROR);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace DmxLedPanel.ArtNetIO
         public void Start()
         {
             StartTracking();
-            LogInfo("Dmx sgnal trcking stoped.");
+            LogInfo("Dmx sgnal trcking started.");
         }
 
         public void Stop()

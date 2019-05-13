@@ -14,6 +14,7 @@ using DmxLedPanel.ArtNetIO;
 using Haukcode.ArtNet.Sockets;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using Talker;
 
 namespace DmxLedPanel
 {
@@ -70,44 +71,59 @@ namespace DmxLedPanel
 
         private void Run(string[] args)
         {
-
-            RestApiServer restApi = new RestApiServer();
-
-            // register objects who would want to init system 
-            InitSystemManager.Instance.AddInitializer(restApi);
-
-
-            if (shouldInit(args))
+            try
             {
-                // init whatever necessary
-                InitSystemManager.Instance.InitSystem();
-            }
-            else
-            {
-                // check if we do not have to reinit system (reboot necessary)
-                string openHash = SettingsHash.GetHash();
-                string closeHash = SettingManager.Instance.Settings.CloseHash;
-                if (!openHash.Equals(closeHash))
+                RestApiServer restApi = new RestApiServer();
+
+                // register objects who would want to init system 
+                InitSystemManager.Instance.AddInitializer(restApi);
+
+
+                if (shouldInit(args))
                 {
-                    Cmd.RestartProcess(true);
+                    // init whatever necessary
+                    InitSystemManager.Instance.InitSystem();
                 }
+                else
+                {
+                    // check if we do not have to reinit system (reboot necessary)
+                    string openHash = SettingsHash.GetHash();
+                    string closeHash = SettingManager.Instance.Settings.CloseHash;
+                    if (!openHash.Equals(closeHash))
+                    {
+                        Cmd.RestartProcess(true);
+                    }
+                }
+
+                restApi.Start();
+
+                StateManager.Instance.LoadStateFromFile(SettingManager.Instance.Settings.CurrentProject);
+                ArtnetIn.Instance.Start();
+                new AutoSave().RunIfEnabled();
+            }
+            catch (Exception e) {
+                HandleFatalException(e);
             }
 
-            restApi.Start();
+        }
 
-            StateManager.Instance.LoadStateFromFile(SettingManager.Instance.Settings.CurrentProject);
-            ArtnetIn.Instance.Start();
-            new AutoSave().RunIfEnabled();
-
-            //var whosInNetwork = new WhosInNetwork();
-
-
-            //new Thread(() => {
-            //    while (true) {
-            //        ArtnetIn.ArtDmxListener.recieved = true;
-            //        Thread.Sleep(1000);
-            //    }
-            //}).Start();
+        public static void HandleFatalException(Exception e) {
+            Talk.Fatal("No joke. The app crashed successfully!");
+            Talk.Fatal("If you want to know why -> pelase press 'y' -> othervise press anything you like.");
+            switch (Console.ReadKey(true).Key)
+            {
+                case ConsoleKey.Y:
+                    {
+                        Talk.Fatal("Error message: " + e.Message);
+                        Talk.Fatal("Stacktrace:" + e.StackTrace);
+                        break;
+                    }
+            }
+            Talk.Info("If you think this is no big deal -> please press 'y' to continue.. or any other key to restart the app.");
+            if (Console.ReadKey().Key == ConsoleKey.Y) {
+                return;
+            }
+            Cmd.RestartProcess(false);
         }
 
         private bool shouldInit(string[] args)
@@ -135,13 +151,7 @@ namespace DmxLedPanel
                         {
                             continue;
                         }
-
-                        Talker.Talk.Log(new Talker.ActionMessage()
-                        {
-                            Message = "NI found: " + ni.Name + " : " + ip.Address,
-                            Source = Talker.Talk.GetSource(),
-                            Level = Talker.LogLevel.ERROR
-                        });
+                        Talk.Info("NI found: " + ni.Name + " : " + ip.Address);
 
                     }
                 }

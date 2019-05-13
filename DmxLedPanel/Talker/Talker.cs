@@ -19,7 +19,8 @@ namespace Talker
 
         public static bool LogToFile { get; set; }
 
-        public static void Log(ActionMessage msg) {
+        public static void Log(ActionMessage msg)
+        {
             new Thread(() =>
             {
                 lock (syncLock)
@@ -27,7 +28,7 @@ namespace Talker
                     printLevel(msg.Level);
                     PrintCurrentTime();
                     PrintCaller(msg);
-                    PrintMessage(msg.Message);
+                    PrintMessage(msg.Message, msg.Level);
                     if (LogToFile)
                     {
                         if (currentFileName.Equals(string.Empty))
@@ -41,66 +42,127 @@ namespace Talker
             }).Start();
         }
 
-        public static string GetLogString(ActionMessage msg) {
+        public static void Info(String msg)
+        {
+            Log(new ActionMessage
+            {
+                Message = msg,
+                Source = GetSource(2),
+                Level = LogLevel.INFO
+            });
+        }
+
+        public static void Warning(String msg)
+        {
+            Log(new ActionMessage
+            {
+                Message = msg,
+                Source = GetSource(2),
+                Level = LogLevel.WARNING
+            });
+        }
+
+        public static void Error(String msg)
+        {
+            Log(new ActionMessage
+            {
+                Message = msg,
+                Source = GetSource(2),
+                Level = LogLevel.ERROR
+            });
+        }
+
+        public static void Fatal(String msg)
+        {
+            Log(new ActionMessage
+            {
+                Message = msg,
+                Source = GetSource(2),
+                Level = LogLevel.FATAL
+            });
+        }
+
+
+
+
+        public static string GetLogString(ActionMessage msg)
+        {
             return GetLevelAsText(msg.Level) + " "
                 + GetCurrentTimeFormated() + " "
                 + GetSourceString(msg) + " "
                 + msg.Message;
         }
 
-        private static void PrintMessage(string msg)
+        private static void PrintMessage(string msg, int level)
         {
-            Console.ForegroundColor = ConsoleColor.Gray;
+            if (level == LogLevel.FATAL)
+            {
+                Console.ForegroundColor = GetLevelColor(level);
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
             Console.WriteLine(msg);
         }
 
-        private static void PrintCaller(ActionMessage msg) {
+        private static void PrintCaller(ActionMessage msg)
+        {
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write(GetSourceString(msg));
         }
 
-        private static string GetSourceString(ActionMessage msg) {
+        private static string GetSourceString(ActionMessage msg)
+        {
             return msg.Source + " => ";
         }
 
-        private static void PrintCurrentTime() {
-            
+        private static void PrintCurrentTime()
+        {
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write(GetCurrentTimeFormated() + " ");
         }
 
-        private static string GetCurrentTimeFormated() {
+        private static string GetCurrentTimeFormated()
+        {
             return GetTimeFormated(DateTime.Now, "H:mm:ss:fff");
         }
 
-        private static string GetCurrentDateTimeFormated() {
+        private static string GetCurrentDateTimeFormated()
+        {
             return GetTimeFormated(DateTime.Now, "yy_MM_dd_H_mm_ss_fff");
         }
 
-        private static string GetTimeFormated(DateTime time, string format) {
+        private static string GetTimeFormated(DateTime time, string format)
+        {
             return time.ToString(format);
         }
 
-        private static void printLevel(int lvl) {
+        private static void printLevel(int lvl)
+        {
+            Console.ForegroundColor = GetLevelColor(lvl); 
+            Console.Write(GetLevelAsText(lvl) + ": ");
+        }
+
+        private static ConsoleColor GetLevelColor(int lvl) {
             switch (lvl)
             {
                 case LogLevel.ERROR:
                     {
-                        Console.ForegroundColor = ConsoleColor.DarkRed;
-                        break;
+                        return ConsoleColor.DarkRed;
                     }
                 case LogLevel.WARNING:
                     {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        break;
+                        return ConsoleColor.DarkYellow;
                     }
+                case LogLevel.FATAL:
+                    {
+                        return ConsoleColor.Red;                    }
                 default:
                     {
-                        Console.ForegroundColor = ConsoleColor.DarkGreen;
-                        break;
+                        return ConsoleColor.DarkGreen;
                     }
             }
-            Console.Write(GetLevelAsText(lvl) + ": ");
         }
 
         private static void WriteFile(string path, bool relative, string data)
@@ -138,6 +200,7 @@ namespace Talker
         private static readonly string INFO_STR = "INFO";
         private static readonly string WARNING_STR = "WARINIG";
         private static readonly string ERROR_STR = "ERROR";
+        private static readonly string FATAL_STR = "FATAL";
 
         public static string GetSource()
         {
@@ -155,30 +218,41 @@ namespace Talker
         {
             switch (level)
             {
-                case LogLevel.INFO: {
+                case LogLevel.INFO:
+                    {
                         return INFO_STR;
                     }
-                case LogLevel.WARNING: {
+                case LogLevel.WARNING:
+                    {
                         return WARNING_STR;
                     }
-                case LogLevel.ERROR: {
+                case LogLevel.ERROR:
+                    {
                         return ERROR_STR;
+                    }
+                case LogLevel.FATAL:
+                    {
+                        return FATAL_STR;
                     }
             }
             return "";
         }
     }
 
-    public static class LogLevel {
+    public static class LogLevel
+    {
 
         public const int INFO = 1;
 
         public const int WARNING = 0;
 
         public const int ERROR = -1;
+
+        public const int FATAL = -2;
     }
 
-    internal interface ILogPrinter {
+    internal interface ILogPrinter
+    {
         void OnLogRecieved(ref List<ActionMessage> logs);
     }
 }
