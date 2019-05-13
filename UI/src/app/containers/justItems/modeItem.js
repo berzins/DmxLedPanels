@@ -1,6 +1,12 @@
+/* eslint-disable */
 import React,  {Component} from 'react'
 import { rowItem, selectItem, radioItem } from '../editForms/formItems'
-import { FixtureMode, fillIncrementArray } from '../../util/util'
+import { FixtureMode } from '../../util/util'
+import { 
+    MODE_COLUMN_VALUES,
+    MODE_ROW_VALUES
+} from '../../constants/const'
+
 
 export const MODE_TYPE_ID = "MODE_TYPE_ID"
 export const MODE_COLUMNS_ID = "MODE_COLUMNS_ID"
@@ -11,7 +17,6 @@ export default class ModeItem extends Component {
 
 
     render() {
-        const sizeValues = fillIncrementArray(56, 1)
         const mode = this.props.mode
         const mi = this.props.modeIndex
         return(
@@ -21,8 +26,8 @@ export default class ModeItem extends Component {
                     radioItem('Select', createModeId(MODE_SELECT_ID, mi), false)
                 ], true),
                 rowItem([
-                    selectItem("Columns" , createModeId(MODE_COLUMNS_ID, mi), sizeValues, mode.colIndex ),
-                    selectItem("Rows" , createModeId(MODE_ROWS_ID, mi), sizeValues, mode.rowIndex),
+                    selectItem("Columns" , createModeId(MODE_COLUMNS_ID, mi), MODE_COLUMN_VALUES, mode.colIndex ),
+                    selectItem("Rows" , createModeId(MODE_ROWS_ID, mi), MODE_ROW_VALUES, mode.rowIndex),
                 ])
            ])
         ) 

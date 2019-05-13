@@ -243,8 +243,7 @@ const modeFormInit = {
 import { 
     getArrayIndexByValue, 
     getShortNameFixtureMode,
-    FixtureMode,
-    fillIncrementArray
+    FixtureMode
 } from '../util/util'
 import {
     MODE_COLUMN_VALUES,

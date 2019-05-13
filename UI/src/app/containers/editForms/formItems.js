@@ -19,7 +19,7 @@ export const selectItem = (title, id, values, index = 0) => {
             {
                 values.map((val, i) => {
                 return i == index ? 
-                <option value={val} key={title + val} selected='selected'>{val}</option> : 
+                <option value={val} key={title + val} selected = {true}>{val}</option> : 
                 <option value={val} key={title + val}>{val}</option>
                 })
             }

@@ -133,8 +133,6 @@ export const getArrayIndexByValue = (array, value) => {
     return index
 }
 
-export const patchSizeValues = [1, 6, 9, 11, 28, 56]
-
 export const getFieldValue = (id) => {
         return document.getElementById(id).value
 }

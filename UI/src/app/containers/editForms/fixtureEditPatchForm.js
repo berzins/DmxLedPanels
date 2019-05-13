@@ -5,8 +5,12 @@ import Modal from 'react-bootstrap4-modal'
 import { fixtureEditPatchFormReducer } from '../../reducers/formReducers'
 import { closeEditFixturePatchForm } from '../../actions/formActions'
 import {  editFixturePatch } from '../../actions/stateActions'
-import {  FixturePatch, patchSizeValues } from '../../util/util'
+import {  FixturePatch } from '../../util/util'
 import store from '../../store'
+import {
+    PATCH_COLUMN_VALUES,
+    PATCH_ROW_VALUES
+} from '../../constants/const'
 
 const FOMR_ID_PATCH = "EDIT_FIXTURE_FOMR_ID_PATCH"
 const FORM_ID_PATCH_COLS = "EDIT_FIXTURE_FORM_ID_PATCH_COLS"
@@ -86,7 +90,6 @@ class FixtureEditPatchFrom extends Component {
     render() {
         let form = this.props.form
         // let patchVals = this.fillIncrementArray(30, 1)
-        const patchVals = patchSizeValues
         return(
             <Modal visible={form.opened} onClickBackdrop={() => this.onClose() }>
                 <div className="modal-header">
@@ -103,8 +106,8 @@ class FixtureEditPatchFrom extends Component {
                         this.createSelectItem("Patch type", FOMR_ID_PATCH, FixturePatch.all())
                     ])} 
                     {this.createRowItem([
-                        this.createSelectItem("Patch columns", FORM_ID_PATCH_COLS, patchVals),
-                        this.createSelectItem("Patch rows", FORM_ID_PATCH_ROWS, patchVals)
+                        this.createSelectItem("Patch columns", FORM_ID_PATCH_COLS, PATCH_COLUMN_VALUES),
+                        this.createSelectItem("Patch rows", FORM_ID_PATCH_ROWS, PATCH_ROW_VALUES)
                     ])}
                     
                 </div>

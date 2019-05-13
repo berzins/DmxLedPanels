@@ -1,9 +1,14 @@
 import { 
-    FixturePatch,
-    patchSizeValues,
+    FixturePatch,           
+    
     fillIncrementArray,
     FixtureMode,
 } from '../../util/util'
+
+import {
+    PATCH_COLUMN_VALUES,
+    PATCH_ROW_VALUES
+} from '../../constants/const'
 
 
 export const getFixtureTemplateData = template => {
@@ -11,8 +16,8 @@ export const getFixtureTemplateData = template => {
         name: template.Name,
         pixelPatch: {
             name: getValuesIndexPair(FixturePatch.all(), template.PixelPatch.Name),
-            columns: getValuesIndexPair(patchSizeValues, template.PixelPatch.Columns),
-            rows: getValuesIndexPair(patchSizeValues, template.PixelPatch.Rows)
+            columns: getValuesIndexPair(PATCH_COLUMN_VALUES, template.PixelPatch.Columns),
+            rows: getValuesIndexPair(PATCH_ROW_VALUES, template.PixelPatch.Rows)
         },
         modes: getModesValues(template.Modes),
         modeIndex: template.CurrentModeIndex,

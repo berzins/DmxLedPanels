@@ -20,9 +20,7 @@ import {
     FixtureMode, 
     FixturePatch, 
     isInteger, 
-    fillIncrementArray,
-    validateInteger,
-    patchSizeValues
+    validateInteger
 } from '../util/util'
 import store from '../store'
 import {
@@ -116,7 +114,7 @@ class FixtureForm extends Component {
             increment : document.getElementById(FORM_ID_ADR_INCREM).checked
         }
         
-        validatons.push(validateInteger(1,512, "Address", data.addr))
+        validatons.push(validateInteger(1, 512, "Address", data.addr))
         validatons.push(validateInteger(1, 512, "Util address", data.utilAddr))
         let res = this.validate(validatons)
 
@@ -143,8 +141,6 @@ class FixtureForm extends Component {
 
     getCurrentTemplate() {
         const prop = {...this.props}
-        console.log("template props: ")
-        console.log(prop);
         return prop.templates.data.find(t => {
             return t.Name == this.props.templates.current
         })

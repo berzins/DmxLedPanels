@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DmxLedPanel.Util;
 using Haukcode.ArtNet.Packets;
+using Talker;
 
 namespace DmxLedPanel.ArtNetIO
 {
@@ -36,12 +37,14 @@ namespace DmxLedPanel.ArtNetIO
         public void Start()
         {
             StartTracking();
+            LogInfo("Dmx sgnal trcking stoped.");
         }
 
         public void Stop()
         {
             trackingThread.Abort();
             trackingThread = null;
+            LogInfo("Dmx sgnal trcking stoped.");
         }
 
         public void StartTracking() {
@@ -131,6 +134,16 @@ namespace DmxLedPanel.ArtNetIO
         public void Dispose()
         {
             Stop();
+        }
+
+        private void LogInfo(String message)
+        {
+            Talk.Log(new ActionMessage()
+            {
+                Message = message,
+                Source = Talk.GetSource(),
+                Level = LogLevel.INFO,
+            });
         }
     }
 }

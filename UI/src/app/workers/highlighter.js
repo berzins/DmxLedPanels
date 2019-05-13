@@ -10,7 +10,6 @@ import store from '../store'
 class Highlighter extends Component {
 
     render() {
-        console.log("hilighter on render")
         if(store.getState().hilightStateReducer.on) {
             this.props.highlight();
         }

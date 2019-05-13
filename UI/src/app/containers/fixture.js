@@ -117,8 +117,6 @@ class Fixture extends Component {
             backgroundColor: this.selected ? 'rgba(20,20,20,0.7)' : this.dmxActive ? 'rgba(0,200,0,0.3)' : 'rgba(200,0,0,0.1)'
         }
 
-        console.log("Fixture render called.")
-
         return(          
             <div
             style={dmxStyle}

@@ -21,8 +21,7 @@ namespace DmxLedPanel.ArtNetIO
         private ArtNetSocket socket;
         private List<ArtDmxListener> dmxListeners;
         private List<ArtPollListener> pollListeners;
-        //private volatile SortedDictionary<int, List<IDmxPacketHandler>> dmxPacketHandlers;
-        private List<IDmxPacketHandler>[,] dmxPacketHandlers; // subnet, uni
+        private List<IDmxPacketHandler>[,] dmxPacketHandlers; // subnet, universe
         public delegate void DmxSignalDeleage(bool hasSingal);
         public event DmxSignalDeleage DmxSignalChanged;
         public delegate void PortDmxSignalDelegate(HashSet<Port> activeProts);
@@ -40,7 +39,6 @@ namespace DmxLedPanel.ArtNetIO
             InitSocket();
             InitPacketListeners();
             InitSignalTracker();
-            //dmxPacketHandlers = new SortedDictionary<int, List<IDmxPacketHandler>>();
             
             var maxThreads = System.Environment.ProcessorCount / 2;
             maxThreads = maxThreads == 0 ? 1 : maxThreads;
@@ -231,119 +229,10 @@ namespace DmxLedPanel.ArtNetIO
 
         private class ArtDmxListener : ArtnetListener
         {
-            private static readonly int DMX_INPUT_TIMEOUT = 1000;
-
-            private object synclock = new object();
-            //private static bool recieved = false;
-            //private bool hasSignal = false;
-
-            //private volatile HashSet<Port> recievedUniverses;
-            //private volatile HashSet<Port> dmxDetectedUniverses;
 
             public ArtDmxListener(ArtnetIn artin) : base(artin)
             {
-                //recievedUniverses = new HashSet<Port>(Port.GetEqualityComparer());
-                //dmxDetectedUniverses = new HashSet<Port>(Port.GetEqualityComparer());
-                //WatchDmxInput();
-                //WatchPortDmxInput();
             }
-
-
-            //private void WatchDmxInput()
-            //{
-            //    new Thread(() =>
-            //    {
-            //        // log 
-            //        Talker.Talk.Log(new Talker.ActionMessage()
-            //        {
-            //            Message = "DMX tracking thread started.",
-            //            Level = Talker.LogLevel.INFO,
-            //            Source = Talker.Talk.GetSource()
-            //        });
-            //        // logic
-            //        while (true)
-            //        {
-            //            if (recieved)
-            //            {
-            //                if (!hasSignal)
-            //                {
-            //                    hasSignal = true;
-            //                    artin.OnSignalChange(hasSignal);
-            //                }
-            //                recieved = false;
-            //            }
-            //            else
-            //            {
-            //                if (hasSignal)
-            //                {
-            //                    hasSignal = false;
-            //                    artin.OnSignalChange(hasSignal);
-            //                }
-            //            }
-            //            Thread.Sleep(DMX_INPUT_TIMEOUT);
-            //        }
-            //    }).Start();
-            //}
-
-            //private bool IsDmxForPortsChanged()
-            //{
-            //    if (!dmxDetectedUniverses.IsSupersetOf(recievedUniverses))
-            //    {
-            //        return true;
-            //    }
-            //    if (!recievedUniverses.IsSupersetOf(dmxDetectedUniverses))
-            //    {
-            //        return true;
-            //    }
-            //    return false;
-            //}
-
-            //private void WatchPortDmxInput()
-            //{
-            //    ThreadPool.QueueUserWorkItem((i) =>
-            //    {
-            //        // log 
-            //        Talker.Talk.Log(new Talker.ActionMessage()
-            //        {
-            //            Message = "Port DMX tracking thread started.",
-            //            Level = Talker.LogLevel.INFO,
-            //            Source = Talker.Talk.GetSource()
-            //        });
-
-            //        //logic
-            //        while (true)
-            //        {
-            //            var isChanged = IsDmxForPortsChanged();
-            //            if (isChanged)
-            //            {
-            //                artin.OnPortSignalChange(Port.CopyHashSet(recievedUniverses));
-
-            //                lock (synclock)
-            //                {
-            //                    var l = dmxDetectedUniverses;
-            //                    l = new HashSet<Port>();
-            //                    l.UnionWith(recievedUniverses);
-            //                    dmxDetectedUniverses = l;
-            //                }
-            //            }
-
-            //            lock (synclock)
-            //            {
-            //                var l = recievedUniverses;
-            //                l.Clear();
-            //                recievedUniverses = l;
-            //            }
-
-            //            Thread.Sleep(DMX_INPUT_TIMEOUT);
-            //        }
-            //    });
-            //}
-
-            //private bool HasEntry(HashSet<Port> data, Port key)
-            //{
-            //    bool b = data.Contains(key);
-            //    return b;
-            //}
 
 
             public override void Action(ArtNetPacket p, IPAddress source)
@@ -354,21 +243,6 @@ namespace DmxLedPanel.ArtNetIO
                 var packetPort = Port.From(packet);
                 var dph = artin.dmxPacketHandlers[packetPort.SubNet, packetPort.Universe];
                 dph?.ForEach(h => h.HandlePacket(packet));
-
-                //recieved = true;
-                //ThreadPool.QueueUserWorkItem((i) =>
-                //{
-                    //var port = packetPort;
-                    //if (!HasEntry(recievedUniverses, port))
-                    //{
-                    //    lock (synclock)
-                    //    {
-                    //        var l = recievedUniverses;
-                    //        l.Add(port);
-                    //        recievedUniverses = l;
-                    //    }
-                    //}
-                //});
             }
         }
 
@@ -386,7 +260,7 @@ namespace DmxLedPanel.ArtNetIO
                     var reply = new ArtPollReplyPacket()
                     {
                         ShortName = "mjau",
-                        LongName = "vau"
+                        LongName = "vau vau vau"
                     };
 
                     artin.Sotcket.Send(reply);
