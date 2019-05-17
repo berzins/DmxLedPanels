@@ -23,7 +23,7 @@ namespace DmxLedPanel.ArtNetIO
         private ArtNetSocket socket;
         private List<ArtDmxListener> dmxListeners;
         private List<ArtPollListener> pollListeners;
-        private List<IDmxPacketHandler>[,] dmxPacketHandlers; // subnet, universe
+        private HashSet<IDmxPacketHandler>[,] dmxPacketHandlers; // subnet, universe
         public delegate void DmxSignalDeleage(bool hasSingal);
         public event DmxSignalDeleage DmxSignalChanged;
         public delegate void PortDmxSignalDelegate(HashSet<Port> activeProts);
@@ -36,7 +36,7 @@ namespace DmxLedPanel.ArtNetIO
 
         private ArtnetIn()
         {
-            dmxPacketHandlers = new List<IDmxPacketHandler>[PORT_SIZE, PORT_SIZE];
+            dmxPacketHandlers = new HashSet<IDmxPacketHandler>[PORT_SIZE, PORT_SIZE];
 
             InitSocket();
             InitPacketListeners();
@@ -170,9 +170,9 @@ namespace DmxLedPanel.ArtNetIO
                     // add handler to list
                     if(handlers == null)
                     {
-                        handlers = new List<IDmxPacketHandler>();
+                        handlers = new HashSet<IDmxPacketHandler>();
                     }
-                    var c = handlers.Select(h => h).ToList();
+                    var c = handlers.Select(h => h).ToHashSet();
                     c.Add(handler);
                     dmxPacketHandlers[p.SubNet, p.Universe] = c;
                 }
@@ -194,7 +194,7 @@ namespace DmxLedPanel.ArtNetIO
                 foreach (var p in PortHelper.AllPorts) {
                     var handlers = dmxPacketHandlers[p.SubNet, p.Universe];
                     if (handlers != null) {
-                        var c = handlers.Select(h => h).ToList();
+                        var c = handlers.Select(h => h).ToHashSet();
                         c.Clear();
                         handlers = c;
                     }
@@ -298,10 +298,9 @@ namespace DmxLedPanel.ArtNetIO
             {
 
                 var packet = ((ArtNetDmxPacket)p);
-
                 var packetPort = Port.From(packet);
                 var dph = artin.dmxPacketHandlers[packetPort.SubNet, packetPort.Universe];
-                dph?.ForEach(h => h.HandlePacket(packet));
+                dph?.Select(h => h).ToList().ForEach(h => h.HandlePacket(packet));
             }
         }
 
@@ -320,7 +319,7 @@ namespace DmxLedPanel.ArtNetIO
                     {
                         ShortName = "mjau",
                         LongName = "vau vau vau"
-                    };
+                    }; 
 
                     artin.Sotcket.Send(reply);
                     

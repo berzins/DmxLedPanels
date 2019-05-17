@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Talker;
 
 namespace DmxLedPanel.Util
 {
@@ -31,12 +32,7 @@ namespace DmxLedPanel.Util
             if (templateList.Count == 0) {
                 templateList = GenerateDefaultTemplates();
 
-                Talker.Talk.Log(new Talker.ActionMessage()
-                {
-                    Message = "No fixture templates were found. Defaults generated successfully.",
-                    Source = Talker.Talk.GetSource(),
-                    Level = Talker.LogLevel.WARNING
-                });
+                Talk.Warning("No fixture templates were found. Defaults generated successfully.");
             }
             return templateList;
         }

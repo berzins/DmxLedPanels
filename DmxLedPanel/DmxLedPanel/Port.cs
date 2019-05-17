@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Haukcode.ArtNet.Packets;
+using Talker;
 
 namespace DmxLedPanel
 {
@@ -33,11 +34,7 @@ namespace DmxLedPanel
         public override bool Equals(Object o)
         {
             if (o == null) {
-                Talker.Talk.Log(new Talker.ActionMessage() {
-                    Message = "On Port.Equals() the expected port object is NULL",
-                    Level = Talker.LogLevel.WARNING,
-                    Source = Talker.Talk.GetSource()
-                });
+                Talk.Warning("On Port.Equals() the expected port object is NULL");
                 return false;
             }
             if (o.GetType() != typeof(Port)) return false;

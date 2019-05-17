@@ -60,7 +60,7 @@ namespace DmxLedPanel
         static void Main(string[] args)
         {
             Talker.Talk.LogToFile = false;
-            GetAvailableInterfaces();
+            PrintAvailableInterfaces();
             _handler += new EventHandler(Handler);
             SetConsoleCtrlHandler(_handler, true);
 
@@ -138,24 +138,55 @@ namespace DmxLedPanel
             return false;
         }
 
-        private static void GetAvailableInterfaces()
+        private static void PrintAvailableInterfaces()
         {
             var interfaces = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface ni in interfaces)
             {
-                foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+                if (ni.OperationalStatus == OperationalStatus.Up)
+                {
+                    Talk.Info("Network interface found: \n{0}", new NetworkInterfaceData(ni).ToString());
+                }
+            }
+        }
+
+        private class NetworkInterfaceData {
+
+            public NetworkInterfaceData(NetworkInterface ni) {
+                Ni = ni;
+                IPs = new List<UnicastIPAddressInformation>();
+                OperationalStatus = Ni.OperationalStatus;
+                foreach (UnicastIPAddressInformation ip in Ni.GetIPProperties().UnicastAddresses)
                 {
                     if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
                     {
-                        if (ni.Name.Contains('*'))
-                        {
-                            continue;
-                        }
-                        Talk.Info("NI found: " + ni.Name + " : " + ip.Address);
-
+                        IPs.Add(ip);
                     }
                 }
             }
+            
+            NetworkInterface Ni { get; }
+            List<UnicastIPAddressInformation> IPs { get; }
+            OperationalStatus OperationalStatus { get; }
+
+            public override string ToString()
+            {
+                return String.Format(
+                    "Name: '{0}'\n" +
+                    "Status: '{1}'\n" +
+                    "IPs/Subnets: {2}", 
+                    Ni.Name, OperationalStatus, getIpSubnetString(IPs));
+            }
+
+            private string getIpSubnetString(List<UnicastIPAddressInformation> ips) {
+                StringBuilder sb = new StringBuilder();
+                foreach (UnicastIPAddressInformation ip in ips) {
+                    sb.Append(String.Format("\n\t{0} / {1}", ip.Address, ip.IPv4Mask));
+                }
+                return sb.ToString();
+            }
+
+
         }
     }
 }

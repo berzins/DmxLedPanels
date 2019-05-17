@@ -11,6 +11,7 @@ using Haukcode.ArtNet.Packets;
 using DmxLedPanel.Util;
 using System.Threading.Tasks;
 using System.Threading;
+using Talker;
 
 namespace DmxLedPanel
 {
@@ -299,12 +300,7 @@ namespace DmxLedPanel
             }
             catch (IndexOutOfRangeException e)
             {
-                Talker.Talk.Log(new Talker.ActionMessage
-                {
-                    Level = Talker.LogLevel.WARNING,
-                    Source = Talker.Talk.GetSource(),
-                    Message = "Failed to swtich mode. Mode index is not in range of the fixture modes. " + e.Message
-                });
+                Talk.Warning("Failed to swtich mode. Mode index is not in range of the fixture modes. " + e.Message);
                 return false;
             }
         }
@@ -433,12 +429,7 @@ namespace DmxLedPanel
             }
             catch (InvalidOperationException e)
             {
-                Talker.Talk.Log(new Talker.ActionMessage()
-                {
-                    Level = Talker.LogLevel.ERROR,
-                    Source = Talker.Talk.GetSource(),
-                    Message = "Fixture faild to update -> most likely on removal from the output: " + e.ToString()
-                });
+                Talk.Error("Fixture faild to update -> most likely on removal from the output: " + e.ToString());
             }
         }
 

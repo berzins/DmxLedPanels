@@ -53,13 +53,8 @@ namespace DmxLedPanel.RestApi
                 Log();
             }
             catch (HttpListenerException e) {
-                Talk.Log(new ActionMessage
-                {
-                    Message = "Some http connection died and response wasn't sent (most likely). " +
-                              "Try to refresh the browser. \n\r " + e.ToString(),
-                    Source = Talk.GetSource(),
-                    Level = LogLevel.WARNING
-                });
+                Talk.Warning("Some http connection died and response wasn't sent (most likely). " +
+                              "Try to refresh the browser. \n\r " + e.ToString());
             }
             
         }

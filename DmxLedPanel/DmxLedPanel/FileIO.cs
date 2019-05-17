@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Talker;
 
 namespace DmxLedPanel
 {
@@ -27,20 +28,10 @@ namespace DmxLedPanel
             try
             {
                 File.WriteAllText(path, data);
-                Talker.Talk.Log(new Talker.ActionMessage()
-                {
-                    Message = path + " written successfully.",
-                    Level = Talker.LogLevel.INFO,
-                    Source = Talker.Talk.GetSource()
-                });
+                Talk.Info(path + " written successfully.");
             }
             catch (Exception e) {
-                Talker.Talk.Log(new Talker.ActionMessage()
-                {
-                    Message = path + "write error => " + e.ToString(),
-                    Level = Talker.LogLevel.ERROR,
-                    Source = Talker.Talk.GetSource()
-                });
+                Talk.Error(path + "write error => " + e.ToString());
             }
         }
 
@@ -57,12 +48,7 @@ namespace DmxLedPanel
 
             if (!Directory.Exists(p) && createDir) {
                 CreateDir(p);
-
-                Talker.Talk.Log(new Talker.ActionMessage() {
-                    Message = "Direcotry '" + p + "' didn't existed -> created successfully.",
-                    Source = Talker.Talk.GetSource(),
-                    Level = Talker.LogLevel.WARNING
-                });
+                Talk.Warning("Direcotry '" + p + "' didn't existed -> created successfully.");
             }
 
             var files = Directory.GetFiles(p, "*.json");

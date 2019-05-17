@@ -42,41 +42,41 @@ namespace Talker
             }).Start();
         }
 
-        public static void Info(String msg)
+        public static void Info(String msg, params object[] args)
         {
             Log(new ActionMessage
             {
-                Message = msg,
+                Message = String.Format(msg, args),
                 Source = GetSource(2),
                 Level = LogLevel.INFO
             });
         }
 
-        public static void Warning(String msg)
+        public static void Warning(String msg, params object[] args)
         {
             Log(new ActionMessage
             {
-                Message = msg,
+                Message = String.Format(msg, args),
                 Source = GetSource(2),
                 Level = LogLevel.WARNING
             });
         }
 
-        public static void Error(String msg)
+        public static void Error(String msg, params object[] args)
         {
             Log(new ActionMessage
             {
-                Message = msg,
+                Message = String.Format(msg, args),
                 Source = GetSource(2),
                 Level = LogLevel.ERROR
             });
         }
 
-        public static void Fatal(String msg)
+        public static void Fatal(String msg, params object[] args)
         {
             Log(new ActionMessage
             {
-                Message = msg,
+                Message = String.Format(msg, args),
                 Source = GetSource(2),
                 Level = LogLevel.FATAL
             });

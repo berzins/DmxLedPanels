@@ -16,8 +16,8 @@ namespace DmxLedPanel.Util
         /// <summary>
         ///  Executes provided command and returns output 
         /// </summary>
-        public static string Execute(string command) {
-
+        public static string Execute(string command)
+        {
             var cmd = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.FileName = "cmd.exe";
@@ -40,12 +40,13 @@ namespace DmxLedPanel.Util
         public static void RestartProcess(bool admin)
         {
             RestartAdmin = admin;
-            var path = Process.GetCurrentProcess().MainModule.FileName;  
+            var path = Process.GetCurrentProcess().MainModule.FileName;
             var app = new Process();
             var startInfo = new ProcessStartInfo();
             startInfo.FileName = path;
             startInfo.UseShellExecute = true;
-            if (admin) {
+            if (admin)
+            {
                 startInfo.Arguments = "init";
                 startInfo.Verb = "runas";
             }

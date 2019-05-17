@@ -37,14 +37,14 @@ namespace DmxLedPanel.ArtNetIO
         public void Start()
         {
             StartTracking();
-            LogInfo("Dmx sgnal trcking started.");
+            Talk.Info("Dmx sgnal trcking started.");
         }
 
         public void Stop()
         {
             trackingThread.Abort();
             trackingThread = null;
-            LogInfo("Dmx sgnal trcking stoped.");
+            Talk.Info("Dmx sgnal trcking stoped.");
         }
 
         public void StartTracking() {
@@ -134,16 +134,6 @@ namespace DmxLedPanel.ArtNetIO
         public void Dispose()
         {
             Stop();
-        }
-
-        private void LogInfo(String message)
-        {
-            Talk.Log(new ActionMessage()
-            {
-                Message = message,
-                Source = Talk.GetSource(),
-                Level = LogLevel.INFO,
-            });
         }
     }
 }

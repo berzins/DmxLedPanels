@@ -13,6 +13,7 @@ using Haukcode.ArtNet.Sockets;
 using Haukcode.ArtNet.Packets;
 using DmxLedPanel.ArtNetIO;
 using System.Net.Sockets;
+using Talker;
 
 namespace DmxLedPanel
 {
@@ -109,7 +110,7 @@ namespace DmxLedPanel
                 bool valid = IPAddress.TryParse(value, out ipAddress);
                 if (!valid)
                 {
-                    Console.WriteLine("not valid ip address - outpt address set to " + DEFAULT_IP);
+                    Talk.Error("Not valid ip address - output address set to " + DEFAULT_IP);
                     ipAddress = DEFAULT_IP;
                 }
             }
@@ -254,12 +255,7 @@ namespace DmxLedPanel
                     socket.SendTo(pack.ToArray(), new IPEndPoint(ipAddress, ArtNetSocket.Port));
                 }
                 catch (Exception e) {
-                    Talker.Talk.Log(new Talker.ActionMessage
-                    {
-                        Message = e.ToString(),
-                        Source = Talker.Talk.GetSource(),
-                        Level = Talker.LogLevel.ERROR
-                    });
+                    Talk.Error(e.ToString());
                 }
                 universeCounter++;
             }
@@ -305,17 +301,6 @@ namespace DmxLedPanel
         {
             string str = list.Aggregate("", (s, o) => s + o.Name + ", ");
             return str.Substring(0, str.Length - 2);
-        }
-
-        public static void CalculateUniversesPerFrameSent()
-        {
-            Task.Factory.StartNew(() => Thread.Sleep(1000))
-                .ContinueWith((t) =>
-                {
-                    Console.WriteLine("Universes sent in a 1 frame" + universeCounter / 30);
-                    universeCounter = 0;
-                    CalculateUniversesPerFrameSent();
-                });
         }
 
         public void Dispose()
