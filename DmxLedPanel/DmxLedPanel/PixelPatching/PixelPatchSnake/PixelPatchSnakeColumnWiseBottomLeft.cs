@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace DmxLedPanel.PixelPatching
 {
-    public class PixelPatchSnakeRowWiseTopLeft : RectaglePixelPatch
+    class PixelPatchSnakeColumnWiseBottomLeft : RectaglePixelPatch
     {
-       
-        public PixelPatchSnakeRowWiseTopLeft(
-            int cols, 
-            int rows, 
-            int address, 
+
+        public PixelPatchSnakeColumnWiseBottomLeft(
+            int cols,
+            int rows,
+            int address,
             int pixelLength
             ) : base(
-                PixelPatch.PIXEL_PATCH_SNAKE_ROWWISE_TOP_LEFT,
+                PixelPatch.PIXEL_PATCH_SNAKE_COLUMNWISE_BOTTOM_LEFT,
                 cols,
                 rows,
                 address,
                 pixelLength,
-                new PixelOrderRowWiseTopLeft(cols, rows)
-                ) {
+                new PixelOrderSnakeColumnWiseBottomLeft(cols, rows))
+        {
 
             this.columns = cols;
             this.rows = rows;

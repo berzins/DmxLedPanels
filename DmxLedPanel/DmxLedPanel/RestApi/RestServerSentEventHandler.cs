@@ -107,6 +107,7 @@ namespace DmxLedPanel.RestApi
                     eventType,
                     StringUtil.MapToString(data).Replace("\r", "").Replace("\n", "").Replace("\"", "").Replace("{", "\r\n{").Replace(",", ""))
                     );
+                
             }
             else
             {

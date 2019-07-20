@@ -312,6 +312,16 @@ export const resetModes = () => {
     }
 }
 
+export const OPEN_CUSOM_MODE_EDITOR = "OPEN_CUSTOM_MODE_EDITOR"
+
+export const openCusomModeEditor = (mode) => {
+    return dispatch => {
+        dispatch({type: OPEN_CUSOM_MODE_EDITOR, payload: mode})
+    }
+}
+
 // ------------- end of mode manager form --------------------
+
+
 
 

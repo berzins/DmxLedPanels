@@ -107,9 +107,6 @@ class App extends Component {
             backgroundImage: 'linear-gradient(rgb(25,25,25), rgba(0,0,0,0.0))'
         }
         
-
-        
-
         return(
             <div className="container-fluid">
                 <div className="fixed-top">
@@ -150,7 +147,7 @@ class App extends Component {
                 </div>
 
                 <div className= "col-12">
-                <ItemContainer click={this.click}/>
+                    <ItemContainer click={this.click}/>
                 </div>
  
                 <FixtureForm click={this.click}/>  
@@ -167,7 +164,8 @@ class App extends Component {
                 <ModeManagerForm click={this.click}/>
                 <ErrorForm click={this.click}/>
 
-                /*Controlers*/
+
+
                 <Highlighter/>
                 
             </div>
@@ -175,8 +173,6 @@ class App extends Component {
     }
 
     render() {
-
-
         return (
             this.props.session.logged ? this.getAppScreen() : this.getLoggingScreen()
         )

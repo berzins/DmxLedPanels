@@ -56,9 +56,9 @@ namespace DmxLedPanel.PixelPatching
         }
     }
 
-    public class PixelOrderRowWiseTopLeft : RectanglePixleOrder
+    public class PixelOrderSnakeRowWiseTopLeft : RectanglePixleOrder
     {
-        public PixelOrderRowWiseTopLeft(int columns, int rows) : base(columns, rows)
+        public PixelOrderSnakeRowWiseTopLeft(int columns, int rows) : base(columns, rows)
         {
         }
 
@@ -93,9 +93,9 @@ namespace DmxLedPanel.PixelPatching
         }
     }
 
-    public class PixelOrderColumnWiseBottomLeft : RectanglePixleOrder
+    public class PixelOrderSnakeColumnWiseBottomLeft : RectanglePixleOrder
     {
-        public PixelOrderColumnWiseBottomLeft(int columns, int rows) : base(columns, rows)
+        public PixelOrderSnakeColumnWiseBottomLeft(int columns, int rows) : base(columns, rows)
         {
         }
 
@@ -123,9 +123,9 @@ namespace DmxLedPanel.PixelPatching
         }
     }
 
-    public class PixelOrderRowWiseBottomRight : RectanglePixleOrder
+    public class PixelOrderSnakeRowWiseBottomRight : RectanglePixleOrder
     {
-        public PixelOrderRowWiseBottomRight(int columns, int rows) : base(columns, rows)
+        public PixelOrderSnakeRowWiseBottomRight(int columns, int rows) : base(columns, rows)
         {
         }
 
@@ -153,9 +153,9 @@ namespace DmxLedPanel.PixelPatching
         }
     }
 
-    public class PixelOrderColumnWiseTopRight : RectanglePixleOrder
+    public class PixelOrderSnakeColumnWiseTopRight : RectanglePixleOrder
     {
-        public PixelOrderColumnWiseTopRight(int columns, int rows) : base(columns, rows)
+        public PixelOrderSnakeColumnWiseTopRight(int columns, int rows) : base(columns, rows)
         {
         }
 
@@ -182,4 +182,47 @@ namespace DmxLedPanel.PixelPatching
             return order;
         }
     }
+
+    public class PixelOrderLinearRowWiseTopLeft : RectanglePixleOrder
+    {
+        public PixelOrderLinearRowWiseTopLeft(int columns, int rows) : base(columns, rows)
+        {
+        }
+
+        protected override List<PixelPosition> init()
+        {
+            var order = new List<PixelPosition>();
+
+            for (var row = 0; row < rows; row++)
+            {
+                for (var col = 0; col < columns; col++)
+                {
+                    order.Add(new PixelPosition(col, row));
+                }
+            }
+            return order;
+        }
+    }
+
+    public class PixelOrderLinearColumnWiseTopLeft : RectanglePixleOrder
+    {
+
+        public PixelOrderLinearColumnWiseTopLeft(int columns, int rows) : base(columns, rows)
+        {
+        }
+
+        protected override List<PixelPosition> init()
+        {
+            var order = new List<PixelPosition>();
+            for (var col = 0; col < columns; col++)
+            {
+                for (var row = 0; row < rows; row++)
+                {
+                    order.Add(new PixelPosition(col, row));
+                }
+            }
+            return order;
+        }
+    }
+
 }

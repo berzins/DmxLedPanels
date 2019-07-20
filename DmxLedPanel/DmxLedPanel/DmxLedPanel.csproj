@@ -81,10 +81,12 @@
     <Compile Include="Modes\ModeRectBorderOutIn.cs" />
     <Compile Include="PixelPatching\PixelOrder.cs" />
     <Compile Include="PixelPatching\PixelPatch.cs" />
-    <Compile Include="PixelPatching\PixelPatchSnakeColumnWiseBottomLeft.cs" />
-    <Compile Include="PixelPatching\PixelPatchSnakeColumnWiseTopRight.cs" />
-    <Compile Include="PixelPatching\PixelPatchSnakeRowWiseBottomRight.cs" />
-    <Compile Include="PixelPatching\PixelPatchSnakeRowWiseTopLeft.cs" />
+    <Compile Include="PixelPatching\PixelPatchLinear\PixelPatchLinearColumnWiseTopLeft.cs" />
+    <Compile Include="PixelPatching\PixelPatchLinear\PixelPatchLinearRowWiseTopLeft.cs" />
+    <Compile Include="PixelPatching\PixelPatchSnake\PixelPatchSnakeColumnWiseBottomLeft.cs" />
+    <Compile Include="PixelPatching\PixelPatchSnake\PixelPatchSnakeColumnWiseTopRight.cs" />
+    <Compile Include="PixelPatching\PixelPatchSnake\PixelPatchSnakeRowWiseBottomRight.cs" />
+    <Compile Include="PixelPatching\PixelPatchSnake\PixelPatchSnakeRowWiseTopLeft.cs" />
     <Compile Include="PixelPatching\PixelPosition.cs" />
     <Compile Include="PixelPatching\RectaglePixelPatch.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -153,7 +155,7 @@
     <Compile Include="Modes\ModeLineWiseTopLeft.cs" />
     <Compile Include="Output.cs" />
     <Compile Include="PixelPatching\Pixel.cs" />
-    <Compile Include="PixelPatching\PixelPatchSnakeColumnWiseTopLeft.cs" />
+    <Compile Include="PixelPatching\PixelPatchSnake\PixelPatchSnakeColumnWiseTopLeft.cs" />
     <Compile Include="Port.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DmxLedPanel.PixelPatching.PixelPatchLinear;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,8 @@ namespace DmxLedPanel.PixelPatching
             int address,
             int pixelLength,
             PixelOrder pixelOrder
-            ) : base(name)
+            ) 
+            : base(name)
         {
 
             this.columns = cols;
@@ -26,9 +28,6 @@ namespace DmxLedPanel.PixelPatching
             patch = patchPixels();
 
         }
-
-
-
 
         public override Pixel[,] GetPixelPatch()
         {
@@ -77,6 +76,15 @@ namespace DmxLedPanel.PixelPatching
             {
                 return new PixelPatchSnakeColumnWiseTopRight(cols, rows, addr, pixLength);
             }
+            if (name.Equals(PIXEL_PATCH_LINEAR_ROW_WISE_TOP_LEFT))
+            {
+                return new PixelPatchLinearRowWiseTopLeft(cols, rows, addr, pixLength);
+            }
+            if (name.Equals(PIXEL_PATCH_LINEAR_COLUMN_WISE_TOP_LEFT))
+            {
+                return new PixelPatchLinearColumnWiseTopLeft(cols, rows, addr, pixLength);
+            }
+
             return null;
         }
     }

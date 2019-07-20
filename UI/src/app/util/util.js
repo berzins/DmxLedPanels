@@ -1,11 +1,14 @@
 
 const MODE_GTL = "GridTopLeft"
 const MODE_RBOI = "RectBorderOutIn"
+const MODE_CUSTOM = "Custom"
 const PATCH_SCTL = "pixelPatchSnakeColumnWiseTopLeft"
 const PATCH_SRTL = "pixelPatchSnakeRowWiseTopLeft"
 const PATCH_SCBL = "pixelPatchSnakeColumnWiseBottomLeft"
 const PATCH_SRBR = "pixelPatchSnakeRowWiseBottomRight"
 const PATCH_SCTR = "pixelPatchSnakeColumnWiseTopRight"
+const PATCH_LRTL = "pixelPatchLinearRowWiseTopLeft"
+const PATCH_LCTL = "pixelPatchLinearColumnWiseTopLeft"
 
 export class FixtureMode {
     static all() {
@@ -19,7 +22,7 @@ export class FixtureMode {
 
 export class FixturePatch {
     static all() {
-        return [PATCH_SCTL, PATCH_SRTL, PATCH_SCBL, PATCH_SRBR, PATCH_SCTR]
+        return [PATCH_SCTL, PATCH_SRTL, PATCH_SCBL, PATCH_SRBR, PATCH_SCTR, PATCH_LRTL, PATCH_LCTL]
     }
 
     static allShort() {
@@ -78,6 +81,12 @@ export const getShortNameFixturePatch = (patch) => {
         }
         case PATCH_SCTR: {
             return 'SCTR' + patch.Columns + 'x' + patch.Rows
+        }
+        case PATCH_LRTL: {
+            return 'LRTL' + patch.Columns + 'x' + patch.Rows
+        }
+        case PATCH_LCTL: {
+            return 'LCTL' + patch.Columns + 'x' + patch.Rows
         }
     }
     return "short name not set"

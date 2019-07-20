@@ -1,5 +1,5 @@
 import React,  {Component} from 'react'
-import { rowItem, selectItem, radioItem } from '../editForms/formItems'
+import { rowItem, selectItem, radioItem, buttonItem } from '../editForms/formItems'
 import { FixtureMode } from '../../util/util'
 import { 
     MODE_COLUMN_VALUES,
@@ -14,6 +14,10 @@ export const MODE_SELECT_ID = "MODE_SELECT_ID"
 
 export default class ModeItem extends Component {
 
+    // basically got to mode editor
+    edit() {
+        console.log("Custom mode edit called")
+    }
 
     render() {
         const mode = this.props.mode
@@ -22,12 +26,9 @@ export default class ModeItem extends Component {
            rowItem([
                 rowItem([
                     selectItem("Type", createModeId(MODE_TYPE_ID, mi), FixtureMode.all(), mode.typeIndex),
-                    radioItem('Select', createModeId(MODE_SELECT_ID, mi), false)
+                    radioItem('Select', createModeId(MODE_SELECT_ID, mi), false),
+                    buttonItem("replace this", "Edit", this.edit.bind(this))
                 ], true),
-                rowItem([
-                    selectItem("Columns" , createModeId(MODE_COLUMNS_ID, mi), MODE_COLUMN_VALUES, mode.colIndex ),
-                    selectItem("Rows" , createModeId(MODE_ROWS_ID, mi), MODE_ROW_VALUES, mode.rowIndex),
-                ])
            ])
         ) 
     }

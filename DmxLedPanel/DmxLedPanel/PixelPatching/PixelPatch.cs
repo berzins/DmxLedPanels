@@ -15,7 +15,11 @@ namespace DmxLedPanel
         public static readonly string PIXEL_PATCH_SNAKE_COLUMNWISE_BOTTOM_LEFT = "pixelPatchSnakeColumnWiseBottomLeft";
         public static readonly string PIXEL_PATCH_SNAKE_ROWWISE_BOTTOM_RIGHT = "pixelPatchSnakeRowWiseBottomRight";
         public static readonly string PIXEL_PATCH_SNAKE_COLUMNWISE_TOP_RIGHT = "pixelPatchSnakeColumnWiseTopRight";
-        
+
+        public static readonly string PIXEL_PATCH_LINEAR_ROW_WISE_TOP_LEFT = "pixelPatchLinearRowWiseTopLeft";
+        public static readonly string PIXEL_PATCH_LINEAR_COLUMN_WISE_TOP_LEFT = "pixelPatchLinearColumnWiseTopLeft";
+
+
 
         protected int columns, rows, address, pixelLength;
         

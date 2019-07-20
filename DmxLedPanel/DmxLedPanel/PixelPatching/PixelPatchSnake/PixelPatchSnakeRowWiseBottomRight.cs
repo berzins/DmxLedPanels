@@ -18,7 +18,7 @@ namespace DmxLedPanel.PixelPatching
                 rows,
                 address,
                 pixelLength,
-                new PixelOrderRowWiseBottomRight(cols,rows))
+                new PixelOrderSnakeRowWiseBottomRight(cols,rows))
         {
         }
     }

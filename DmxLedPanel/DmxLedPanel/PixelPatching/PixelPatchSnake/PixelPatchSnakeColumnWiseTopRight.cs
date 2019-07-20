@@ -9,9 +9,9 @@ namespace DmxLedPanel.PixelPatching
     public class PixelPatchSnakeColumnWiseTopRight : RectaglePixelPatch
     {
         public PixelPatchSnakeColumnWiseTopRight(
-            int cols, 
-            int rows, 
-            int address, 
+            int cols,
+            int rows,
+            int address,
             int pixelLength
             ) : base(
                 PixelPatch.PIXEL_PATCH_SNAKE_COLUMNWISE_TOP_RIGHT,
@@ -19,7 +19,7 @@ namespace DmxLedPanel.PixelPatching
                 rows,
                 address,
                 pixelLength,
-                new PixelOrderColumnWiseTopRight(cols, rows))
+                new PixelOrderSnakeColumnWiseTopRight(cols, rows))
         {
         }
     }

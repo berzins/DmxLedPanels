@@ -46,7 +46,7 @@ namespace Talker
         {
             Log(new ActionMessage
             {
-                Message = String.Format(msg, args),
+                Message = args.Count() < 1 ? msg : String.Format(msg, args),
                 Source = GetSource(2),
                 Level = LogLevel.INFO
             });
