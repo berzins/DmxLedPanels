@@ -193,6 +193,7 @@ namespace DmxLedPanel
         {
             lock (lockref)
             {
+                this.modes = modes;
                 TrySwitchMode(CurrentModeIndex < this.modes.Count ? CurrentModeIndex : 0);
             }
         }
@@ -376,6 +377,7 @@ namespace DmxLedPanel
                 return;
             // ok, intereseted in this packet -> copy data to dmx data buffer
             portsPending.Remove(result);
+
             Array.Copy(
                 packet.DmxData, 0,
                 dmxBuffer, result.PixelOffset * PixelChannelCount,
@@ -383,6 +385,8 @@ namespace DmxLedPanel
 
             if (portsPending.Count > 0)
                 return; // still waiting for second packet to arrive.
+
+            ResetPortsPending();
 
             // dmx has arrived -> go on. 
             // process the frame. 

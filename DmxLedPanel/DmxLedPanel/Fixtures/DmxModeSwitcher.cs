@@ -11,6 +11,8 @@ namespace DmxLedPanel.Fixtures
         public static readonly int ADDRESS_COUNT = 1;
         public static readonly string UTIL_NAME = "Pixel Mode Switcher";
 
+        private int currentIndex = 0;
+
         public DmxModeSwitcher(int index) : base(index, ADDRESS_COUNT) {
             Name = UTIL_NAME;
         }
@@ -27,7 +29,10 @@ namespace DmxLedPanel.Fixtures
         {
             float switchInterval = ((float)256 / f.ModeCount);
             int index = (int)((float)values[0] / switchInterval);
-            f.SwitchMode(index);
+            if (index != currentIndex) {
+                f.SwitchMode(index);
+                currentIndex = index;
+            }
         }
     }
 }

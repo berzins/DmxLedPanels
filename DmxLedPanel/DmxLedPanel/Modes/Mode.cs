@@ -13,6 +13,7 @@ namespace DmxLedPanel.Modes
 
         public static readonly string MODE_GRID_TOP_LEFT = "GridTopLeft";
         public static readonly string MODE_RECT_BORDER_OUT_IN = "RectBorderOutIn";
+        public static readonly string MODE_RANDOM = "Random";
 
         protected Mode(string name) {
             Id = id++;
@@ -40,6 +41,9 @@ namespace DmxLedPanel.Modes
             }
             if (name.Equals(Mode.MODE_RECT_BORDER_OUT_IN)) {
                 return new ModeRectBorderOutIn(dim[0]);
+            }
+            if (name.Equals(Mode.MODE_RANDOM)) {
+                return new ModeRandom(dim[0]);
             }
             return null;
         }

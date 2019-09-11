@@ -1,6 +1,7 @@
 
 const MODE_GTL = "GridTopLeft"
 const MODE_RBOI = "RectBorderOutIn"
+const MODE_RANDOM = "Random"
 const MODE_CUSTOM = "Custom"
 const PATCH_SCTL = "pixelPatchSnakeColumnWiseTopLeft"
 const PATCH_SRTL = "pixelPatchSnakeRowWiseTopLeft"
@@ -12,7 +13,7 @@ const PATCH_LCTL = "pixelPatchLinearColumnWiseTopLeft"
 
 export class FixtureMode {
     static all() {
-        return [MODE_GTL, MODE_RBOI]
+        return [MODE_GTL, MODE_RBOI, MODE_RANDOM]
     }
 
     static allShort() {

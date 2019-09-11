@@ -30,5 +30,14 @@ namespace DmxLedPanel.Fixtures
                 }
             }
         }
+
+        public static void SetUtilAddressFor(List<Fixture> fixtures, Address startAddress, bool increment)
+        {
+            // as you see this is duumy method.. just set same address for all
+            foreach (Fixture fix in fixtures)
+            {
+                fix.UtilAddress = startAddress;
+            }
+        }
     }
 }
