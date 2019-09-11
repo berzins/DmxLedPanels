@@ -31,15 +31,15 @@ namespace DmxLedPanel.RestApi
                 
                 var fixtures = StateManager.Instance.State.GetFixtures(fids);
 
-                IPixelPatch pixelPatch = RestCreateFixtureHandler.getPixelPatch(patch);
+                
                 foreach (var f in fixtures)
                 {
-                    f.TrySetPatch(pixelPatch);    
+                    f.TrySetPatch(RestCreateFixtureHandler.getPixelPatch(patch));    
                 }
 
                 SetInfoMessage(
                     "Pixel patch for fixtures: " + Fixture.GetFixtureListNameString(fixtures)
-                    + " is set to: " + pixelPatch.ToString(),
+                    + " is set to: " + RestCreateFixtureHandler.getPixelPatch(patch).ToString(),
                     IS_PART_OF_STATE,
                     Talker.Talk.GetSource()
                     );
