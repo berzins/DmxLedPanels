@@ -58,6 +58,7 @@ namespace DmxLedPanel.RestApi
 
                 var fixtures = StateManager.Instance.State.GetFixtures(fids);
                 FixtureAddressSetter.SetDmxAddressFor(fixtures, address, increment);
+                FixtureAddressSetter.SetUtilAddressFor(fixtures, utilAddress, increment);
 
                 SetInfoMessage(
                     "Address for fixtures: " + Fixture.GetFixtureListNameString(fixtures)
