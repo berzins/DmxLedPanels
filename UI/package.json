@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.18.0",
-    "bootstrap": "^4.0.0",
+    "bootstrap": "^4.3.1",
     "bootstrap-toggle": "^2.2.2",
     "react": "^16.2.0",
     "react-bootstrap": "^0.32.1",
